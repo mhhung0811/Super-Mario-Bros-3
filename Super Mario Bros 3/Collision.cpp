@@ -13,6 +13,11 @@ CCollision* CCollision::GetInstance()
 	return __instance;
 }
 
+int CCollisionEvent::WasCollided() {
+	return
+		t >= 0.0f && t <= 1.0f && obj->IsDirectionColliable(nx, ny) == 1;
+}
+
 /*
 	SweptAABB 
 */
