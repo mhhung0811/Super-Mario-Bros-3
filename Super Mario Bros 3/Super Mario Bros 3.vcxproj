@@ -193,11 +193,14 @@
     <Text Include="cloud.txt" />
     <Text Include="coin.txt" />
     <Text Include="goomba.txt" />
+    <Text Include="groundMid.txt" />
+    <Text Include="groundTop.txt" />
     <Text Include="mario-sample.txt" />
     <Text Include="mario.txt" />
     <Text Include="scene0005.txt" />
     <Text Include="scene01.txt" />
     <Text Include="scene02.txt" />
+    <Text Include="sceneMain.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico" />
@@ -205,6 +208,7 @@
     <Image Include="textures\enemies.png" />
     <Image Include="textures\mario.png" />
     <Image Include="textures\misc.png" />
+    <Image Include="textures\tiles.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -157,6 +157,9 @@
     <Text Include="scene01.txt" />
     <Text Include="scene02.txt" />
     <Text Include="scene0005.txt" />
+    <Text Include="sceneMain.txt" />
+    <Text Include="groundTop.txt" />
+    <Text Include="groundMid.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico">
@@ -172,6 +175,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\misc.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\tiles.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
