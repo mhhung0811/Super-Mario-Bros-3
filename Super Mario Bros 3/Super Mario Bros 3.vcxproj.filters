@@ -78,6 +78,9 @@
     <ClCompile Include="PlatformOneWay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CubeOneWay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -150,6 +153,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlatformOneWay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Decor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeOneWay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

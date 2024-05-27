@@ -10,6 +10,8 @@
 #include "Coin.h"
 #include "Platform.h"
 #include "PlatformOneWay.h"
+#include "Decor.h"
+#include "CubeOneWay.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -158,6 +160,51 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_DECOR:
+	{
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int sprite_begin = atoi(tokens[6].c_str());
+		int sprite_middle = atoi(tokens[7].c_str());
+		int sprite_end = atoi(tokens[8].c_str());
+
+		obj = new Decor(
+			x, y,
+			cell_width, cell_height, length,
+			sprite_begin, sprite_middle, sprite_end
+		);
+
+		break;
+	}
+
+	case OBJECT_TYPE_CUBE_ONE_WAY:
+	{
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int height = atoi(tokens[6].c_str());
+		int sprite_top_begin = atoi(tokens[7].c_str());
+		int sprite_top_middle = atoi(tokens[8].c_str());
+		int sprite_top_end = atoi(tokens[9].c_str());
+		int sprite_mid_begin = atoi(tokens[10].c_str());
+		int sprite_mid_middle = atoi(tokens[11].c_str());
+		int sprite_mid_end = atoi(tokens[12].c_str());
+		int sprite_bottom_begin = atoi(tokens[13].c_str());
+		int sprite_bottom_middle = atoi(tokens[14].c_str());
+		int sprite_bottom_end = atoi(tokens[15].c_str());
+
+		obj = new CCubeOneWay(
+			x, y,
+			cell_width, cell_height, length, height,
+			sprite_top_begin, sprite_top_middle, sprite_top_end,
+			sprite_mid_begin, sprite_mid_middle, sprite_mid_end,
+			sprite_bottom_begin, sprite_bottom_middle, sprite_bottom_end
+		);
+
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -255,11 +302,18 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
+	// Now Mario is the last
+
 	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 0; i < objects.size() - 1; i++)
 	{
 		coObjects.push_back(objects[i]);
 	}
+
+	/*for (size_t i = 1; i < objects.size(); i++)
+	{
+		coObjects.push_back(objects[i]);
+	}*/
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
