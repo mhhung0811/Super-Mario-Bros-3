@@ -118,10 +118,25 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		player = (CMario*)obj;  
 
 		DebugOut(L"[INFO] Player object has been created!\n");
+
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
-	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
+	case OBJECT_TYPE_GOOMBA: 
+		obj = new CGoomba(x,y); 
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	case OBJECT_TYPE_BRICK: 
+		obj = new CBrick(x,y); 
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	case OBJECT_TYPE_COIN: 
+		obj = new CCoin(x, y); 
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
 
 	case OBJECT_TYPE_PLATFORM:
 	{
@@ -138,7 +153,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			cell_width, cell_height, length,
 			sprite_begin, sprite_middle, sprite_end
 		);
-
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
 		break;
 	}
 	case OBJECT_TYPE_PLATFORM_ONE_WAY:
@@ -157,6 +173,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			sprite_begin, sprite_middle, sprite_end
 		);
 
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
 		break;
 	}
 
@@ -174,7 +192,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			cell_width, cell_height, length,
 			sprite_begin, sprite_middle, sprite_end
 		);
-
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
 		break;
 	}
 
@@ -201,7 +220,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			sprite_mid_begin, sprite_mid_middle, sprite_mid_end,
 			sprite_bottom_begin, sprite_bottom_middle, sprite_bottom_end
 		);
-
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
 		break;
 	}
 
@@ -211,6 +231,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float b = (float)atof(tokens[4].c_str());
 		int scene_id = atoi(tokens[5].c_str());
 		obj = new CPortal(x, y, r, b, scene_id);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
 	}
 	break;
 
@@ -221,10 +243,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 
 	// General object setup
-	obj->SetPosition(x, y);
+	/*obj->SetPosition(x, y);*/
 
 
-	objects.push_back(obj);
+	/*objects.push_back(obj);*/
 }
 
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
@@ -300,25 +322,47 @@ void CPlayScene::Load()
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
-	// TO-DO: This is a "dirty" way, need a more organized way 
+	// TO-DO: This is a "dirty" way, need a more organized way 	
 
+	
+	vector<LPGAMEOBJECT> coObjects0;
+	
+	for (size_t i = 0; i < objects0.size(); i++)
+	{
+		coObjects0.push_back(objects0[i]);
+	}
+	
 	// Now Mario is the last
-
-	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 0; i < objects.size() - 1; i++)
+	vector<LPGAMEOBJECT> coObjects1;
+	for (size_t i = 0; i < objects1.size() - 1; i++)
 	{
-		coObjects.push_back(objects[i]);
+		coObjects1.push_back(objects1[i]);
 	}
 
-	/*for (size_t i = 1; i < objects.size(); i++)
+	vector<LPGAMEOBJECT> coAllObjects;
+	coAllObjects.reserve(coObjects0.size() + coObjects1.size());
+	coAllObjects.insert(coAllObjects.begin(), coObjects0.begin(), coObjects0.end());
+	coAllObjects.insert(coAllObjects.begin(), coObjects1.begin(), coObjects1.end());
+
+	for (size_t i = 0; i < objects0.size(); i++)
 	{
-		coObjects.push_back(objects[i]);
+		objects0[i]->Update(dt, &coAllObjects);
+	}
+	for (size_t i = 0; i < objects1.size(); i++)
+	{
+		objects1[i]->Update(dt, &coAllObjects);
+	}
+
+	// Update objects0
+	/*for (size_t i = 0; i < objects0.size(); i++)
+	{
+		objects0[i]->Update(dt, &coObjects0);
 	}*/
-
-	for (size_t i = 0; i < objects.size(); i++)
+	// Update objects1
+	/*for (size_t i = 0; i < objects1.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
-	}
+		objects1[i]->Update(dt, &coObjects1);
+	}*/
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
@@ -340,8 +384,11 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	for (int i = 0; i < objects0.size(); i++)
+		objects0[i]->Render();
+
+	for (int i = 0; i < objects1.size(); i++)
+		objects1[i]->Render();
 }
 
 /*
@@ -349,12 +396,19 @@ void CPlayScene::Render()
 */
 void CPlayScene::Clear()
 {
-	vector<LPGAMEOBJECT>::iterator it;
-	for (it = objects.begin(); it != objects.end(); it++)
+	vector<LPGAMEOBJECT>::iterator it0;
+	for (it0 = objects0.begin(); it0 != objects0.end(); it0++)
 	{
-		delete (*it);
+		delete (*it0);
 	}
-	objects.clear();
+	objects0.clear();
+
+	vector<LPGAMEOBJECT>::iterator it1;
+	for (it1 = objects1.begin(); it1 != objects1.end(); it1++)
+	{
+		delete (*it1);
+	}
+	objects1.clear();
 }
 
 /*
@@ -365,10 +419,14 @@ void CPlayScene::Clear()
 */
 void CPlayScene::Unload()
 {
-	for (int i = 0; i < objects.size(); i++)
-		delete objects[i];
+	for (int i = 0; i < objects0.size(); i++)
+		delete objects0[i];
+	objects0.clear();
 
-	objects.clear();
+	for (int i = 0; i < objects1.size(); i++)
+		delete objects1[i];
+	objects1.clear();
+
 	player = NULL;
 
 	DebugOut(L"[INFO] Scene %d unloaded! \n", id);
@@ -378,20 +436,34 @@ bool CPlayScene::IsGameObjectDeleted(const LPGAMEOBJECT& o) { return o == NULL; 
 
 void CPlayScene::PurgeDeletedObjects()
 {
-	vector<LPGAMEOBJECT>::iterator it;
-	for (it = objects.begin(); it != objects.end(); it++)
+	vector<LPGAMEOBJECT>::iterator it0;
+	for (it0 = objects0.begin(); it0 != objects0.end(); it0++)
 	{
-		LPGAMEOBJECT o = *it;
+		LPGAMEOBJECT o = *it0;
 		if (o->IsDeleted())
 		{
 			delete o;
-			*it = NULL;
+			*it0 = NULL;
+		}
+	}
+	objects0.erase(
+		std::remove_if(objects0.begin(), objects0.end(), CPlayScene::IsGameObjectDeleted),
+		objects0.end());
+
+	vector<LPGAMEOBJECT>::iterator it1;
+	for (it1 = objects1.begin(); it1 != objects1.end(); it1++)
+	{
+		LPGAMEOBJECT o = *it1;
+		if (o->IsDeleted())
+		{
+			delete o;
+			*it1 = NULL;
 		}
 	}
 
 	// NOTE: remove_if will swap all deleted items to the end of the vector
 	// then simply trim the vector, this is much more efficient than deleting individual items
-	objects.erase(
-		std::remove_if(objects.begin(), objects.end(), CPlayScene::IsGameObjectDeleted),
-		objects.end());
+	objects1.erase(
+		std::remove_if(objects1.begin(), objects1.end(), CPlayScene::IsGameObjectDeleted),
+		objects1.end());
 }
