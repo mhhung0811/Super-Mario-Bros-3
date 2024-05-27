@@ -27,6 +27,7 @@ public:
 	}
 
 	int IsBlocking() { return 0; }
+	void RenderBoundingBox() {}
 };
 
 typedef CPlatform* LPPLATFORM;

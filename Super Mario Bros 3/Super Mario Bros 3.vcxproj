@@ -195,7 +195,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="brick.txt" />
+    <Text Include="bushes.txt" />
     <Text Include="cloud.txt" />
+    <Text Include="cloudDecor.txt" />
     <Text Include="coin.txt" />
     <Text Include="cubes.txt" />
     <Text Include="goomba.txt" />

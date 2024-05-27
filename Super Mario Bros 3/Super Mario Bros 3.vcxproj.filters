@@ -175,6 +175,8 @@
     <Text Include="sceneMain.txt" />
     <Text Include="ground.txt" />
     <Text Include="cubes.txt" />
+    <Text Include="bushes.txt" />
+    <Text Include="cloudDecor.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico">

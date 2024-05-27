@@ -29,7 +29,7 @@ public:
 	void Render();
 	void Update(DWORD dt) {}
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	void RenderBoundingBox();
+	virtual void RenderBoundingBox();
 	virtual int IsDirectionColliable(float nx, float ny) { return 1; };
 	virtual int IsBlocking() { return 1; }
 };
