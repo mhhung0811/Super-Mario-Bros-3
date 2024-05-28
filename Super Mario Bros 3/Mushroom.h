@@ -3,6 +3,7 @@
 #include "AssetIDs.h"
 
 #define MUSHROOM_GRAVITY 0.002f
+#define MUSHROOM_APPEAR_SPEED -0.02f
 #define	MUSHROOM_WALKING_SPEED 0.05f
 
 #define MUSHROOM_BBOX_WIDTH	16
@@ -15,9 +16,11 @@
 class CMushroom : public CGameObject
 {
 protected:
+	float fixedX;
+	float fixedY;
 	float ax;
 	float ay;
-	int isCollidable;
+	int isCollidable = 0;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

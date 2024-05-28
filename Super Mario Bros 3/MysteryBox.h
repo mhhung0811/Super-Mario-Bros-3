@@ -18,6 +18,9 @@ protected:
 	float fixedX;
 	float fixedY;
 
+	int isOpened;
+	int giftId;
+
 	float ax;
 	float ay;
 
@@ -29,7 +32,7 @@ protected:
 	virtual int IsCollidable() { return 1; };
 	virtual int IsBlocking() { return 1; }
 public:
-	CMysteryBox(float x, float y);
+	CMysteryBox(float x, float y, int giftId);
 	virtual void SetState(int state);
 	virtual void OpenBox();
 };

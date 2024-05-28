@@ -229,7 +229,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	case OBJECT_TYPE_MYSTERY_BOX:
 	{
-		obj = new CMysteryBox(x, y);
+		int gift = -1;
+		if (tokens.size() > 3)
+		{
+			gift = (int)atoi(tokens[3].c_str());
+		}
+		obj = new CMysteryBox(x, y, gift);
 		obj->SetPosition(x, y);
 		objects1.push_back(obj);
 		break;
@@ -484,4 +489,9 @@ void CPlayScene::PurgeDeletedObjects()
 	objects1.erase(
 		std::remove_if(objects1.begin(), objects1.end(), CPlayScene::IsGameObjectDeleted),
 		objects1.end());
+}
+
+void CPlayScene::CreateGameObject(string line)
+{
+	_ParseSection_OBJECTS(line);
 }

@@ -1,13 +1,18 @@
 #include "MysteryBox.h"
 #include "Mario.h"
 #include "debug.h"
+#include "AssetIDs.h"
+#include "PlayScene.h"
+#include "debug.h"
 
-CMysteryBox::CMysteryBox(float x, float y) : CGameObject(x, y)
-{
+CMysteryBox::CMysteryBox(float x, float y, int gift) : CGameObject(x, y)
+{	
 	this->fixedX = x;
 	this->fixedY = y;
 	this->ax = 0;
 	this->ay = 0;
+	this->isOpened = 0;
+	this->giftId = gift;
 	SetState(MYSTERYBOX_STATE_ACTIVE);
 }
 
@@ -52,6 +57,13 @@ void CMysteryBox::OnNoCollision(DWORD dt)
 		ay = 0;
 		vy = 0;
 		y = fixedY;
+		// open mushroom
+		if (isOpened == OBJECT_TYPE_MUSHROOM)
+		{
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->CreateGameObject(std::to_string(isOpened) + "\t" + std::to_string(x) + "\t" + std::to_string(y));
+			isOpened = 0;
+		}
 	}
 }
 
@@ -65,6 +77,7 @@ void CMysteryBox::OpenBox()
 	if (state == MYSTERYBOX_STATE_ACTIVE)
 	{
 		ay = -0.005f;
-		SetState(MYSTERYBOX_STATE_UNACTIVE);		
+		SetState(MYSTERYBOX_STATE_UNACTIVE);
+		isOpened = giftId;
 	}
 }
