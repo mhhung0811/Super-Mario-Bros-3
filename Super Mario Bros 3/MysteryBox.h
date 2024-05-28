@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
+#define MYSTERYBOX_GRAVITY 0.002f
+
 #define MYSTERYBOX_BBOX_HEIGHT 16
 #define MYSTERYBOX_BBOX_WIDTDH 16
 
@@ -13,6 +15,9 @@
 class CMysteryBox : public CGameObject
 {
 protected:
+	float fixedX;
+	float fixedY;
+
 	float ax;
 	float ay;
 
@@ -20,6 +25,7 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
+	virtual void OnNoCollision(DWORD dt);
 	virtual int IsCollidable() { return 1; };
 	virtual int IsBlocking() { return 1; }
 public:
