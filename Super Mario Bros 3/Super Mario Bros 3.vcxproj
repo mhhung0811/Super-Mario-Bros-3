@@ -154,6 +154,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="MysteryBox.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlatformOneWay.cpp" />
     <ClCompile Include="PlayScene.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="MysteryBox.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformOneWay.h" />
     <ClInclude Include="PlayScene.h" />
@@ -204,6 +206,7 @@
     <Text Include="ground.txt" />
     <Text Include="mario-sample.txt" />
     <Text Include="mario.txt" />
+    <Text Include="mysteryBox.txt" />
     <Text Include="scene0005.txt" />
     <Text Include="scene01.txt" />
     <Text Include="scene02.txt" />

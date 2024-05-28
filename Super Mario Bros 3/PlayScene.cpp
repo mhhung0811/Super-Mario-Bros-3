@@ -12,6 +12,7 @@
 #include "PlatformOneWay.h"
 #include "Decor.h"
 #include "CubeOneWay.h"
+#include "MysteryBox.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -233,9 +234,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CPortal(x, y, r, b, scene_id);
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
+		break;
 	}
-	break;
-
+	case OBJECT_TYPE_MYSTERY_BOX:
+	{
+		obj = new CMysteryBox(x, y);
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	}
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);

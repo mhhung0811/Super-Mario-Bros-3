@@ -81,6 +81,9 @@
     <ClCompile Include="CubeOneWay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MysteryBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -161,6 +164,9 @@
     <ClInclude Include="CubeOneWay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MysteryBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="brick.txt" />
@@ -177,6 +183,7 @@
     <Text Include="cubes.txt" />
     <Text Include="bushes.txt" />
     <Text Include="cloudDecor.txt" />
+    <Text Include="mysteryBox.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico">

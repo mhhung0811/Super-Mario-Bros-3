@@ -29,7 +29,6 @@ public:
 		int sprite_id_bottom_begin, int sprite_id_bottom_middle, int sprite_id_bottom_end) : CGameObject(x,y)
 	{
 		this->length = length;
-		DebugOut(L"Length is: %d\n", length);
 		this->height = height;
 		this->cellWidth = cellWidth;
 		this->cellHeight = cellHeight;

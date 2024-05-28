@@ -1,10 +1,12 @@
 # list of object assets to load in this scene
 [ASSETS]
 mario.txt
+goomba.txt
 ground.txt
 cubes.txt
 bushes.txt
 cloudDecor.txt
+mysteryBox.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -102,6 +104,13 @@ cloudDecor.txt
 5	1646	194	16	16	36	61000	62000	63000
 
 5	2238	194	16	16	35	61000	62000	63000
+
+# MYSTERY BOX
+9	176	130
+9	192	130
+
+# GOOMBA
+2	200	150
 
 # MARIO
 0	12	150
