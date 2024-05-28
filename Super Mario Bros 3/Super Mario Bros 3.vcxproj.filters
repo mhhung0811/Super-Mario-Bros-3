@@ -84,6 +84,9 @@
     <ClCompile Include="MysteryBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mushroom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -167,6 +170,9 @@
     <ClInclude Include="MysteryBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mushroom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="brick.txt" />
@@ -184,6 +190,7 @@
     <Text Include="bushes.txt" />
     <Text Include="cloudDecor.txt" />
     <Text Include="mysteryBox.txt" />
+    <Text Include="mushroom.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico">
@@ -202,6 +209,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\tiles.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\items.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

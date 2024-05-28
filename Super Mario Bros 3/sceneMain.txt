@@ -7,6 +7,7 @@ cubes.txt
 bushes.txt
 cloudDecor.txt
 mysteryBox.txt
+mushroom.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -111,8 +112,11 @@ mysteryBox.txt
 9	224	82
 9	240	82
 
+# MUSHROOM
+10	200	150
+
 # GOOMBA
-2	200	150
+#2	200	150
 
 # MARIO
 0	12	150

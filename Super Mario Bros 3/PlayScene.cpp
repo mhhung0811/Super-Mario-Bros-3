@@ -13,6 +13,7 @@
 #include "Decor.h"
 #include "CubeOneWay.h"
 #include "MysteryBox.h"
+#include "Mushroom.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -226,6 +227,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_MYSTERY_BOX:
+	{
+		obj = new CMysteryBox(x, y);
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	}
+
+	case OBJECT_TYPE_MUSHROOM:
+	{
+		obj = new CMushroom(x, y);
+		obj->SetPosition(x, y);
+		// mushroom should be the first
+		objects1.insert(objects1.begin(), obj);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -234,13 +252,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CPortal(x, y, r, b, scene_id);
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
-		break;
-	}
-	case OBJECT_TYPE_MYSTERY_BOX:
-	{
-		obj = new CMysteryBox(x, y);
-		obj->SetPosition(x, y);
-		objects1.push_back(obj);
 		break;
 	}
 

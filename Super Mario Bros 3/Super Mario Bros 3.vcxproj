@@ -154,6 +154,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="MysteryBox.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlatformOneWay.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Mario.h" />
+    <ClInclude Include="Mushroom.h" />
     <ClInclude Include="MysteryBox.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformOneWay.h" />
@@ -206,6 +208,7 @@
     <Text Include="ground.txt" />
     <Text Include="mario-sample.txt" />
     <Text Include="mario.txt" />
+    <Text Include="mushroom.txt" />
     <Text Include="mysteryBox.txt" />
     <Text Include="scene0005.txt" />
     <Text Include="scene01.txt" />
@@ -216,6 +219,7 @@
     <Image Include="mario.ico" />
     <Image Include="textures\bbox.png" />
     <Image Include="textures\enemies.png" />
+    <Image Include="textures\items.png" />
     <Image Include="textures\mario.png" />
     <Image Include="textures\misc.png" />
     <Image Include="textures\tiles.png" />
