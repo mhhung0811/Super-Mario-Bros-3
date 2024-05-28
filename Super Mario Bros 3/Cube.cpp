@@ -1,12 +1,11 @@
-#include "CubeOneWay.h"
+#include "Cube.h"
 
 #include "Sprite.h"
 #include "Sprites.h"
 
 #include "Textures.h"
-#include "debug.h"
 
-void CCubeOneWay::RenderBoundingBox()
+void CCube::RenderBoundingBox()
 {
 	D3DXVECTOR3 p(x, y, 0);
 	RECT rect;
@@ -30,7 +29,7 @@ void CCubeOneWay::RenderBoundingBox()
 	CGame::GetInstance()->Draw(xx - cx, yy - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
 }
 
-void CCubeOneWay::Render()
+void CCube::Render()
 {
 	/*DebugOut(L"Length is: %d\n", this->length);*/
 
@@ -85,16 +84,10 @@ void CCubeOneWay::Render()
 	RenderBoundingBox();
 }
 
-void CCubeOneWay::GetBoundingBox(float& l, float& t, float& r, float& b)
+void CCube::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x - this->cellWidth / 2;
 	t = y - this->cellHeight / 2;
 	r = l + this->cellWidth * this->length;
 	b = t + this->cellHeight * this->height;
-}
-
-int CCubeOneWay::IsDirectionColliable(float nx, float ny)
-{
-	if (nx == 0 && ny == -1) return 1;
-	else return 0;
 }

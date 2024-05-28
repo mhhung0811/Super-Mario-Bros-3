@@ -8,6 +8,7 @@ bushes.txt
 cloudDecor.txt
 mysteryBox.txt
 mushroom.txt
+piranhaPlant.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -33,6 +34,9 @@ mushroom.txt
 8	2176	50	16	16	3	9	72100	72200	72300	72400	72500	72600	72700	72800	72900
 8	2144	146	16	16	3	3	70100	70200	70300	70400	70500	70600	70700	70800	70900
 
+# CUBE
+# id x y cellWidth cellHeight lenght height spriteId1....
+11	352	146	16	16	2	3	74100	74100	74200	74300	74300	74400	74300	74300	74400
 
 # DECOR
 # id x y cellWidth cellHeight lenght spriteid...
@@ -112,8 +116,8 @@ mushroom.txt
 9	224	82
 9	240	82	10
 
-# MUSHROOM
-#10	200	150
+# PIRANHA PLANT
+12	360	154
 
 # GOOMBA
 #2	200	150

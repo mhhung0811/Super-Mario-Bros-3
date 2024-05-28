@@ -56,7 +56,7 @@ void CMysteryBox::OnNoCollision(DWORD dt)
 	{
 		ay = 0;
 		vy = 0;
-		y = fixedY;
+		y = fixedY; /*this cause bug where box drop when move screen*/
 		// open mushroom
 		if (isOpened == OBJECT_TYPE_MUSHROOM)
 		{

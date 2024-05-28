@@ -14,6 +14,8 @@
 #include "CubeOneWay.h"
 #include "MysteryBox.h"
 #include "Mushroom.h"
+#include "Cube.h"
+#include "PiranhaPlant.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -127,7 +129,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GOOMBA: 
 		obj = new CGoomba(x,y); 
 		obj->SetPosition(x, y);
-		objects1.push_back(obj);
+		objects0.push_back(obj);
 		break;
 	case OBJECT_TYPE_BRICK: 
 		obj = new CBrick(x,y); 
@@ -249,6 +251,42 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_CUBE:
+	{
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int height = atoi(tokens[6].c_str());
+		int sprite_top_begin = atoi(tokens[7].c_str());
+		int sprite_top_middle = atoi(tokens[8].c_str());
+		int sprite_top_end = atoi(tokens[9].c_str());
+		int sprite_mid_begin = atoi(tokens[10].c_str());
+		int sprite_mid_middle = atoi(tokens[11].c_str());
+		int sprite_mid_end = atoi(tokens[12].c_str());
+		int sprite_bottom_begin = atoi(tokens[13].c_str());
+		int sprite_bottom_middle = atoi(tokens[14].c_str());
+		int sprite_bottom_end = atoi(tokens[15].c_str());
+
+		obj = new CCube(
+			x, y,
+			cell_width, cell_height, length, height,
+			sprite_top_begin, sprite_top_middle, sprite_top_end,
+			sprite_mid_begin, sprite_mid_middle, sprite_mid_end,
+			sprite_bottom_begin, sprite_bottom_middle, sprite_bottom_end
+		);
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	}
+
+	case OBJECT_TYPE_PIRANHAPLANT:
+	{
+		obj = new CPiranhaPlant(x, y);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -258,7 +296,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
 		break;
-	}
+	}	
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
