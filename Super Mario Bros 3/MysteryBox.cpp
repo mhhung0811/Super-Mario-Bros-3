@@ -27,26 +27,30 @@ void CMysteryBox::GetBoundingBox(float& left, float& top, float& right, float& b
 void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
-	vx += ax * dt;
 
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
 
-	if (y < (fixedY - cy) + 1)
+	if (state == MYSTERYBOX_STATE_OPEN)
 	{
-		ay = MYSTERYBOX_GRAVITY;
-	}
-	if (y > (fixedY - cy))
-	{
-		ay = 0;
-		vy = 0;
-		y = fixedY - cy;
-		// open mushroom
-		if (isOpened == OBJECT_TYPE_MUSHROOM)
+		if (y <= (fixedY - cy) + 10)
 		{
-			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-			playScene->CreateGameObject(std::to_string(isOpened) + "\t" + std::to_string(x) + "\t" + std::to_string(y));
-			isOpened = 0;
+			ay = MYSTERYBOX_GRAVITY;
+		}
+		if (y > (fixedY - cy))
+		{
+			ay = 0;
+			vy = 0;
+			y = fixedY - cy;
+			// open mushroom
+			if (isOpened == OBJECT_TYPE_MUSHROOM)
+			{
+				LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+				playScene->CreateGameObject(std::to_string(isOpened) + "\t" + std::to_string(x) + "\t" + std::to_string(y));
+				isOpened = 0;
+			}
+			// done open
+			SetState(MYSTERYBOX_STATE_UNACTIVE);
 		}
 	}
 
@@ -57,7 +61,7 @@ void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CMysteryBox::Render()
 {
 	int aniId = ID_ANI_MYSTERYBOX_ACTIVE;
-	if (state == MYSTERYBOX_STATE_UNACTIVE)
+	if (state == MYSTERYBOX_STATE_UNACTIVE || state == MYSTERYBOX_STATE_OPEN)
 	{
 		aniId = ID_ANI_MYSTERYBOX_UNACTIVE;
 	}
@@ -91,21 +95,31 @@ void CMysteryBox::RenderBoundingBox()
 
 void CMysteryBox::OnNoCollision(DWORD dt)
 {
-	x += vx * dt;
 	y += vy * dt;
 }
 
 void CMysteryBox::SetState(int state)
 {
 	CGameObject::SetState(state);
+	switch (state)
+	{
+	case MYSTERYBOX_STATE_ACTIVE:
+		break;
+	case MYSTERYBOX_STATE_OPEN:
+		ay = -MYSTERYBOX_SPEED;
+		isOpened = giftId;
+		break;
+	case MYSTERYBOX_STATE_UNACTIVE:
+		break;
+	default:
+		break;
+	}
 }
 
 void CMysteryBox::OpenBox()
 {
 	if (state == MYSTERYBOX_STATE_ACTIVE)
 	{
-		ay = -0.005f;
-		SetState(MYSTERYBOX_STATE_UNACTIVE);
-		isOpened = giftId;
+		SetState(MYSTERYBOX_STATE_OPEN);
 	}
 }
