@@ -51,3 +51,17 @@ LPCWSTR ToLPCWSTR(string st)
 	// delete wcstring   // << can I ? 
 	return w->c_str();
 }
+
+/*
+	Check if two box is overlap
+*/
+bool OverlapBox(
+	float left1, float top1, float right1, float bottom1,
+	float left2, float top2, float right2, float bottom2)
+{
+	if (left1 <= right2 && right1 >= left2 && top1 <= bottom2 && bottom1 >= top2)
+	{
+		return true;
+	}
+	else return false;
+}

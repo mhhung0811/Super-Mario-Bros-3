@@ -1,11 +1,16 @@
 #include "PiranhaPlant.h"
 #include "Textures.h"
+#include "Utils.h"
+#include "Mario.h"
+#include "PlayScene.h"
+#include "debug.h"
 
 CPiranhaPlant::CPiranhaPlant(float x, float y) :CGameObject(x, y)
 {
 	this->fixedX = x;
 	this->fixedY = y;
 	this->isIdle = 0;
+	this->facingDir = 0;
 	SetState(PIRANHAPLANT_STATE_IDLE);
 }
 
@@ -15,6 +20,66 @@ void CPiranhaPlant::GetBoundingBox(float& left, float& top, float& right, float&
 	top = y - PIRANHAPLANT_BBOX_HEIGHT / 2;
 	right = left + PIRANHAPLANT_BBOX_WIDTH;
 	bottom = top + PIRANHAPLANT_BBOX_HEIGHT;
+}
+
+/*
+	Get shoot box in world coord
+*/
+void CPiranhaPlant::GetShootBox(int id, float& left, float& top, float& right, float& bottom)
+{
+	/*float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);*/
+	float bx, by, rx, ry;
+	switch (id)
+	{
+	case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0:
+		rx = PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0_X;
+		ry = PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0_Y;
+		break;
+	case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1:
+		rx = PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1_X;
+		ry = PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1_Y;
+		break;
+	case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0:
+		rx = PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0_X;
+		ry = PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0_Y;
+		break;
+	case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1:
+		rx = PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1_X;
+		ry = PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1_Y;
+		break;
+	case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0:
+		rx = PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0_X;
+		ry = PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0_Y;
+		break;
+	case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1:
+		rx = PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1_X;
+		ry = PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1_Y;
+		break;
+	case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0:
+		rx = PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0_X;
+		ry = PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0_Y;
+		break;
+	case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1:
+		rx = PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1_X;
+		ry = PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1_Y;
+		break;
+	case ID_PIRANHAPLANT_SAFE_BOX:
+		rx = PIRANHAPLANT_SAFE_BOX_X;
+		ry = PIRANHAPLANT_SAFE_BOX_Y;
+		break;
+	default:
+		rx = 0;
+		ry = 0;
+		break;
+	}
+	bx = x + rx;
+	by = y + ry;
+
+	left = bx;
+	top = by;
+	right = left + PIRANHAPLANT_SHOOT_BOX_WIDTH;
+	bottom = top + PIRANHAPLANT_SHOOT_BOX_HEIGHT;
 }
 
 void CPiranhaPlant::RenderBoundingBox()
@@ -40,6 +105,24 @@ void CPiranhaPlant::RenderBoundingBox()
 
 	CGame::GetInstance()->Draw(xx - cx, yy - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
 }
+void CPiranhaPlant::RenderShootBox(int id)
+{
+	RECT rect;
+
+	LPTEXTURE bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+	
+	float l, t, r, b;
+	GetShootBox(id, l, t, r, b);
+	rect.left = 0;
+	rect.top = 0;
+	rect.right = (int)r - (int)l;
+	rect.bottom = (int)b - (int)t;
+
+	float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);	
+
+	CGame::GetInstance()->Draw(l - cx, t - cy, bbox, &rect, BBOX_ALPHA);
+}
 
 void CPiranhaPlant::OnNoCollision(DWORD dt)
 {
@@ -55,17 +138,51 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
-
+	// Appear & Disappear
 	if (state == PIRANHAPLANT_STATE_APPEAR && y <= (fixedY - cy)-PIRANHAPLANT_BBOX_HEIGHT)
 	{
 		SetState(PIRANHAPLANT_STATE_IDLE);
 	}
-	if (state == PIRANHAPLANT_STATE_DISAPPEAR && y >= (fixedY - cy))
+	if (state == PIRANHAPLANT_STATE_DISAPPEAR && y >= (fixedY - cy) + 10)
 	{
 		SetState(PIRANHAPLANT_STATE_IDLE);
 	}
 	if (state == PIRANHAPLANT_STATE_IDLE)
 	{
+		// Detect Player
+		LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+		LPGAMEOBJECT player = playScene->GetPlayer();
+		int boxId = -1;
+		if (player == NULL) DebugOut(L"Player is null\n");
+		else boxId = InWhichBox(player);
+		// Action in Box
+		switch (boxId)
+		{
+		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0:
+		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1:
+			facingDir = 0;
+			break;
+		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0:
+		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1:
+			facingDir = 1;
+			break;
+		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0:
+		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1:
+			facingDir = 2;
+			break;
+		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0:
+		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1:
+			facingDir = 3;
+			break;
+		case ID_PIRANHAPLANT_SAFE_BOX:
+			isIdle = 0;
+			break;
+		default:
+			facingDir = 1;
+			break;
+		}
+
+		// to Other state
 		if (isIdle > PIRANHAPLANT_IDLE_TIME)
 		{
 			isIdle = 0;
@@ -83,25 +200,58 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			isIdle += dt;
 		}
 	}
-	/*DebugOut(L"idle time: %d\n", isIdle);
-	DebugOut(L"state: %d\n", state);*/
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CPiranhaPlant::Render()
 {
+	float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);
+
 	CSprites* s = CSprites::GetInstance();
-	int aniId = ID_ANI_PIRANHAPLANT_APPEAR_LEFT;
+	int aniId, sprId;
+	switch (facingDir)
+	{
+	case 0:
+		aniId = ID_ANI_PIRANHAPLANT_APPEAR_LEFT;
+		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_DOWN;
+		break;
+	case 1:
+		aniId = ID_ANI_PIRANHAPLANT_APPEAR_LEFT;
+		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_UP;
+		break;
+	case 2:
+		aniId = ID_ANI_PIRANHAPLANT_APPEAR_RIGHT;
+		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_RIGHT_DOWN;
+		break;
+	case 3:
+		aniId = ID_ANI_PIRANHAPLANT_APPEAR_RIGHT;
+		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_RIGHT_UP;
+		break;
+	default:
+		aniId = ID_ANI_PIRANHAPLANT_APPEAR_LEFT;
+		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_UP;
+	}
 	if (state == PIRANHAPLANT_STATE_IDLE)
 	{
-		s->Get(ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_UP + 1)->Draw(x, y);
+		s->Get(sprId + 1)->Draw(x, y);
 	}
 	else
 	{
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
 
+	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0);
+	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1);
+	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0);
+	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1);
+	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0);
+	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1);
+	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0);
+	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1);
+	RenderShootBox(ID_PIRANHAPLANT_SAFE_BOX);
 	RenderBoundingBox();
 }
 
@@ -122,4 +272,122 @@ void CPiranhaPlant::SetState(int state)
 	default:
 		break;
 	}
+}
+
+int CPiranhaPlant::InWhichBox(LPGAMEOBJECT obj)
+{
+	float cx, cy;
+	float bug1, bug2;
+	bug1 = -24;	// it has to be -24 for the collider to work well
+	bug2 = -24;	// still a mystery!
+	CGame::GetInstance()->GetCamPos(cx, cy);
+
+	if (obj == NULL) return -1;
+	float l1, t1, r1, b1, l2, t2, r2, b2;
+	obj->GetBoundingBox(l2, t2, r2, b2);
+	l2 -= cx;
+	t2 -= cy;
+	r2 -= cx;
+	b2 -= cy;
+	// Is in Left Low 0
+	GetShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0, l1, t1, r1, b1);
+	l1 = l1 - cx + bug1;
+	t1 = t1 - cy + bug2;
+	r1 = r1 - cx + bug1;
+	b1 = b1 - cy + bug2;
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0);
+		return ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0;
+	}
+	// Is in Left Low 1
+	GetShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1, l1, t1, r1, b1);
+	l1 = l1 - cx + bug1;
+	t1 = t1 - cy + bug2;
+	r1 = r1 - cx + bug1;
+	b1 = b1 - cy + bug2;
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1);
+		return ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1;
+	}
+	// Is in Left High 0
+	GetShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0, l1, t1, r1, b1);
+	l1 = l1 - cx + bug1;
+	t1 = t1 - cy + bug2;
+	r1 = r1 - cx + bug1;
+	b1 = b1 - cy + bug2;
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0);
+		return ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0;
+	}
+	// Is in Left High 1
+	GetShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1, l1, t1, r1, b1);
+	l1 = l1 - cx + bug1;
+	t1 = t1 - cy + bug2;
+	r1 = r1 - cx + bug1;
+	b1 = b1 - cy + bug2;
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1);
+		return ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1;
+	}
+
+	// Is in Righ Low 0
+	GetShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0, l1, t1, r1, b1);
+	l1 = l1 - cx + bug1;
+	t1 = t1 - cy + bug2;
+	r1 = r1 - cx + bug1;
+	b1 = b1 - cy + bug2;
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0);
+		return ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0;
+	}
+	// Is in Right Low 1
+	GetShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1, l1, t1, r1, b1);
+	l1 = l1 - cx + bug1;
+	t1 = t1 - cy + bug2;
+	r1 = r1 - cx + bug1;
+	b1 = b1 - cy + bug2;
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1);
+		return ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1;
+	}
+	// Is in Right High 0
+	GetShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0, l1, t1, r1, b1);
+	l1 = l1 - cx + bug1;
+	t1 = t1 - cy + bug2;
+	r1 = r1 - cx + bug1;
+	b1 = b1 - cy + bug2;
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0);
+		return ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0;
+	}
+	// Is in Right High 1
+	GetShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1, l1, t1, r1, b1);
+	l1 = l1 - cx + bug1;
+	t1 = t1 - cy + bug2;
+	r1 = r1 - cx + bug1;
+	b1 = b1 - cy + bug2;
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1);
+		return ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1;
+	}
+	GetShootBox(ID_PIRANHAPLANT_SAFE_BOX, l1, t1, r1, b1);
+	l1 = l1 - cx + bug1;
+	t1 = t1 - cy + bug2;
+	r1 = r1 - cx + bug1;
+	b1 = b1 - cy + bug2;
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SAFE_BOX);
+		return ID_PIRANHAPLANT_SAFE_BOX;
+	}
+	//DebugOut(L"no box found\n");
+	return -1;
 }
