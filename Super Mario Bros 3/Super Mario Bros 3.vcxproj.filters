@@ -271,6 +271,9 @@
     <Text Include="fireball.txt">
       <Filter>Infor Files\Characters</Filter>
     </Text>
+    <Text Include="shadowDecor.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico">

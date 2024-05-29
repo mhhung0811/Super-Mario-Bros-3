@@ -222,6 +222,7 @@
     <Text Include="scene01.txt" />
     <Text Include="scene02.txt" />
     <Text Include="sceneMain.txt" />
+    <Text Include="shadowDecor.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico" />
