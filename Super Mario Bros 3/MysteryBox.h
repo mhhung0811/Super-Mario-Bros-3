@@ -4,7 +4,7 @@
 #define MYSTERYBOX_GRAVITY 0.002f
 
 #define MYSTERYBOX_BBOX_HEIGHT 16
-#define MYSTERYBOX_BBOX_WIDTDH 16
+#define MYSTERYBOX_BBOX_WIDTH 16
 
 #define MYSTERYBOX_STATE_ACTIVE 100
 #define MYSTERYBOX_STATE_UNACTIVE 200
@@ -27,6 +27,7 @@ protected:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
+	void RenderBoundingBox();
 
 	virtual void OnNoCollision(DWORD dt);
 	virtual int IsCollidable() { return 1; };

@@ -283,7 +283,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		obj = new CPiranhaPlant(x, y);
 		obj->SetPosition(x, y);
-		objects0.push_back(obj);
+		objects1.push_back(obj);
 		break;
 	}
 

@@ -13,8 +13,8 @@
 #define PIRANHAPLANT_STATE_APPEAR 200
 #define PIRANHAPLANT_STATE_DISAPPEAR 300
 
-#define ID_ANI_PIRANHAPLANT_APPEAR_LEFT 5000
-#define ID_ANI_PIRANHAPLANT_APPEAR_RIGHT 5100
+#define ID_ANI_PIRANHAPLANT_APPEAR_LEFT 121100
+#define ID_ANI_PIRANHAPLANT_APPEAR_RIGHT 121300
 
 class CPiranhaPlant : public CGameObject
 {
@@ -26,8 +26,9 @@ protected:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
+	void RenderBoundingBox();
 
-	virtual int IsCollidable() { return 1; };
+	virtual int IsCollidable() { return 0; };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
