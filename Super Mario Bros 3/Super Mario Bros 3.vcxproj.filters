@@ -25,6 +25,18 @@
     <Filter Include="Header Files\Objects">
       <UniqueIdentifier>{a828ade7-ba0c-473e-a105-b01086d282f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Infor Files">
+      <UniqueIdentifier>{d7186c8f-9570-4d35-99c5-7dfd0400c488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infor Files\Scenes">
+      <UniqueIdentifier>{d4c3926f-ee11-4e4c-ba01-68a9df1a83eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infor Files\Characters">
+      <UniqueIdentifier>{50c70663-bd4b-4593-9b2f-0be4220f63c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Infor Files\Objects">
+      <UniqueIdentifier>{9cf49333-501c-4497-aa27-6f562c164840}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp">
@@ -104,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="Portal.cpp">
       <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="FireBall.cpp">
+      <Filter>Source Files\Characters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -197,25 +212,65 @@
     <ClInclude Include="Portal.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="FireBall.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="brick.txt" />
-    <Text Include="cloud.txt" />
-    <Text Include="coin.txt" />
-    <Text Include="goomba.txt" />
-    <Text Include="mario.txt" />
-    <Text Include="mario-sample.txt" />
-    <Text Include="scene01.txt" />
-    <Text Include="scene02.txt" />
-    <Text Include="scene0005.txt" />
-    <Text Include="sceneMain.txt" />
-    <Text Include="ground.txt" />
-    <Text Include="cubes.txt" />
-    <Text Include="bushes.txt" />
-    <Text Include="cloudDecor.txt" />
-    <Text Include="mysteryBox.txt" />
-    <Text Include="mushroom.txt" />
-    <Text Include="piranhaPlant.txt" />
+    <Text Include="mario-sample.txt">
+      <Filter>Infor Files</Filter>
+    </Text>
+    <Text Include="scene01.txt">
+      <Filter>Infor Files\Scenes</Filter>
+    </Text>
+    <Text Include="scene02.txt">
+      <Filter>Infor Files\Scenes</Filter>
+    </Text>
+    <Text Include="scene0005.txt">
+      <Filter>Infor Files\Scenes</Filter>
+    </Text>
+    <Text Include="sceneMain.txt">
+      <Filter>Infor Files\Scenes</Filter>
+    </Text>
+    <Text Include="goomba.txt">
+      <Filter>Infor Files\Characters</Filter>
+    </Text>
+    <Text Include="mario.txt">
+      <Filter>Infor Files\Characters</Filter>
+    </Text>
+    <Text Include="mushroom.txt">
+      <Filter>Infor Files\Characters</Filter>
+    </Text>
+    <Text Include="piranhaPlant.txt">
+      <Filter>Infor Files\Characters</Filter>
+    </Text>
+    <Text Include="brick.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="bushes.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="cloud.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="cloudDecor.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="coin.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="cubes.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="ground.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="mysteryBox.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="fireball.txt">
+      <Filter>Infor Files\Characters</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico">

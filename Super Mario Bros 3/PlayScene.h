@@ -42,6 +42,8 @@ public:
 	static bool IsGameObjectDeleted(const LPGAMEOBJECT& o);
 
 	void CreateGameObject(string line);
+	void CreateItem(int id, float x, float y);
+	void CreateFireBall(float x, float y, int dir);
 };
 
 typedef CPlayScene* LPPLAYSCENE;

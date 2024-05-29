@@ -16,6 +16,7 @@
 #include "Mushroom.h"
 #include "Cube.h"
 #include "PiranhaPlant.h"
+#include "FireBall.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -287,6 +288,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_FIREBALL:
+	{
+		int dir = -1;
+		if (tokens.size() > 3)
+		{
+			dir = (int)atoi(tokens[3].c_str());
+		}
+		obj = new CFireBall(x, y, dir);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -532,4 +546,22 @@ void CPlayScene::PurgeDeletedObjects()
 void CPlayScene::CreateGameObject(string line)
 {
 	_ParseSection_OBJECTS(line);
+}
+
+void CPlayScene::CreateItem(int id, float x, float y)
+{
+	if (id == OBJECT_TYPE_MUSHROOM)
+	{
+		CGameObject* obj = new CMushroom(x, y);
+		obj->SetPosition(x, y);
+		// mushroom should be the first
+		objects1.insert(objects1.begin(), obj);
+	}
+}
+
+void CPlayScene::CreateFireBall(float x, float y, int dir)
+{
+	CGameObject* obj = new CFireBall(x, y, dir);
+	obj->SetPosition(x, y);
+	objects0.push_back(obj);
 }

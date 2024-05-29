@@ -46,7 +46,8 @@ void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (isOpened == OBJECT_TYPE_MUSHROOM)
 			{
 				LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-				playScene->CreateGameObject(std::to_string(isOpened) + "\t" + std::to_string(x) + "\t" + std::to_string(y));
+				//playScene->CreateGameObject(std::to_string(isOpened) + "\t" + std::to_string(x) + "\t" + std::to_string(y));
+				playScene->CreateItem(isOpened, x, y);
 				isOpened = 0;
 			}
 			// done open

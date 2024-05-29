@@ -1,9 +1,4 @@
 #include "PiranhaPlant.h"
-#include "Textures.h"
-#include "Utils.h"
-#include "Mario.h"
-#include "PlayScene.h"
-#include "debug.h"
 
 CPiranhaPlant::CPiranhaPlant(float x, float y) :CGameObject(x, y)
 {
@@ -11,6 +6,7 @@ CPiranhaPlant::CPiranhaPlant(float x, float y) :CGameObject(x, y)
 	this->fixedY = y;
 	this->isIdle = 0;
 	this->facingDir = 0;
+	this->canShoot = true;
 	SetState(PIRANHAPLANT_STATE_IDLE);
 }
 
@@ -137,6 +133,7 @@ void CPiranhaPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float cx, cy;
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
 	CGame::GetInstance()->GetCamPos(cx, cy);
 	// Appear & Disappear
 	if (state == PIRANHAPLANT_STATE_APPEAR && y <= (fixedY - cy)-PIRANHAPLANT_BBOX_HEIGHT)
@@ -155,24 +152,73 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		int boxId = -1;
 		if (player == NULL) DebugOut(L"Player is null\n");
 		else boxId = InWhichBox(player);
-		// Action in Box
+		// Action in when player in zone
 		switch (boxId)
 		{
 		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0:
+			facingDir = 0;
+			// only shoot 1 per idle UP
+			if (canShoot && y < fixedY - cy)
+			{
+				canShoot = false;
+				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_LEFT_LOW_0);
+			}
+			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1:
 			facingDir = 0;
+			if (canShoot && y < fixedY - cy)
+			{
+				canShoot = false;
+				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_LEFT_LOW_1);
+			}
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0:
+			facingDir = 1;
+			if (canShoot && y < fixedY - cy)
+			{
+				canShoot = false;
+				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_LEFT_HIGH_0);
+			}
+			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1:
 			facingDir = 1;
+			if (canShoot && y < fixedY - cy)
+			{
+				canShoot = false;
+				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_LEFT_HIGH_1);
+			}
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0:
+			facingDir = 2;
+			if (canShoot && y < fixedY - cy)
+			{
+				canShoot = false;
+				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_RIGHT_LOW_1);
+			}
+			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1:
 			facingDir = 2;
+			if (canShoot && y < fixedY - cy)
+			{
+				canShoot = false;
+				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_RIGHT_LOW_1);
+			}
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0:
+			facingDir = 3;
+			if (canShoot && y < fixedY - cy)
+			{
+				canShoot = false;
+				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_RIGHT_HIGH_0);
+			}
+			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1:
 			facingDir = 3;
+			if (canShoot && y < fixedY - cy)
+			{
+				canShoot = false;
+				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_RIGHT_HIGH_1);
+			}
 			break;
 		case ID_PIRANHAPLANT_SAFE_BOX:
 			isIdle = 0;
@@ -267,6 +313,7 @@ void CPiranhaPlant::SetState(int state)
 		vy = PIRANHAPLANT_APPEAR_SPEED;
 		break;
 	case PIRANHAPLANT_STATE_IDLE:
+		canShoot = true;
 		vy = 0;
 		break;
 	default:

@@ -1,6 +1,11 @@
 #pragma once
 #include "GameObject.h"
 #include "AssetIDs.h"
+#include "Textures.h"
+#include "Utils.h"
+#include "Mario.h"
+#include "FireBall.h"
+#include "PlayScene.h"
 #include "debug.h"
 
 #define PIRANHAPLANT_BBOX_WIDTH 16
@@ -56,6 +61,7 @@ protected:
 	float fixedY;
 	unsigned long isIdle;
 	int facingDir;	// 0: left down, 1: left up, 2: right down, 3: right up
+	bool canShoot;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
