@@ -58,7 +58,7 @@ void CMushroom::Render()
 	CSprites* s = CSprites::GetInstance();
 	s->Get(ID_SPRITE_MUSHROOM_RED)->Draw(x, y);
 
-	RenderBoundingBox();
+	/*RenderBoundingBox();*/
 }
 
 void CMushroom::SetState(int state)

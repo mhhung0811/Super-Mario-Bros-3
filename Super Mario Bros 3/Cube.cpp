@@ -81,7 +81,7 @@ void CCube::Render()
 			s->Get(this->spriteIdBottomEnd)->Draw(xx, yy);
 	}
 
-	RenderBoundingBox();
+	/*RenderBoundingBox();*/
 }
 
 void CCube::GetBoundingBox(float& l, float& t, float& r, float& b)

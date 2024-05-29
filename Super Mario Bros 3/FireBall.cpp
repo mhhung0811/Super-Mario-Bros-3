@@ -3,31 +3,6 @@
 CFireBall::CFireBall(float x, float y, int dir) : CGameObject(x, y)
 {
 	this->direction = dir;
-}
-
-void CFireBall::GetBoundingBox(float& left, float& top, float& right, float& bottom)
-{
-	left = x - FIREBALL_BBOX_WIDTH / 2;
-	top = y - FIREBALL_BBOX_HEIGHT / 2;
-	right = left + FIREBALL_BBOX_WIDTH;
-	bottom = top + FIREBALL_BBOX_HEIGHT;
-}
-
-void CFireBall::OnNoCollision(DWORD dt)
-{
-	
-}
-
-void CFireBall::OnCollisionWith(LPCOLLISIONEVENT e)
-{
-
-}
-
-void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
-	x += vx * FIREBALL_SPEED * dt;
-	y += vy * FIREBALL_SPEED * dt;
-
 	switch (direction)
 	{
 	case FIREBALL_DIRECTION_LEFT_LOW_0:
@@ -67,12 +42,41 @@ void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = 0;
 		break;
 	}
+	vx *= FIREBALL_SPEED;
+	vy *= FIREBALL_SPEED;
+}
+
+void CFireBall::GetBoundingBox(float& left, float& top, float& right, float& bottom)
+{
+	left = x - FIREBALL_BBOX_WIDTH / 2;
+	top = y - FIREBALL_BBOX_HEIGHT / 2;
+	right = left + FIREBALL_BBOX_WIDTH;
+	bottom = top + FIREBALL_BBOX_HEIGHT;
+}
+
+void CFireBall::OnNoCollision(DWORD dt)
+{
+	// Better put x, y modification here
+
+	x += vx * dt;
+	y += vy * dt;
+}
+
+void CFireBall::OnCollisionWith(LPCOLLISIONEVENT e)
+{
+	if (!e->obj->IsBlocking()) return;
+}
+
+void CFireBall::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+{
+	CGameObject::Update(dt, coObjects);
+	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 void CFireBall::Render()
 {
 	CAnimations::GetInstance()->Get(ID_ANI_FIREBALL_FLY)->Render(x, y);
-	RenderBoundingBox();
+	/*RenderBoundingBox();*/
 }
 
 void CFireBall::SetState(int state)

@@ -6,7 +6,7 @@
 #define FIREBALL_BBOX_WIDTH 8
 #define FIREBALL_BBOX_HEIGHT 8
 
-#define FIREBALL_SPEED 0.03f
+#define FIREBALL_SPEED 0.05f
 
 #define FIREBALL_DIRECTION_LEFT_LOW_0 0
 #define FIREBALL_DIRECTION_LEFT_LOW_1 1
@@ -30,7 +30,7 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() { return 1; };
+	virtual int IsCollidable() { return 0; };
 	virtual int IsBlocking() { return 0; }
 	virtual void OnNoCollision(DWORD dt);
 
