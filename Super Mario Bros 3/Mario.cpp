@@ -11,6 +11,7 @@
 #include "Mushroom.h"
 #include "PiranhaPlant.h"
 #include "FireBall.h"
+#include "Koopa.h"
 
 #include "Collision.h"
 
@@ -66,6 +67,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithPiranhaPlant(e);
 	else if (dynamic_cast<CFireBall*>(e->obj))
 		OnCollisionWithFireBall(e);
+	else if (dynamic_cast<CKoopa*>(e->obj))
+		OnCillisionWithKoopa(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -155,6 +158,23 @@ void CMario::OnCollisionWithFireBall(LPCOLLISIONEVENT e)
 	{
 		fireBall->Delete();
 
+		if (level > MARIO_LEVEL_SMALL)
+		{
+			level = MARIO_LEVEL_SMALL;
+			StartUntouchable();
+		}
+		else
+		{
+			DebugOut(L">>> Mario DIE >>> \n");
+			SetState(MARIO_STATE_DIE);
+		}
+	}
+}
+
+void CMario::OnCillisionWithKoopa(LPCOLLISIONEVENT e)
+{
+	if (untouchable == 0)
+	{
 		if (level > MARIO_LEVEL_SMALL)
 		{
 			level = MARIO_LEVEL_SMALL;
