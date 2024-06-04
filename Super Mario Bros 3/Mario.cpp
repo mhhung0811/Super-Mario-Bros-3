@@ -68,7 +68,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<CFireBall*>(e->obj))
 		OnCollisionWithFireBall(e);
 	else if (dynamic_cast<CKoopa*>(e->obj))
-		OnCillisionWithKoopa(e);
+		OnCollisionWithKoopa(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -171,7 +171,7 @@ void CMario::OnCollisionWithFireBall(LPCOLLISIONEVENT e)
 	}
 }
 
-void CMario::OnCillisionWithKoopa(LPCOLLISIONEVENT e)
+void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 {
 	CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
 
@@ -207,12 +207,21 @@ void CMario::OnCillisionWithKoopa(LPCOLLISIONEVENT e)
 	{
 		float kx, ky;
 		koopa->GetPosition(kx, ky);
-		// deflect if jump on top
-		if (e->ny < 0)
+		if (isHolding)
 		{
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			holdedObj = koopa;
+			if (level == MARIO_LEVEL_SMALL) koopa->ToShellHold(MARIO_HOLD_X, MARIO_HOLD_Y);
+			else koopa->ToShellHold(MARIO_HOLD_X, MARIO_BIG_HOLD_Y);
 		}
-		koopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+		else
+		{
+			// deflect if jump on top
+			if (e->ny < 0)
+			{
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
+			koopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+		}
 		break;
 	}
 	case KOOPA_STATE_SHELL_ROLL:
@@ -383,7 +392,7 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
-	/*RenderBoundingBox();*/
+	//RenderBoundingBox();
 	
 	DebugOutTitle(L"Coins: %d", coin);
 }
@@ -397,24 +406,28 @@ void CMario::SetState(int state)
 	{
 	case MARIO_STATE_RUNNING_RIGHT:
 		if (isSitting) break;
+		isHolding = true;		
 		maxVx = MARIO_RUNNING_SPEED;
 		ax = MARIO_ACCEL_RUN_X;
 		nx = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
 		if (isSitting) break;
+		isHolding = true;
 		maxVx = -MARIO_RUNNING_SPEED;
 		ax = -MARIO_ACCEL_RUN_X;
 		nx = -1;
 		break;
 	case MARIO_STATE_WALKING_RIGHT:
 		if (isSitting) break;
+		isHolding = false;		
 		maxVx = MARIO_WALKING_SPEED;
 		ax = MARIO_ACCEL_WALK_X;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
 		if (isSitting) break;
+		isHolding = false;
 		maxVx = -MARIO_WALKING_SPEED;
 		ax = -MARIO_ACCEL_WALK_X;
 		nx = -1;
@@ -463,6 +476,13 @@ void CMario::SetState(int state)
 		vx = 0;
 		ax = 0;
 		break;
+	case MARIO_STATE_KICK:
+		float kx, ky;
+		CKoopa* koopa = dynamic_cast<CKoopa*>(holdedObj);
+		koopa->GetPosition(kx, ky);
+		koopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+		holdedObj = NULL;
+		break;
 	}
 
 	CGameObject::SetState(state);
@@ -506,3 +526,11 @@ void CMario::SetLevel(int l)
 	level = l;
 }
 
+bool CMario::IsHoldingShell()
+{
+	if (isHolding && dynamic_cast<CKoopa*>(holdedObj))
+	{
+		return true;
+	}
+	return false;
+}

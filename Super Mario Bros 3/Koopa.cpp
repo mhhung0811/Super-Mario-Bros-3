@@ -1,5 +1,4 @@
 #include "Koopa.h"
-#include "EmptyObject.h"
 
 CKoopa::CKoopa(float x, float y) :CGameObject(x, y)
 {
@@ -56,17 +55,39 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	/*DebugOut(L"state: %d\n", state);*/
+
 	vy += ay * dt;
 	vx += ax * dt;
 
 	groundCheck->SetSpeed(vx, vy);
 
-	// if end of the gound
+	// Patrol
 	if (state == KOOPA_STATE_WALKING && EdgeCheck())
 	{
 		vx = -vx;
 		if (vx <= 0) groundCheck->SetPosition(x - KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
 		else groundCheck->SetPosition(x + KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
+	}
+
+	// Holded
+	if (state == KOOPA_STATE_SHELL_HOLDED)
+	{
+		// Detect Player
+		LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+		LPGAMEOBJECT player = playScene->GetPlayer();
+
+		float pvx, pvy;
+		float px, py;
+		player->GetPosition(px, py);
+		player->GetSpeed(pvx, pvy);
+
+		if (vx < 0) x = px - holdAdjX;
+		if (vx > 0) x = px + holdAdjX;
+		y = py + holdAdjY;
+
+		vx = pvx;
+		vy = pvy;
 	}
 
 	CGameObject::Update(dt, coObjects);
@@ -127,10 +148,15 @@ void CKoopa::SetState(int state)
 		vx = 0;
 		break;
 	case KOOPA_STATE_SHELL_ROLL:
+		ay = KOOPA_GRAVITY;
 		break;
 	case KOOPA_STATE_SHELL_APPEAR:
 		break;
 	case KOOPA_STATE_SHELL_HOLDED:
+		vx = 0;
+		vy = 0;
+		ax = 0;
+		ay = 0;
 		break;
 	case KOOPA_STATE_DIE:
 		vx = 0;
@@ -152,4 +178,11 @@ void CKoopa::ToShellRoll(int dir)
 {
 	SetState(KOOPA_STATE_SHELL_ROLL);
 	vx = dir * KOOPA_ROLLING_SPEED;
+}
+
+void CKoopa::ToShellHold(float adjX, float adjY)
+{
+	holdAdjX = adjX;
+	holdAdjY = adjY;
+	SetState(KOOPA_STATE_SHELL_HOLDED);
 }

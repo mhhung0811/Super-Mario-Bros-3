@@ -8,7 +8,7 @@
 #define KOOPA_WALKING_SPEED 0.05f
 #define KOOPA_ROLLING_SPEED 0.2f
 
-#define KOOPA_BBOX_WIDTH 16
+#define KOOPA_BBOX_WIDTH 14
 #define KOOPA_BBOX_HEIGHT 24
 #define KOOPA_SHELL_BBOX_HEIGHT 14
 
@@ -35,6 +35,9 @@ protected:
 	float ax;
 	float ay;
 
+	float holdAdjX = 0;
+	float holdAdjY = 0;
+
 	CGameObject *groundCheck;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -52,4 +55,5 @@ public:
 	virtual void SetState(int state);
 	void ToShellIdle();
 	void ToShellRoll(int dir);
+	void ToShellHold(float adjX, float adjY);
 };
