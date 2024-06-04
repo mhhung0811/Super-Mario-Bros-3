@@ -7,6 +7,8 @@
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.05f
 #define KOOPA_ROLLING_SPEED 0.2f
+#define KOOPA_RESURRECT_TIME 1000
+#define KOOPA_RESURRECT_COOLDOWN 5000
 
 #define KOOPA_BBOX_WIDTH 14
 #define KOOPA_BBOX_HEIGHT 24
@@ -18,8 +20,8 @@
 #define KOOPA_STATE_WALKING 100
 #define KOOPA_STATE_SHELL_IDLE 200
 #define KOOPA_STATE_SHELL_ROLL 300
-#define KOOPA_STATE_SHELL_APPEAR 400
-#define KOOPA_STATE_SHELL_HOLDED 500
+#define KOOPA_STATE_SHELL_RESURRECT 400
+//#define KOOPA_STATE_SHELL_HOLDED 500
 #define KOOPA_STATE_DIE 600
 
 #define ID_ANI_KOOPA_WALK_LEFT 151002
@@ -35,8 +37,12 @@ protected:
 	float ax;
 	float ay;
 
+	bool isHolded = false;
+
 	float holdAdjX = 0;
 	float holdAdjY = 0;
+	long resTime = 0;
+	long resCoolDown = 0;
 
 	CGameObject *groundCheck;
 
@@ -56,4 +62,7 @@ public:
 	void ToShellIdle();
 	void ToShellRoll(int dir);
 	void ToShellHold(float adjX, float adjY);
+	void ToResurrect();
+	void ToWalking();
+	bool IsHolded() { return isHolded; }
 };

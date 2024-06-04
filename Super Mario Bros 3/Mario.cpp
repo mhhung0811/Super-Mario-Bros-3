@@ -530,7 +530,8 @@ bool CMario::IsHoldingShell()
 {
 	if (isHolding && dynamic_cast<CKoopa*>(holdedObj))
 	{
-		return true;
+		CKoopa* koopa = dynamic_cast<CKoopa*>(holdedObj);
+		if (koopa->IsHolded()) return true;
 	}
 	return false;
 }

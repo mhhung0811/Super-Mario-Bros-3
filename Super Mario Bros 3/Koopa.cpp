@@ -71,7 +71,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	// Holded
-	if (state == KOOPA_STATE_SHELL_HOLDED)
+	if (isHolded)
 	{
 		// Detect Player
 		LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
@@ -90,6 +90,27 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		vy = pvy;
 	}
 
+	// Resurrect
+	if (state == KOOPA_STATE_SHELL_IDLE)
+	{
+		resCoolDown += dt;
+		if (resCoolDown >= KOOPA_RESURRECT_COOLDOWN)
+		{
+			ToResurrect();
+		}
+	}
+	else resCoolDown = 0;
+	if (state == KOOPA_STATE_SHELL_RESURRECT)
+	{
+		resTime += dt;
+		if (resTime >= KOOPA_RESURRECT_TIME)
+		{
+			ToWalking();
+			resTime = 0;
+		}
+	}
+	else resTime = 0;
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -103,11 +124,11 @@ void CKoopa::Render()
 	case KOOPA_STATE_WALKING:
 		aniId = (vx <= 0) ? ID_ANI_KOOPA_WALK_LEFT : ID_ANI_KOOPA_WALK_RIGHT;
 		break;
-	case KOOPA_STATE_SHELL_HOLDED:
+	/*case KOOPA_STATE_SHELL_HOLDED:*/
 	case KOOPA_STATE_SHELL_IDLE:
 		CSprites::GetInstance()->Get(sprId)->Draw(x, y);
 		break;
-	case KOOPA_STATE_SHELL_APPEAR:
+	case KOOPA_STATE_SHELL_RESURRECT:
 		aniId = ID_ANI_KOOPA_SHELL_APPEAR;
 		break;
 	case KOOPA_STATE_SHELL_ROLL:
@@ -141,7 +162,10 @@ void CKoopa::SetState(int state)
 	switch (state)
 	{
 	case KOOPA_STATE_WALKING:
+		y -= (KOOPA_BBOX_HEIGHT - KOOPA_SHELL_BBOX_HEIGHT) / 2 + 5;
 		vx = -KOOPA_WALKING_SPEED;
+		if (vx <= 0) groundCheck->SetPosition(x - KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
+		else groundCheck->SetPosition(x + KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
 		break;
 	case KOOPA_STATE_SHELL_IDLE:
 		y += (KOOPA_BBOX_HEIGHT - KOOPA_SHELL_BBOX_HEIGHT) / 2 - 5;
@@ -150,14 +174,14 @@ void CKoopa::SetState(int state)
 	case KOOPA_STATE_SHELL_ROLL:
 		ay = KOOPA_GRAVITY;
 		break;
-	case KOOPA_STATE_SHELL_APPEAR:
+	case KOOPA_STATE_SHELL_RESURRECT:
 		break;
-	case KOOPA_STATE_SHELL_HOLDED:
+	/*case KOOPA_STATE_SHELL_HOLDED:
 		vx = 0;
 		vy = 0;
 		ax = 0;
 		ay = 0;
-		break;
+		break;*/
 	case KOOPA_STATE_DIE:
 		vx = 0;
 		vy = 0;
@@ -171,18 +195,32 @@ void CKoopa::SetState(int state)
 
 void CKoopa::ToShellIdle()
 {
+	isHolded = false;
 	SetState(KOOPA_STATE_SHELL_IDLE);
 }
 
 void CKoopa::ToShellRoll(int dir)
 {
+	isHolded = false;
 	SetState(KOOPA_STATE_SHELL_ROLL);
 	vx = dir * KOOPA_ROLLING_SPEED;
 }
 
 void CKoopa::ToShellHold(float adjX, float adjY)
 {
+	isHolded = true;
 	holdAdjX = adjX;
 	holdAdjY = adjY;
-	SetState(KOOPA_STATE_SHELL_HOLDED);
+	SetState(KOOPA_STATE_SHELL_IDLE);
+}
+
+void CKoopa::ToResurrect()
+{
+	SetState(KOOPA_STATE_SHELL_RESURRECT);
+}
+
+void CKoopa::ToWalking()
+{
+	isHolded = false;
+	SetState(KOOPA_STATE_WALKING);	
 }
