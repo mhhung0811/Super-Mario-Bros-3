@@ -573,3 +573,18 @@ void CPlayScene::CreateFireBall(float x, float y, int dir)
 	obj->SetPosition(x, y);
 	objects0.push_back(obj);
 }
+
+void CPlayScene::AddObject(CGameObject* obj, int type)
+{
+	switch (type)
+	{
+	case 0:
+		objects0.push_back(obj);
+		break;
+	case 1:
+		objects1.push_back(obj);
+		break;
+	default:
+		break;
+	}
+}

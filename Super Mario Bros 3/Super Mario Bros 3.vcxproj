@@ -150,6 +150,7 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="CubeOneWay.cpp" />
     <ClCompile Include="debug.cpp" />
+    <ClCompile Include="EmptyObject.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="CubeOneWay.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="Decor.h" />
+    <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />

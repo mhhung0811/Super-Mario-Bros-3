@@ -1,9 +1,17 @@
 #include "Koopa.h"
+#include "EmptyObject.h"
 
 CKoopa::CKoopa(float x, float y) :CGameObject(x, y)
 {
 	this->ax = 0;
 	this->ay = KOOPA_GRAVITY;
+	this->groundCheck = new CEmptyObject(x - KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y, KOOPA_BBOX_WIDTH, 2);
+	/*groundCheck->SetPosition(-(x + KOOPA_GROUND_CHECK_X), y + KOOPA_GROUND_CHECK_Y);*/
+	
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->AddObject(groundCheck, 0);
+	
+	
 	SetState(KOOPA_STATE_WALKING);
 }
 
@@ -41,6 +49,8 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (e->nx != 0)
 	{
 		vx = -vx;
+		if (vx <= 0) groundCheck->SetPosition(x - KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
+		else groundCheck->SetPosition(x + KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
 	}
 }
 
@@ -49,7 +59,15 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	groundCheck->SetSpeed(vx, vy);
 
+	// if end of the gound
+	if (state == KOOPA_STATE_WALKING && EdgeCheck())
+	{
+		vx = -vx;
+		if (vx <= 0) groundCheck->SetPosition(x - KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
+		else groundCheck->SetPosition(x + KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
+	}
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -82,8 +100,18 @@ void CKoopa::Render()
 	{
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
+	//RenderBoundingBox();
+}
 
-	RenderBoundingBox();
+bool CKoopa::EdgeCheck()
+{
+	float gx, gy;
+	groundCheck->GetPosition(gx, gy);
+	if (gy > y + KOOPA_BBOX_HEIGHT / 2)
+	{
+		return true;
+	}
+	return false;
 }
 
 void CKoopa::SetState(int state)
@@ -106,7 +134,7 @@ void CKoopa::SetState(int state)
 		vx = 0;
 		vy = 0;
 		ay = 0;
-		isDeleted = true;
+		Delete();
 		break;
 	default:
 		break;

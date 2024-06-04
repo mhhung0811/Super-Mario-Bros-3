@@ -44,6 +44,7 @@ public:
 	void CreateGameObject(string line);
 	void CreateItem(int id, float x, float y);
 	void CreateFireBall(float x, float y, int dir);
+	void AddObject(CGameObject* obj, int type);
 };
 
 typedef CPlayScene* LPPLAYSCENE;
