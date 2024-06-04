@@ -123,7 +123,7 @@ void CKoopa::SetState(int state)
 		vx = -KOOPA_WALKING_SPEED;
 		break;
 	case KOOPA_STATE_SHELL_IDLE:
-		y += (KOOPA_BBOX_HEIGHT - KOOPA_SHELL_BBOX_HEIGHT) / 2;
+		y += (KOOPA_BBOX_HEIGHT - KOOPA_SHELL_BBOX_HEIGHT) / 2 - 5;
 		vx = 0;
 		break;
 	case KOOPA_STATE_SHELL_ROLL:

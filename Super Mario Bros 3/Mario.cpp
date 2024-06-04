@@ -217,7 +217,28 @@ void CMario::OnCillisionWithKoopa(LPCOLLISIONEVENT e)
 	}
 	case KOOPA_STATE_SHELL_ROLL:
 	{
-
+		// jump on top >> stop Koopa shell and deflect a bit 
+		if (e->ny < 0)
+		{
+			koopa->ToShellIdle();
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else // hit by koopa
+		{
+			if (untouchable == 0)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
+		}
 		break;
 	}
 	default:
