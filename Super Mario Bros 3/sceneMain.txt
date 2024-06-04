@@ -11,6 +11,7 @@ mushroom.txt
 piranhaPlant.txt
 fireball.txt
 shadowDecor.txt
+koopa.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -182,7 +183,10 @@ shadowDecor.txt
 12	360	154
 
 # GOOMBA
-2	200	150
+#2	200	150
+
+# KOOPA
+3	400	150
 
 # MARIO
 0	12	150

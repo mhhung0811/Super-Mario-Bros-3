@@ -17,6 +17,7 @@
 #include "Cube.h"
 #include "PiranhaPlant.h"
 #include "FireBall.h"
+#include "Koopa.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -132,6 +133,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
 		break;
+	case OBJECT_TYPE_KOOPA:
+	{
+		obj = new CKoopa(x, y);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
+	}
 	case OBJECT_TYPE_BRICK: 
 		obj = new CBrick(x,y); 
 		obj->SetPosition(x, y);
@@ -299,7 +307,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
 		break;
-	}
+	}	
 
 	case OBJECT_TYPE_PORTAL:
 	{

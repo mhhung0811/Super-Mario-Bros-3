@@ -120,6 +120,9 @@
     <ClCompile Include="FireBall.cpp">
       <Filter>Source Files\Characters</Filter>
     </ClCompile>
+    <ClCompile Include="Koopa.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -215,6 +218,9 @@
     <ClInclude Include="FireBall.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="Koopa.h">
+      <Filter>Header Files\Characters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="mario-sample.txt">
@@ -273,6 +279,9 @@
     </Text>
     <Text Include="shadowDecor.txt">
       <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="koopa.txt">
+      <Filter>Infor Files\Characters</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
