@@ -6,11 +6,11 @@
 
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.05f
-#define KOOPA_ROLLING_SPEED 0.1f
+#define KOOPA_ROLLING_SPEED 0.15f
 
 #define KOOPA_BBOX_WIDTH 16
 #define KOOPA_BBOX_HEIGHT 24
-#define KOOPA_SHELL_BBOX_HEIGHT 16
+#define KOOPA_SHELL_BBOX_HEIGHT 14
 
 #define KOOPA_GROUND_CHECK_X 9
 #define KOOPA_GROUND_CHECK_Y 10
@@ -50,4 +50,6 @@ protected:
 public:
 	CKoopa(float x, float y);
 	virtual void SetState(int state);
+	void ToShellIdle();
+	void ToShellRoll(int dir);
 };

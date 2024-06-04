@@ -75,7 +75,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CKoopa::Render()
 {
-	int aniId;
+	int aniId = 0;
 	int sprId = ID_SPR_KOOPA_SHELL_IDLE;
 	switch (state)
 	{
@@ -100,7 +100,7 @@ void CKoopa::Render()
 	{
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 bool CKoopa::EdgeCheck()
@@ -123,6 +123,8 @@ void CKoopa::SetState(int state)
 		vx = -KOOPA_WALKING_SPEED;
 		break;
 	case KOOPA_STATE_SHELL_IDLE:
+		y += (KOOPA_BBOX_HEIGHT - KOOPA_SHELL_BBOX_HEIGHT) / 2;
+		vx = 0;
 		break;
 	case KOOPA_STATE_SHELL_ROLL:
 		break;
@@ -139,4 +141,15 @@ void CKoopa::SetState(int state)
 	default:
 		break;
 	}
+}
+
+void CKoopa::ToShellIdle()
+{
+	SetState(KOOPA_STATE_SHELL_IDLE);
+}
+
+void CKoopa::ToShellRoll(int dir)
+{
+	SetState(KOOPA_STATE_SHELL_ROLL);
+	vx = dir * KOOPA_ROLLING_SPEED;
 }

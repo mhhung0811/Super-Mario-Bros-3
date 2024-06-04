@@ -173,18 +173,55 @@ void CMario::OnCollisionWithFireBall(LPCOLLISIONEVENT e)
 
 void CMario::OnCillisionWithKoopa(LPCOLLISIONEVENT e)
 {
-	if (untouchable == 0)
+	CKoopa* koopa = dynamic_cast<CKoopa*>(e->obj);
+
+	switch (koopa->GetState())
 	{
-		if (level > MARIO_LEVEL_SMALL)
+	case KOOPA_STATE_WALKING:
+	{
+		// jump on top >> turn Koopa to shell and deflect a bit 
+		if (e->ny < 0)
 		{
-			level = MARIO_LEVEL_SMALL;
-			StartUntouchable();
+			koopa->ToShellIdle();
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
-		else
+		else // hit by koopa
 		{
-			DebugOut(L">>> Mario DIE >>> \n");
-			SetState(MARIO_STATE_DIE);
+			if (untouchable == 0)
+			{
+				if (level > MARIO_LEVEL_SMALL)
+				{
+					level = MARIO_LEVEL_SMALL;
+					StartUntouchable();
+				}
+				else
+				{
+					DebugOut(L">>> Mario DIE >>> \n");
+					SetState(MARIO_STATE_DIE);
+				}
+			}
 		}
+		break;
+	}
+	case KOOPA_STATE_SHELL_IDLE:
+	{
+		float kx, ky;
+		koopa->GetPosition(kx, ky);
+		// deflect if jump on top
+		if (e->ny < 0)
+		{
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		koopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+		break;
+	}
+	case KOOPA_STATE_SHELL_ROLL:
+	{
+
+		break;
+	}
+	default:
+		break;
 	}
 }
 
