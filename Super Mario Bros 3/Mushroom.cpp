@@ -12,7 +12,7 @@ CMushroom::CMushroom(float x, float y) :CGameObject(x, y)
 void CMushroom::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x - MUSHROOM_BBOX_WIDTH / 2;
-	top = y - MUSHROOM_BBOX_WIDTH / 2;
+	top = y - MUSHROOM_BBOX_HEIGHT / 2;
 	right = left + MUSHROOM_BBOX_WIDTH;
 	bottom = top + MUSHROOM_BBOX_HEIGHT;
 }
@@ -40,7 +40,7 @@ void CMushroom::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
-	if (state == MUSHROOM_STATE_APPEAR && y < fixedY - MUSHROOM_BBOX_HEIGHT)
+	if (state == MUSHROOM_STATE_APPEAR && y < fixedY - MUSHROOM_BBOX_HEIGHT - 1)
 	{
 		SetState(MUSHROOM_STATE_WALKING);
 	}

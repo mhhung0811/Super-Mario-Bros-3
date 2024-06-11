@@ -30,10 +30,13 @@ void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	LPGAMEOBJECT player = playScene->GetPlayer();
+	CMario* mario = dynamic_cast<CMario*>(player);
 
 	if (state == MYSTERYBOX_STATE_OPEN)
 	{
-		if (y <= (fixedY - cy) + 10)
+		if (y <= (fixedY - cy) + 5)
 		{
 			ay = MYSTERYBOX_GRAVITY;
 		}
@@ -43,16 +46,19 @@ void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			vy = 0;
 			y = fixedY - cy;
 			// open mushroom
-			if (isOpened == OBJECT_TYPE_MUSHROOM)
+			if (isOpened == MYSTERYBOX_GIFT_LEVELUP)
 			{
-				LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-				//playScene->CreateGameObject(std::to_string(isOpened) + "\t" + std::to_string(x) + "\t" + std::to_string(y));
-				playScene->CreateItem(isOpened, x, y);
-				isOpened = 0;
+				if (mario->GetLevel() == MARIO_LEVEL_SMALL) playScene->CreateItem(OBJECT_TYPE_MUSHROOM, x, y);
+				if (mario->GetLevel() == MARIO_LEVEL_BIG) playScene->CreateItem(OBJECT_TYPE_RACOONLEAF, x, y);
 			}
 			// done open
+			isOpened = 0;
 			SetState(MYSTERYBOX_STATE_UNACTIVE);
 		}
+	}
+	if (state == MYSTERYBOX_STATE_UNACTIVE && y != fixedX - cy)
+	{
+		y = fixedY - cy;
 	}
 
 	CGameObject::Update(dt, coObjects);
@@ -67,7 +73,7 @@ void CMysteryBox::Render()
 		aniId = ID_ANI_MYSTERYBOX_UNACTIVE;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	/*RenderBoundingBox();*/
+	RenderBoundingBox();
 }
 
 void CMysteryBox::RenderBoundingBox()

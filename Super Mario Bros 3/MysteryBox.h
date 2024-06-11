@@ -1,7 +1,11 @@
 #pragma once
 #include "GameObject.h"
+#include "PlayScene.h"
 
-#define MYSTERYBOX_GRAVITY 0.002f
+#define MYSTERYBOX_GIFT_COIN 1
+#define MYSTERYBOX_GIFT_LEVELUP 2
+
+#define MYSTERYBOX_GRAVITY 0.003f
 
 #define MYSTERYBOX_BBOX_HEIGHT 16
 #define MYSTERYBOX_BBOX_WIDTH 16
@@ -32,7 +36,7 @@ protected:
 	void RenderBoundingBox();
 
 	virtual void OnNoCollision(DWORD dt);
-	virtual int IsCollidable() { return 1; };
+	virtual int IsCollidable() { return 0; };
 	virtual int IsBlocking() { return 1; }
 public:
 	CMysteryBox(float x, float y, int giftId);

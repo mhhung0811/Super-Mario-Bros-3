@@ -165,6 +165,7 @@
     <ClCompile Include="PlatformOneWay.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="RacoonLeaf.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="PlatformOneWay.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="RacoonLeaf.h" />
     <ClInclude Include="SampleKeyEventHandler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sprite.h" />
@@ -223,6 +225,7 @@
     <Text Include="mushroom.txt" />
     <Text Include="mysteryBox.txt" />
     <Text Include="piranhaPlant.txt" />
+    <Text Include="racoonLeaf.txt" />
     <Text Include="scene0005.txt" />
     <Text Include="scene01.txt" />
     <Text Include="scene02.txt" />

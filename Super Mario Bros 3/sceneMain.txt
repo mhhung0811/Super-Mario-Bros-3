@@ -12,6 +12,7 @@ piranhaPlant.txt
 fireball.txt
 shadowDecor.txt
 koopa.txt
+racoonLeaf.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -174,9 +175,9 @@ koopa.txt
 9	176	130
 9	192	130
 9	224	82
-9	240	82	10
+9	240	82	2
 9	416	98
-9	656	162
+9	656	162	2
 9	704	130
 
 # PIRANHA PLANT

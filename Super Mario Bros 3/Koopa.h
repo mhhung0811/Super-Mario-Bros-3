@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "EmptyObject.h"
 #include "PlayScene.h"
+#include "MysteryBox.h"
 #include "debug.h"
 
 #define KOOPA_GRAVITY 0.002f

@@ -18,6 +18,7 @@
 #include "PiranhaPlant.h"
 #include "FireBall.h"
 #include "Koopa.h"
+#include "RacoonLeaf.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -307,7 +308,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
 		break;
-	}	
+	}
+	case OBJECT_TYPE_RACOONLEAF:
+	{
+		obj = new CRacoonLeaf(x, y);
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	}
 
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -558,13 +566,23 @@ void CPlayScene::CreateGameObject(string line)
 
 void CPlayScene::CreateItem(int id, float x, float y)
 {
-	if (id == OBJECT_TYPE_MUSHROOM)
+	CGameObject* obj;
+	switch (id)
 	{
-		CGameObject* obj = new CMushroom(x, y);
+	case OBJECT_TYPE_MUSHROOM:
+		obj = new CMushroom(x, y);
 		obj->SetPosition(x, y);
 		// mushroom should be the first
 		objects1.insert(objects1.begin(), obj);
-	}
+		break;
+	case OBJECT_TYPE_RACOONLEAF:
+		obj = new CRacoonLeaf(x, y);
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	default:
+		break;
+	}	
 }
 
 void CPlayScene::CreateFireBall(float x, float y, int dir)

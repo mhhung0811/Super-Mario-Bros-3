@@ -51,6 +51,11 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (vx <= 0) groundCheck->SetPosition(x - KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
 		else groundCheck->SetPosition(x + KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
 	}
+	if (dynamic_cast<CMysteryBox*>(e->obj) && state == KOOPA_STATE_SHELL_ROLL)
+	{
+		CMysteryBox* mBox = dynamic_cast<CMysteryBox*>(e->obj);
+		mBox->OpenBox();
+	}
 }
 
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

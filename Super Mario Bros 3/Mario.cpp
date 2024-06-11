@@ -220,6 +220,9 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 			{
 				vy = -MARIO_JUMP_DEFLECT_SPEED;
 			}
+			float kx, ky;
+			koopa->GetPosition(kx, ky);
+			koopa->SetPosition(kx, ky + (KOOPA_BBOX_HEIGHT - KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
 			koopa->ToShellRoll((kx - x > 0) ? 1 : -1);
 		}
 		break;
@@ -229,6 +232,9 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		// jump on top >> stop Koopa shell and deflect a bit 
 		if (e->ny < 0)
 		{
+			float kx, ky;
+			koopa->GetPosition(kx, ky);
+			koopa->SetPosition(kx, ky + (KOOPA_BBOX_HEIGHT - KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
 			koopa->ToShellIdle();
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
@@ -514,6 +520,11 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		right = left + MARIO_SMALL_BBOX_WIDTH;
 		bottom = top + MARIO_SMALL_BBOX_HEIGHT;
 	}
+}
+
+int CMario::GetLevel()
+{
+	return this->level;
 }
 
 void CMario::SetLevel(int l)
