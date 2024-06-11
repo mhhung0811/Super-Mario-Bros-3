@@ -21,3 +21,4 @@ height	240
 30	textures\tiles.png
 40	textures\items.png
 50	textures\enemy.png
+60	textures\marioAll.png
