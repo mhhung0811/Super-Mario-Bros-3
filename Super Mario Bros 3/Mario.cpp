@@ -12,6 +12,7 @@
 #include "PiranhaPlant.h"
 #include "FireBall.h"
 #include "Koopa.h"
+#include "RacoonLeaf.h"
 
 #include "Collision.h"
 
@@ -269,7 +270,9 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithRacoonLeaf(LPCOLLISIONEVENT e)
 {
-
+	CRacoonLeaf* p = (CRacoonLeaf*)e->obj;
+	SetLevel(MARIO_LEVEL_RACOON);
+	p->IsAbsorbed();
 }
 
 //
