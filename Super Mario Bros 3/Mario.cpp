@@ -20,6 +20,12 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	if (state == MARIO_STATE_IDLE && ax == 0)
+	{
+		vx /= 1.1f;
+		if (abs(vx) <= 0.00001f) vx = 0;
+	}
+
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	// reset untouchable timer if untouchable time has passed
@@ -261,6 +267,11 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithRacoonLeaf(LPCOLLISIONEVENT e)
+{
+
+}
+
 //
 // Get animation ID for small Mario
 //
@@ -306,6 +317,8 @@ int CMario::GetAniIdSmall()
 					aniId = ID_ANI_MARIO_SMALL_RUNNING_RIGHT;
 				else if (ax == MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
+				else if (ax == 0)
+					aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
 			}
 			else // vx < 0
 			{
@@ -315,6 +328,8 @@ int CMario::GetAniIdSmall()
 					aniId = ID_ANI_MARIO_SMALL_RUNNING_LEFT;
 				else if (ax == -MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
+				else if (ax == 0)
+					aniId = ID_ANI_MARIO_SMALL_IDLE_LEFT;
 			}
 
 	if (aniId == -1) aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
@@ -368,6 +383,8 @@ int CMario::GetAniIdBig()
 					aniId = ID_ANI_MARIO_RUNNING_RIGHT;
 				else if (ax == MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_WALKING_RIGHT;
+				else if (ax == 0)
+					aniId = ID_ANI_MARIO_IDLE_RIGHT;
 			}
 			else // vx < 0
 			{
@@ -377,8 +394,9 @@ int CMario::GetAniIdBig()
 					aniId = ID_ANI_MARIO_RUNNING_LEFT;
 				else if (ax == -MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_WALKING_LEFT;
+				else if (ax == 0)
+					aniId = ID_ANI_MARIO_IDLE_LEFT;
 			}
-
 	if (aniId == -1) aniId = ID_ANI_MARIO_IDLE_RIGHT;
 
 	return aniId;
@@ -405,6 +423,7 @@ void CMario::Render()
 
 void CMario::SetState(int state)
 {
+	/*DebugOut(L"state: %d\n", state);*/
 	// DIE is the end state, cannot be changed! 
 	if (this->state == MARIO_STATE_DIE) return; 
 
@@ -426,7 +445,7 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_WALKING_RIGHT:
 		if (isSitting) break;
-		isHolding = false;		
+		isHolding = false;
 		maxVx = MARIO_WALKING_SPEED;
 		ax = MARIO_ACCEL_WALK_X;
 		nx = 1;
@@ -474,7 +493,7 @@ void CMario::SetState(int state)
 
 	case MARIO_STATE_IDLE:
 		ax = 0.0f;
-		vx = 0.0f;
+		//vx = 0.0f;
 		break;
 
 	case MARIO_STATE_DIE:
