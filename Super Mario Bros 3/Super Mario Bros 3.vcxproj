@@ -173,6 +173,7 @@
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="Wing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -210,6 +211,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="Wing.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="brick.txt" />
@@ -234,6 +236,7 @@
     <Text Include="scene02.txt" />
     <Text Include="sceneMain.txt" />
     <Text Include="shadowDecor.txt" />
+    <Text Include="wing.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico" />

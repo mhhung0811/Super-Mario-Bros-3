@@ -20,6 +20,7 @@
 #include "Koopa.h"
 #include "RacoonLeaf.h"
 #include "FlyGoomba.h"
+#include "Wing.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -318,10 +319,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 	case OBJECT_TYPE_FLY_GOOMBA:
+	{
 		obj = new CFlyGoomba(x, y);
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
 		break;
+	}
+	case OBJECT_TYPE_WING:
+	{
+		obj = new CWing(x, y, -1);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
+	}
 
 	case OBJECT_TYPE_PORTAL:
 	{

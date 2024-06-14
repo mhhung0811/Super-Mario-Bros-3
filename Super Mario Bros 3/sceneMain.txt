@@ -14,6 +14,7 @@ shadowDecor.txt
 koopa.txt
 racoonLeaf.txt
 flyGoomba.txt
+wing.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -189,6 +190,9 @@ flyGoomba.txt
 
 # FLY GOOMBA
 15	200	150
+
+# WING
+#16	200	150
 
 # KOOPA
 3	588	130
