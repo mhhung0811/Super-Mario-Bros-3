@@ -247,6 +247,9 @@ void CMario::OnCollisionWithFlyGoomba(LPCOLLISIONEVENT e)
 	{
 		if (flyGoomba->GetState() != FLY_GOOMBA_STATE_DIE)
 		{
+			float kx, ky;
+			flyGoomba->GetPosition(kx, ky);
+			flyGoomba->SetPosition(kx, ky + (FLY_GOOMBA_BBOX_HEIGHT) / 2 - 10);
 			flyGoomba->Damaged();
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
@@ -259,8 +262,8 @@ void CMario::OnCollisionWithFlyGoomba(LPCOLLISIONEVENT e)
 
 void CMario::OnCollisionWithSpawner(LPCOLLISIONEVENT e)
 {
+	onAir = MARIO_ON_AIR_TIME;
 	CSpawner* spawner = dynamic_cast<CSpawner*>(e->obj);
-
 	spawner->Spawn();
 }
 
