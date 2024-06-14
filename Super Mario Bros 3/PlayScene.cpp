@@ -578,7 +578,8 @@ void CPlayScene::CreateItem(int id, float x, float y)
 	case OBJECT_TYPE_RACOONLEAF:
 		obj = new CRacoonLeaf(x, y);
 		obj->SetPosition(x, y);
-		objects1.push_back(obj);
+		// racoon should be the last but still after mario
+		objects1.insert(objects1.end() - 1, obj);
 		break;
 	default:
 		break;

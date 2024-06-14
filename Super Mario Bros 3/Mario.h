@@ -80,6 +80,28 @@
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_RIGHT 1600
 #define ID_ANI_MARIO_SMALL_JUMP_RUN_LEFT 1601
 
+// RACOON MARIO
+#define ID_ANI_MARIO_RACOON_IDLE_LEFT 1700
+#define ID_ANI_MARIO_RACOON_IDLE_RIGHT 1701
+
+#define ID_ANI_MARIO_RACOON_WALKING_LEFT 1800
+#define ID_ANI_MARIO_RACOON_WALKING_RIGHT 1801
+
+#define ID_ANI_MARIO_RACOON_RUNNING_LEFT 1900
+#define ID_ANI_MARIO_RACOON_RUNNING_RIGHT 1901
+
+#define ID_ANI_MARIO_RACOON_JUMP_WALK_LEFT 2000
+#define ID_ANI_MARIO_RACOON_JUMP_WALK_RIGHT 2001
+
+#define ID_ANI_MARIO_RACOON_JUMP_RUN_LEFT 2100
+#define ID_ANI_MARIO_RACOON_JUMP_RUN_RIGHT 2101
+
+#define ID_ANI_MARIO_RACOON_SIT_LEFT 2200
+#define ID_ANI_MARIO_RACOON_SIT_RIGHT 2201
+
+#define ID_ANI_MARIO_RACOON_BRACE_LEFT 2300
+#define ID_ANI_MARIO_RACOON_BRACE_RIGHT 2301
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -136,6 +158,7 @@ class CMario : public CGameObject
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
+	int GetAniIdRacoon();
 
 public:
 	CMario(float x, float y) : CGameObject(x, y)
@@ -146,7 +169,7 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
 
-		level = MARIO_LEVEL_SMALL;
+		level = MARIO_LEVEL_BIG;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
@@ -173,4 +196,5 @@ public:
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	bool IsHoldingShell();
+	void IsDamaged();
 };
