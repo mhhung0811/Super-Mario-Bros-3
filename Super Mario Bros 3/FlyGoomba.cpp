@@ -1,9 +1,22 @@
 #include "FlyGoomba.h"
+#include "debug.h"
 
 CFlyGoomba::CFlyGoomba(float x, float y) :CGameObject(x, y)
 {
+	this->haveWings = true;
 	this->ax = 0;
 	this->ay = FLY_GOOMBA_GRAVITY;
+	this->isOnPlatform = false;
+	this->leftWing = new CWing(x - FLY_GOOMBA_WING_X - 1, y - FLY_GOOMBA_WING_Y, -1);
+	this->rightWing = new CWing(x + FLY_GOOMBA_WING_X, y - FLY_GOOMBA_WING_Y, 1);
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->AddObject(leftWing, 1);
+	playScene->AddObject(rightWing, 1);
+
+	stepTimer = 0;
+	jumpCount = 0;
+	jumpTimer = FLY_GOOMBA_JUMP_COOLDOWN;
+
 	die_start = -1;
 	SetState(FLY_GOOMBA_STATE_WALKING);
 }
@@ -30,12 +43,19 @@ void CFlyGoomba::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
 	y += vy * dt;
+
+	leftWing->SetPosition(x - FLY_GOOMBA_WING_X - 1, y - FLY_GOOMBA_WING_Y);
+	rightWing->SetPosition(x + FLY_GOOMBA_WING_X, y - FLY_GOOMBA_WING_Y);
 };
 
 void CFlyGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (!e->obj->IsBlocking()) return;
 	if (dynamic_cast<CFlyGoomba*>(e->obj)) return;
+	if (e->ny != 0 && e->obj->IsBlocking())
+	{
+		if (e->ny < 0) isOnPlatform = true;
+	}
 	if (e->ny != 0)
 	{
 		vy = 0;
@@ -51,11 +71,54 @@ void CFlyGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	leftWing->SetPosition(x - FLY_GOOMBA_WING_X - 1, y - FLY_GOOMBA_WING_Y);
+	rightWing->SetPosition(x + FLY_GOOMBA_WING_X, y - FLY_GOOMBA_WING_Y);
+
+	stepTimer += dt;
+	jumpTimer += dt;
+
 	if ((state == FLY_GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > FLY_GOOMBA_DIE_TIMEOUT))
 	{
 		isDeleted = true;
 		return;
 	}
+
+	if (haveWings)
+	{
+		if (jumpTimer >= FLY_GOOMBA_JUMP_COOLDOWN)
+		{
+			if (jumpCount < 3)
+			{
+				leftWing->SetState(WING_STATE_FLAP_SLOW);
+				rightWing->SetState(WING_STATE_FLAP_SLOW);
+				if (stepTimer >= FLY_GOOMBA_JUMP_STEP)
+				{
+					stepTimer = 0;
+					jumpCount++;
+					vy -= FLY_GOOMBA_SMALL_JUMP_SPEED;
+				}
+			}
+			else
+			{
+				if (stepTimer >= FLY_GOOMBA_JUMP_STEP)
+				{
+					stepTimer = 0;
+					jumpCount = 0;
+					jumpTimer = 0;
+					vy -= FLY_GOOMBA_BIG_JUMP_SPEED;
+					leftWing->SetState(WING_STATE_FLAP_FAST);
+					rightWing->SetState(WING_STATE_FLAP_FAST);
+				}
+			}
+		}
+		else if (isOnPlatform)
+		{
+			leftWing->SetState(WING_STATE_CLOSE);
+			rightWing->SetState(WING_STATE_CLOSE);
+		}
+	}
+
+	isOnPlatform = true;
 
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
@@ -89,5 +152,19 @@ void CFlyGoomba::SetState(int state)
 	case FLY_GOOMBA_STATE_WALKING:
 		vx = -FLY_GOOMBA_WALKING_SPEED;
 		break;
+	}
+}
+
+void CFlyGoomba::Damaged()
+{
+	if (haveWings)
+	{
+		haveWings = false;
+		leftWing->Delete();
+		rightWing->Delete();
+	}
+	else
+	{
+		SetState(FLY_GOOMBA_STATE_DIE);
 	}
 }

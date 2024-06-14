@@ -13,6 +13,7 @@
 #include "FireBall.h"
 #include "Koopa.h"
 #include "RacoonLeaf.h"
+#include "FlyGoomba.h"
 
 #include "Collision.h"
 
@@ -96,6 +97,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithKoopa(e);
 	else if (dynamic_cast<CRacoonLeaf*>(e->obj))
 		OnCollisionWithRacoonLeaf(e);
+	else if (dynamic_cast<CFlyGoomba*>(e->obj))
+		OnCollisionWithFlyGoomba(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -230,6 +233,25 @@ void CMario::OnCollisionWithRacoonLeaf(LPCOLLISIONEVENT e)
 	CRacoonLeaf* p = (CRacoonLeaf*)e->obj;
 	SetLevel(MARIO_LEVEL_RACOON);
 	p->IsAbsorbed();
+}
+
+void CMario::OnCollisionWithFlyGoomba(LPCOLLISIONEVENT e)
+{
+	CFlyGoomba* flyGoomba = dynamic_cast<CFlyGoomba*>(e->obj);
+
+	// jump on top >> kill damage Fly Goomba and deflect a bit 
+	if (e->ny < 0)
+	{
+		if (flyGoomba->GetState() != FLY_GOOMBA_STATE_DIE)
+		{
+			flyGoomba->Damaged();
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+	}
+	else // hit by Goomba
+	{
+		IsDamaged();
+	}
 }
 
 //
