@@ -79,7 +79,7 @@ void CRacoonLeaf::Render()
 		s->Get(ID_SPRITE_RACOONLEAF_RIGHT)->Draw(x, y);
 	else s->Get(ID_SPRITE_RACOONLEAF_LEFT)->Draw(x, y);
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CRacoonLeaf::SetState(int state)

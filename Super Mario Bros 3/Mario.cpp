@@ -428,7 +428,6 @@ int CMario::GetAniIdRacoon()
 				else if (ax == 0)
 					aniId = ID_ANI_MARIO_RACOON_IDLE_LEFT;
 			}
-	DebugOut(L"aniId: %d\n", aniId);
 	if (aniId == -1) aniId = ID_ANI_MARIO_RACOON_IDLE_RIGHT;
 
 	return aniId;

@@ -129,6 +129,9 @@
     <ClCompile Include="RacoonLeaf.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="FlyGoomba.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -233,6 +236,9 @@
     <ClInclude Include="RacoonLeaf.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="FlyGoomba.h">
+      <Filter>Header Files\Characters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="mario-sample.txt">
@@ -297,6 +303,9 @@
     </Text>
     <Text Include="racoonLeaf.txt">
       <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="flyGoomba.txt">
+      <Filter>Infor Files\Characters</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,7 @@
 #include "FireBall.h"
 #include "Koopa.h"
 #include "RacoonLeaf.h"
+#include "FlyGoomba.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -316,6 +317,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects1.push_back(obj);
 		break;
 	}
+	case OBJECT_TYPE_FLY_GOOMBA:
+		obj = new CFlyGoomba(x, y);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
 
 	case OBJECT_TYPE_PORTAL:
 	{
