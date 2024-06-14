@@ -21,6 +21,24 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	if (isOnPlatform) onAir = 0;
+	else onAir += 1;
+	
+	if (flapTimer > 0)
+	{
+		flapTimer -= dt;
+	}
+	if (flapTimer <= 0 && state == MARIO_STATE_FLAP_FLOW)
+	{
+		SetState(MARIO_STATE_FLAP_FLOW_RELEASE);
+	}
+
+	/*flapTimer += dt;
+	if (flapTimer >= MARIO_FLAP_COOLDOWN) flapTimer = MARIO_FLAP_COOLDOWN;*/
+
+	if (state == MARIO_STATE_FLAP_FLOW && vy > MARIO_FLAP_FLOW_SPEED_Y) vy = MARIO_FLAP_FLOW_SPEED_Y;
+	else if (vy > MARIO_DROP_SPEED_Y) vy = MARIO_DROP_SPEED_Y;
+
 	if (state == MARIO_STATE_IDLE && ax == 0)
 	{
 		vx /= 1.1f;
@@ -58,7 +76,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->nx != 0 && e->obj->IsBlocking())
 	{
 		vx = 0;
-	}
+	}	
 
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
@@ -115,6 +133,7 @@ void CMario::OnCollisionWithMysteryBox(LPCOLLISIONEVENT e)
 {
 	if (e->ny > 0)
 	{
+		onAir = MARIO_ON_AIR_TIME;
 		CMysteryBox* p = (CMysteryBox*)e->obj;
 		p->OpenBox();
 	}
@@ -351,7 +370,14 @@ int CMario::GetAniIdRacoon()
 	int aniId = -1;
 	if (!isOnPlatform)
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
+		if (state == MARIO_STATE_FLAP_FLOW)
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_RACOON_FLAP_FLOW_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_RACOON_FLAP_FLOW_LEFT;
+		}
+		else if (abs(ax) == MARIO_ACCEL_RUN_X)
 		{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_RACOON_JUMP_RUN_RIGHT;
@@ -402,6 +428,7 @@ int CMario::GetAniIdRacoon()
 				else if (ax == 0)
 					aniId = ID_ANI_MARIO_RACOON_IDLE_LEFT;
 			}
+	DebugOut(L"aniId: %d\n", aniId);
 	if (aniId == -1) aniId = ID_ANI_MARIO_RACOON_IDLE_RIGHT;
 
 	return aniId;
@@ -430,7 +457,6 @@ void CMario::Render()
 
 void CMario::SetState(int state)
 {
-	/*DebugOut(L"state: %d\n", state);*/
 	// DIE is the end state, cannot be changed! 
 	if (this->state == MARIO_STATE_DIE) return; 
 
@@ -466,17 +492,44 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_JUMP:
 		if (isSitting) break;
-		if (isOnPlatform)
+		// First jump
+		if (isOnPlatform && canJump)
 		{
+			ay = 0;
 			if (abs(this->vx) == MARIO_RUNNING_SPEED)
 				vy = -MARIO_JUMP_RUN_SPEED_Y;
 			else
 				vy = -MARIO_JUMP_SPEED_Y;
 		}
+		canJump = false;
 		break;
 
+	case MARIO_STATE_HOLD_JUMP:
+		if (isSitting) break;
+		// Drop after jump time
+		if (onAir >= MARIO_ON_AIR_TIME)
+		{
+			ay = MARIO_GRAVITY;
+			if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
+		}
+		// Holding jump
+		else
+		{
+			vy -= MARIO_JUMP_HOLDING_SPEED_Y;
+		}
+		break;
 	case MARIO_STATE_RELEASE_JUMP:
-		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
+		canJump = true;
+		/*ay = MARIO_GRAVITY;
+		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;*/
+		/*if (onAir >= MARIO_FIRST_JUMP_TIME)
+		{
+			vy += MARIO_JUMP_SPEED_Y / 2;
+			ay = MARIO_GRAVITY;
+		}*/
+		vy += MARIO_JUMP_SPEED_Y / 2;
+		ay = MARIO_GRAVITY;
+
 		break;
 
 	case MARIO_STATE_SIT:
@@ -498,6 +551,13 @@ void CMario::SetState(int state)
 		}
 		break;
 
+	case MARIO_STATE_FLAP_FLOW:
+		vy = MARIO_FLAP_FLOW_SPEED_Y;
+		ay = MARIO_FLAP_FLOW_ACC_Y;
+		break;
+	case MARIO_STATE_FLAP_FLOW_RELEASE:
+		ay = MARIO_GRAVITY;
+		break;
 	case MARIO_STATE_IDLE:
 		ax = 0.0f;
 		//vx = 0.0f;
@@ -597,4 +657,20 @@ bool CMario::IsDamaged()
 		return true;
 	}
 	return false;
+}
+
+bool CMario::IsGrounded()
+{
+	return isOnPlatform;
+}
+
+void CMario::Flap()
+{
+	/*if (flapTimer >= MARIO_FLAP_COOLDOWN)
+	{
+		SetState(MARIO_STATE_FLAP_FLOW);
+		flapTimer = MARIO_FLAP_COOLDOWN;
+	}*/
+	SetState(MARIO_STATE_FLAP_FLOW);
+	flapTimer = MARIO_FLAP_COOLDOWN;
 }

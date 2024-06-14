@@ -12,12 +12,22 @@
 #define MARIO_ACCEL_WALK_X	0.0005f
 #define MARIO_ACCEL_RUN_X	0.0007f
 
-#define MARIO_JUMP_SPEED_Y		0.5f
+#define MARIO_JUMP_SPEED_Y		0.25f
 #define MARIO_JUMP_RUN_SPEED_Y	0.6f
+#define MARIO_JUMP_HOLDING_SPEED_Y 0.002f
+
+#define MARIO_FLAP_FLOW_SPEED_Y 0.05f
+#define MARIO_FLAP_FLOW_ACC_Y	0.0001f
+#define MARIO_DROP_SPEED_Y		0.25f
 
 #define MARIO_GRAVITY			0.002f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
+
+#define MARIO_ON_AIR_TIME		15
+#define MARIO_FIRST_JUMP_TIME	5
+
+#define MARIO_FLAP_COOLDOWN		150
 
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
@@ -26,6 +36,7 @@
 
 #define MARIO_STATE_JUMP			300
 #define MARIO_STATE_RELEASE_JUMP    301
+#define MARIO_STATE_HOLD_JUMP		302
 
 #define MARIO_STATE_RUNNING_RIGHT	400
 #define MARIO_STATE_RUNNING_LEFT	500
@@ -35,6 +46,8 @@
 
 #define MARIO_STATE_KICK			700
 
+#define MARIO_STATE_FLAP_FLOW		800
+#define MARIO_STATE_FLAP_FLOW_RELEASE 801
 
 #pragma region ANIMATION_ID
 
@@ -102,6 +115,9 @@
 #define ID_ANI_MARIO_RACOON_BRACE_LEFT 2300
 #define ID_ANI_MARIO_RACOON_BRACE_RIGHT 2301
 
+#define ID_ANI_MARIO_RACOON_FLAP_FLOW_LEFT 2400
+#define ID_ANI_MARIO_RACOON_FLAP_FLOW_RIGHT 2401
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -140,6 +156,10 @@ class CMario : public CGameObject
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
+	long onAir;
+	bool canJump;
+	long flapTimer;
+
 	int level; 
 	int untouchable; 
 	ULONGLONG untouchable_start;
@@ -169,7 +189,11 @@ public:
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
 
-		level = MARIO_LEVEL_BIG;
+		onAir = 0;
+		canJump = true;
+		flapTimer = 0;
+
+		level = MARIO_LEVEL_RACOON;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
@@ -181,7 +205,7 @@ public:
 
 	int IsCollidable()
 	{ 
-		return (state != MARIO_STATE_DIE); 
+		return (state != MARIO_STATE_DIE);
 	}
 
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
@@ -197,4 +221,6 @@ public:
 
 	bool IsHoldingShell();
 	bool IsDamaged();
+	bool IsGrounded();
+	void Flap();
 };

@@ -10,14 +10,17 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMario* mario = (CMario *)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer(); 
-
+	if (mario->GetState() == MARIO_STATE_FLAP_FLOW) return;
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT);
 		break;
 	case DIK_S:
-		mario->SetState(MARIO_STATE_JUMP);
+		if (!mario->IsGrounded() && mario->GetLevel() == MARIO_LEVEL_RACOON)
+			mario->Flap();
+		else
+			mario->SetState(MARIO_STATE_JUMP);
 		break;
 	case DIK_1:
 		mario->SetLevel(MARIO_LEVEL_SMALL);
@@ -39,10 +42,14 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	//DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+	if (mario->GetState() == MARIO_STATE_FLAP_FLOW) return;
 	switch (KeyCode)
 	{
 	case DIK_S:
-		mario->SetState(MARIO_STATE_RELEASE_JUMP);
+		if (mario->GetState() == MARIO_STATE_FLAP_FLOW)
+			mario->SetState(MARIO_STATE_FLAP_FLOW_RELEASE);
+		else 
+			mario->SetState(MARIO_STATE_RELEASE_JUMP);
 		break;
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
@@ -60,6 +67,12 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 {
 	LPGAME game = CGame::GetInstance();
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
+
+	if (mario->GetState() == MARIO_STATE_FLAP_FLOW) return;
+	if (game->IsKeyDown(DIK_S))
+	{		
+		mario->SetState(MARIO_STATE_HOLD_JUMP);
+	}
 
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
