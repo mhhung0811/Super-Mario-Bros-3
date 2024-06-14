@@ -14,6 +14,7 @@
 #include "Koopa.h"
 #include "RacoonLeaf.h"
 #include "FlyGoomba.h"
+#include "Spawner.h"
 
 #include "Collision.h"
 
@@ -99,6 +100,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithRacoonLeaf(e);
 	else if (dynamic_cast<CFlyGoomba*>(e->obj))
 		OnCollisionWithFlyGoomba(e);
+	else if (dynamic_cast<CSpawner*>(e->obj))
+		OnCollisionWithSpawner(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -252,6 +255,13 @@ void CMario::OnCollisionWithFlyGoomba(LPCOLLISIONEVENT e)
 	{
 		IsDamaged();
 	}
+}
+
+void CMario::OnCollisionWithSpawner(LPCOLLISIONEVENT e)
+{
+	CSpawner* spawner = dynamic_cast<CSpawner*>(e->obj);
+
+	spawner->Spawn();
 }
 
 //

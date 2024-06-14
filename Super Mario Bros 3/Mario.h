@@ -176,6 +176,7 @@ class CMario : public CGameObject
 	void OnCollisionWithKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithRacoonLeaf(LPCOLLISIONEVENT e);
 	void OnCollisionWithFlyGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithSpawner(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
@@ -194,7 +195,7 @@ public:
 		canJump = true;
 		flapTimer = 0;
 
-		level = MARIO_LEVEL_RACOON;
+		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;

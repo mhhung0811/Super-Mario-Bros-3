@@ -21,6 +21,7 @@
 #include "RacoonLeaf.h"
 #include "FlyGoomba.h"
 #include "Wing.h"
+#include "Spawner.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -332,6 +333,28 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects0.push_back(obj);
 		break;
 	}
+	case OBJECT_TYPE_SPAWNER:
+	{
+		vector<int> ids;
+		vector<float> coordinateX;
+		vector<float> coordinateY;
+		int bboxWidth = atoi(tokens[3].c_str());
+		int bboxHeight = atoi(tokens[4].c_str());
+		for (int i = 5; i < tokens.size(); i += 3)  
+		{
+			int id = atoi(tokens[i].c_str());
+			float coX = atof(tokens[i + 1].c_str());
+			float coY = atof(tokens[i + 2].c_str());
+			
+			ids.push_back(id);
+			coordinateX.push_back(coX);
+			coordinateY.push_back(coY);
+		}
+		obj = new CSpawner(x, y, bboxWidth, bboxHeight, ids, coordinateX, coordinateY);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
+	}
 
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -618,6 +641,28 @@ void CPlayScene::AddObject(CGameObject* obj, int type)
 		break;
 	case 1:
 		objects1.push_back(obj);
+		break;
+	default:
+		break;
+	}
+}
+
+void CPlayScene::SpawnMonster(int id, float x, float y)
+{
+	CGameObject* obj;
+	switch (id)
+	{
+	case OBJECT_TYPE_GOOMBA:
+		obj = new CGoomba(x, y);
+		obj->SetPosition(x, y);
+		/*objects0.push_back(obj);*/
+		objects0.insert(objects0.end(), obj);
+		break;
+	case OBJECT_TYPE_FLY_GOOMBA:
+		obj = new CFlyGoomba(x, y);
+		obj->SetPosition(x, y);
+		/*objects0.push_back(obj);*/
+		objects0.insert(objects0.end(), obj);
 		break;
 	default:
 		break;

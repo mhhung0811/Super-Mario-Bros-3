@@ -45,6 +45,7 @@ public:
 	void CreateItem(int id, float x, float y);
 	void CreateFireBall(float x, float y, int dir);
 	void AddObject(CGameObject* obj, int type);
+	void SpawnMonster(int id, float x, float y);
 };
 
 typedef CPlayScene* LPPLAYSCENE;
