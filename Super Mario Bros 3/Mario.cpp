@@ -746,6 +746,7 @@ bool CMario::IsDamaged()
 {
 	if (untouchable == 0)
 	{
+		holdedObj = nullptr;
 		switch (level)
 		{
 		case MARIO_LEVEL_SMALL:

@@ -110,6 +110,13 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		resTime += dt;
 		if (resTime >= KOOPA_RESURRECT_TIME)
 		{
+			// deal damage to player
+			if (isHolded)
+			{
+				LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+				CMario* mario = dynamic_cast<CMario*>(playScene->GetPlayer());
+				mario->IsDamaged();
+			}
 			ToWalking();
 			resTime = 0;
 		}
