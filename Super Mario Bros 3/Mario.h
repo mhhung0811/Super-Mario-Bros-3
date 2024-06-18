@@ -28,6 +28,7 @@
 #define MARIO_FIRST_JUMP_TIME	5
 
 #define MARIO_FLAP_COOLDOWN		150
+#define MARIO_KICK_TIME			150
 
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
@@ -176,6 +177,7 @@ class CMario : public CGameObject
 {
 	BOOLEAN isSitting;
 	BOOLEAN isHolding;
+	BOOLEAN canSetState;
 
 	CGameObject* holdedObj = NULL;
 
@@ -186,6 +188,7 @@ class CMario : public CGameObject
 	long onAir;
 	bool canJump;
 	long flapTimer;
+	long kickTimer;
 
 	int level; 
 	int untouchable; 
@@ -214,6 +217,8 @@ public:
 	{
 		isSitting = false;
 		isHolding = false;
+		canSetState = true;
+
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY; 
@@ -221,6 +226,8 @@ public:
 		onAir = 0;
 		canJump = true;
 		flapTimer = 0;
+
+		kickTimer = 0;
 
 		level = MARIO_LEVEL_BIG;
 		untouchable = 0;
