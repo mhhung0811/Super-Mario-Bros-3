@@ -3,6 +3,8 @@
 #include "EmptyObject.h"
 #include "PlayScene.h"
 #include "MysteryBox.h"
+#include "Goomba.h"
+#include "FlyGoomba.h"
 #include "debug.h"
 
 #define KOOPA_GRAVITY 0.002f

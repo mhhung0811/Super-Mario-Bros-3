@@ -33,5 +33,5 @@ void CEmptyObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CEmptyObject::Render()
 {
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
