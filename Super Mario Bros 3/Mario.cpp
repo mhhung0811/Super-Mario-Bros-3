@@ -23,9 +23,31 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	if (abs(vx) >= MARIO_RUNNING_SLOW_SPEED && 
+		abs(ax) >= MARIO_ACCEL_RUN_SLOW_X && 
+		vx * ax > 0 &&
+		runCharge <= MARIO_RUN_CHARGE_MAX * 1.2)
+	{
+		runCharge += dt;
+		runChargeTimer = 0;
+	}
+	else
+	{
+		if (runChargeTimer >= MARIO_RUN_CHARGE_DROP_TIME && runCharge > 0)
+		{
+			runCharge -= MARIO_RUN_CHARGE_MAX / 6;
+			if (runCharge < 0) runCharge = 0;
+			runChargeTimer = 0;
+		}
+		else
+		{
+			runChargeTimer += dt;
+		}
+	}
+
+	// Flap timer
 	if (isOnPlatform) onAir = 0;
 	else onAir += 1;
-	
 	if (flapTimer > 0)
 	{
 		flapTimer -= dt;
@@ -35,6 +57,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		SetState(MARIO_STATE_FLAP_FLOW_RELEASE);
 	}
 
+	// Kick timer
 	if (state == MARIO_STATE_KICK)
 	{
 		kickTimer -= dt;
@@ -45,15 +68,18 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
+	// Max Drop Speed
 	if (state == MARIO_STATE_FLAP_FLOW && vy > MARIO_FLAP_FLOW_SPEED_Y) vy = MARIO_FLAP_FLOW_SPEED_Y;
 	else if (vy > MARIO_DROP_SPEED_Y) vy = MARIO_DROP_SPEED_Y;
 
+	// Drag force
 	if (state == MARIO_STATE_IDLE && ax == 0)
 	{
 		vx /= 1.1f;
 		if (abs(vx) <= 0.00001f) vx = 0;
 	}
 
+	// Max Velocity
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	// reset untouchable timer if untouchable time has passed
@@ -327,7 +353,9 @@ int CMario::GetAniIdSmall()
 			aniId = ID_ANI_MARIO_SMALL_BRACE_RIGHT;
 		else if (ax == MARIO_ACCEL_RUN_X)
 			aniId = ID_ANI_MARIO_SMALL_RUNNING_RIGHT;
-		else if (ax == MARIO_ACCEL_WALK_X)
+		else if (ax == MARIO_ACCEL_RUN_SLOW_X)
+			aniId = ID_ANI_MARIO_SMALL_RUNNING_SLOW_RIGHT;
+		else if (ax == MARIO_ACCEL_WALK_X)		
 			aniId = ID_ANI_MARIO_SMALL_WALKING_RIGHT;
 		else if (ax == 0)
 			aniId = ID_ANI_MARIO_SMALL_IDLE_RIGHT;
@@ -342,6 +370,8 @@ int CMario::GetAniIdSmall()
 			aniId = ID_ANI_MARIO_SMALL_BRACE_LEFT;
 		else if (ax == -MARIO_ACCEL_RUN_X)
 			aniId = ID_ANI_MARIO_SMALL_RUNNING_LEFT;
+		else if (ax == MARIO_ACCEL_RUN_SLOW_X)
+			aniId = ID_ANI_MARIO_SMALL_RUNNING_SLOW_LEFT;
 		else if (ax == -MARIO_ACCEL_WALK_X)
 			aniId = ID_ANI_MARIO_SMALL_WALKING_LEFT;
 		else if (ax == 0)
@@ -414,6 +444,8 @@ int CMario::GetAniIdBig()
 			aniId = ID_ANI_MARIO_HOLDSHELL_WALK_RIGHT;
 		else if (ax < 0)
 			aniId = ID_ANI_MARIO_BRACE_RIGHT;
+		else if (ax == MARIO_ACCEL_RUN_SLOW_X)
+			aniId = ID_ANI_MARIO_RUNNING_SLOW_RIGHT;
 		else if (ax == MARIO_ACCEL_RUN_X)
 			aniId = ID_ANI_MARIO_RUNNING_RIGHT;
 		else if (ax == MARIO_ACCEL_WALK_X)
@@ -429,6 +461,8 @@ int CMario::GetAniIdBig()
 			aniId = ID_ANI_MARIO_HOLDSHELL_WALK_LEFT;
 		else if (ax > 0)
 			aniId = ID_ANI_MARIO_BRACE_LEFT;
+		else if (ax == -MARIO_ACCEL_RUN_SLOW_X)
+			aniId = ID_ANI_MARIO_RUNNING_SLOW_LEFT;
 		else if (ax == -MARIO_ACCEL_RUN_X)
 			aniId = ID_ANI_MARIO_RUNNING_LEFT;
 		else if (ax == -MARIO_ACCEL_WALK_X)
@@ -504,6 +538,8 @@ int CMario::GetAniIdRacoon()
 			aniId = ID_ANI_MARIO_RACOON_BRACE_RIGHT;
 		else if (ax == MARIO_ACCEL_RUN_X)
 			aniId = ID_ANI_MARIO_RACOON_RUNNING_RIGHT;
+		else if (ax == MARIO_ACCEL_RUN_SLOW_X)
+			aniId = ID_ANI_MARIO_RACOON_RUNNING_SLOW_RIGHT;
 		else if (ax == MARIO_ACCEL_WALK_X)
 			aniId = ID_ANI_MARIO_RACOON_WALKING_RIGHT;
 		else if (ax == 0)
@@ -519,6 +555,8 @@ int CMario::GetAniIdRacoon()
 			aniId = ID_ANI_MARIO_RACOON_BRACE_LEFT;
 		else if (ax == -MARIO_ACCEL_RUN_X)
 			aniId = ID_ANI_MARIO_RACOON_RUNNING_LEFT;
+		else if (ax == MARIO_ACCEL_RUN_SLOW_X)
+			aniId = ID_ANI_MARIO_RACOON_RUNNING_SLOW_LEFT;
 		else if (ax == -MARIO_ACCEL_WALK_X)
 			aniId = ID_ANI_MARIO_RACOON_WALKING_LEFT;
 		else if (ax == 0)
@@ -547,7 +585,7 @@ void CMario::Render()
 
 	//RenderBoundingBox();
 	
-	DebugOutTitle(L"Coins: %d", coin);
+	DebugOutTitle(L"Coins: %d, Run: %d", coin, runCharge);
 }
 
 void CMario::SetState(int state)
@@ -559,16 +597,16 @@ void CMario::SetState(int state)
 	{
 	case MARIO_STATE_RUNNING_RIGHT:
 		if (isSitting) break;
-		isHolding = true;		
-		maxVx = MARIO_RUNNING_SPEED;
-		ax = MARIO_ACCEL_RUN_X;
+		isHolding = true;
+		maxVx = (runCharge < MARIO_RUN_CHARGE_MAX) ? MARIO_RUNNING_SLOW_SPEED : MARIO_RUNNING_SPEED;
+		ax = (runCharge < MARIO_RUN_CHARGE_MAX) ? MARIO_ACCEL_RUN_SLOW_X : MARIO_ACCEL_RUN_X;
 		nx = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
 		if (isSitting) break;
 		isHolding = true;
-		maxVx = -MARIO_RUNNING_SPEED;
-		ax = -MARIO_ACCEL_RUN_X;
+		maxVx = -((runCharge < MARIO_RUN_CHARGE_MAX) ? MARIO_RUNNING_SLOW_SPEED : MARIO_RUNNING_SPEED);
+		ax = -((runCharge < MARIO_RUN_CHARGE_MAX) ? MARIO_ACCEL_RUN_SLOW_X : MARIO_ACCEL_RUN_X);
 		nx = -1;
 		break;
 	case MARIO_STATE_WALKING_RIGHT:

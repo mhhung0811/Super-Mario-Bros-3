@@ -7,10 +7,12 @@
 #include "debug.h"
 
 #define MARIO_WALKING_SPEED		0.1f
+#define MARIO_RUNNING_SLOW_SPEED 0.125f
 #define MARIO_RUNNING_SPEED		0.2f
 
 #define MARIO_ACCEL_WALK_X	0.0005f
-#define MARIO_ACCEL_RUN_X	0.0007f
+#define	MARIO_ACCEL_RUN_SLOW_X	0.0007f
+#define MARIO_ACCEL_RUN_X	0.0009f
 
 #define MARIO_JUMP_SPEED_Y		0.25f
 #define MARIO_JUMP_RUN_SPEED_Y	0.4f
@@ -23,12 +25,6 @@
 #define MARIO_GRAVITY			0.002f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.4f
-
-#define MARIO_ON_AIR_TIME		15
-#define MARIO_FIRST_JUMP_TIME	5
-
-#define MARIO_FLAP_COOLDOWN		150
-#define MARIO_KICK_TIME			150
 
 #define MARIO_STATE_DIE				-10
 #define MARIO_STATE_IDLE			0
@@ -60,6 +56,9 @@
 
 #define ID_ANI_MARIO_RUNNING_RIGHT 600
 #define ID_ANI_MARIO_RUNNING_LEFT 601
+
+#define ID_ANI_MARIO_RUNNING_SLOW_LEFT	602
+#define ID_ANI_MARIO_RUNNING_SLOW_RIGHT	603
 
 #define ID_ANI_MARIO_JUMP_WALK_RIGHT 700
 #define ID_ANI_MARIO_JUMP_WALK_LEFT 701
@@ -97,6 +96,9 @@
 #define ID_ANI_MARIO_SMALL_RUNNING_RIGHT 1300
 #define ID_ANI_MARIO_SMALL_RUNNING_LEFT 1301
 
+#define ID_ANI_MARIO_SMALL_RUNNING_SLOW_LEFT 1302
+#define ID_ANI_MARIO_SMALL_RUNNING_SLOW_RIGHT 1303
+
 #define ID_ANI_MARIO_SMALL_BRACE_RIGHT 1400
 #define ID_ANI_MARIO_SMALL_BRACE_LEFT 1401
 
@@ -124,6 +126,9 @@
 
 #define ID_ANI_MARIO_RACOON_RUNNING_LEFT 1900
 #define ID_ANI_MARIO_RACOON_RUNNING_RIGHT 1901
+
+#define ID_ANI_MARIO_RACOON_RUNNING_SLOW_LEFT 1902
+#define ID_ANI_MARIO_RACOON_RUNNING_SLOW_RIGHT 1903
 
 #define ID_ANI_MARIO_RACOON_JUMP_WALK_LEFT 2000
 #define ID_ANI_MARIO_RACOON_JUMP_WALK_RIGHT 2001
@@ -179,6 +184,15 @@
 
 #define MARIO_UNTOUCHABLE_TIME 2500
 
+#define MARIO_ON_AIR_TIME		15
+#define MARIO_FIRST_JUMP_TIME	5
+
+#define MARIO_FLAP_COOLDOWN		150
+#define MARIO_KICK_TIME			150
+
+#define MARIO_RUN_CHARGE_MAX	1500
+#define MARIO_RUN_CHARGE_DROP_TIME	500
+
 class CMario : public CGameObject
 {
 	BOOLEAN isSitting;
@@ -195,6 +209,8 @@ class CMario : public CGameObject
 	bool canJump;
 	long flapTimer;
 	long kickTimer;
+	long runCharge;
+	long runChargeTimer;
 
 	int level; 
 	int untouchable; 
@@ -232,10 +248,11 @@ public:
 		onAir = 0;
 		canJump = true;
 		flapTimer = 0;
-
 		kickTimer = 0;
+		runCharge = 0;
+		runChargeTimer = 0;
 
-		level = MARIO_LEVEL_RACOON;
+		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;

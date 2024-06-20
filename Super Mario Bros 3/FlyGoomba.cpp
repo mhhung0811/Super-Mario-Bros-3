@@ -134,7 +134,7 @@ void CFlyGoomba::Render()
 	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CFlyGoomba::SetState(int state)
