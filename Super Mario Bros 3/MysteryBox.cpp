@@ -73,7 +73,7 @@ void CMysteryBox::Render()
 		aniId = ID_ANI_MYSTERYBOX_UNACTIVE;
 	}
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CMysteryBox::RenderBoundingBox()

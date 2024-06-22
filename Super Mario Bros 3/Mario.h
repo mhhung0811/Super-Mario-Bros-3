@@ -187,6 +187,7 @@
 #define MARIO_ON_AIR_TIME		15
 #define MARIO_FIRST_JUMP_TIME	5
 
+#define MARIO_FLOW_TIME			200
 #define MARIO_FLAP_COOLDOWN		150
 #define MARIO_KICK_TIME			150
 
@@ -207,6 +208,7 @@ class CMario : public CGameObject
 
 	long onAir;
 	bool canJump;
+	long flowTimer;
 	long flapTimer;
 	long kickTimer;
 	long runCharge;
@@ -247,12 +249,13 @@ public:
 
 		onAir = 0;
 		canJump = true;
+		flowTimer = 0;
 		flapTimer = 0;
 		kickTimer = 0;
 		runCharge = 0;
 		runChargeTimer = 0;
 
-		level = MARIO_LEVEL_SMALL;
+		level = MARIO_LEVEL_RACOON;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;

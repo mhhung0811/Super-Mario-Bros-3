@@ -45,6 +45,16 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
+	// Flow timer
+	if (flowTimer > 0)
+	{
+		flowTimer -= dt;
+		if (flowTimer <= 0 || isOnPlatform)
+		{
+			ay = MARIO_GRAVITY;
+		}
+	}
+
 	// Flap timer
 	if (isOnPlatform) onAir = 0;
 	else onAir += 1;
@@ -685,11 +695,13 @@ void CMario::SetState(int state)
 		break;
 
 	case MARIO_STATE_FLAP_FLOW:
+		flowTimer = 0;
 		vy = MARIO_FLAP_FLOW_SPEED_Y;
 		ay = MARIO_FLAP_FLOW_ACC_Y;
 		break;
 	case MARIO_STATE_FLAP_FLOW_RELEASE:
-		ay = MARIO_GRAVITY;
+		flowTimer = MARIO_FLOW_TIME;
+		//ay = MARIO_GRAVITY;
 		break;
 	case MARIO_STATE_IDLE:
 		ax = 0.0f;
