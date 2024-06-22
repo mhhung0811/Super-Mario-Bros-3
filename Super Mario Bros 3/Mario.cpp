@@ -23,12 +23,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	// Run Charge
 	if (abs(vx) >= MARIO_RUNNING_SLOW_SPEED && 
 		abs(ax) >= MARIO_ACCEL_RUN_SLOW_X && 
 		vx * ax > 0 &&
 		runCharge <= MARIO_RUN_CHARGE_MAX * 1.2)
 	{
-		runCharge += dt;
+		if (isOnPlatform)
+			runCharge += dt;
 		runChargeTimer = 0;
 	}
 	else
@@ -41,7 +43,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 		else
 		{
-			runChargeTimer += dt;
+			if (runCharge > 0)
+				runChargeTimer += dt;
 		}
 	}
 
@@ -81,6 +84,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// Max Drop Speed
 	if (state == MARIO_STATE_FLAP_FLOW && vy > MARIO_FLAP_FLOW_SPEED_Y) vy = MARIO_FLAP_FLOW_SPEED_Y;
 	else if (vy > MARIO_DROP_SPEED_Y) vy = MARIO_DROP_SPEED_Y;
+
+	// Max Fly Speed
+	if ((state == MARIO_STATE_FLAP_FLOW || state == MARIO_STATE_FLAP_FLOW_RELEASE) && vy < -MARIO_FLY_SPEED_Y) vy = -MARIO_FLY_SPEED_Y;
 
 	// Drag force
 	if (state == MARIO_STATE_IDLE && ax == 0)
@@ -503,7 +509,10 @@ int CMario::GetAniIdRacoon()
 		}
 		else if (state == MARIO_STATE_FLAP_FLOW)
 		{
-			aniId = (nx >= 0) ? ID_ANI_MARIO_RACOON_FLAP_FLOW_RIGHT : ID_ANI_MARIO_RACOON_FLAP_FLOW_LEFT;
+			if (runCharge >= MARIO_RUN_CHARGE_MAX)
+				aniId = (nx >= 0) ? ID_ANI_MARIO_RACOON_FLAP_FLY_RIGHT : ID_ANI_MARIO_RACOON_FLAP_FLY_LEFT;
+			else 
+				aniId = (nx >= 0) ? ID_ANI_MARIO_RACOON_FLAP_FLOW_RIGHT : ID_ANI_MARIO_RACOON_FLAP_FLOW_LEFT;
 		}
 		else if (abs(ax) == MARIO_ACCEL_RUN_X)
 		{
@@ -565,7 +574,7 @@ int CMario::GetAniIdRacoon()
 			aniId = ID_ANI_MARIO_RACOON_BRACE_LEFT;
 		else if (ax == -MARIO_ACCEL_RUN_X)
 			aniId = ID_ANI_MARIO_RACOON_RUNNING_LEFT;
-		else if (ax == MARIO_ACCEL_RUN_SLOW_X)
+		else if (ax == -MARIO_ACCEL_RUN_SLOW_X)
 			aniId = ID_ANI_MARIO_RACOON_RUNNING_SLOW_LEFT;
 		else if (ax == -MARIO_ACCEL_WALK_X)
 			aniId = ID_ANI_MARIO_RACOON_WALKING_LEFT;
@@ -595,7 +604,7 @@ void CMario::Render()
 
 	//RenderBoundingBox();
 	
-	DebugOutTitle(L"Coins: %d, Run: %d", coin, runCharge);
+	DebugOutTitle(L"Coins: %d, Run: %d, RunTimer: %d", coin, runCharge, runChargeTimer);
 }
 
 void CMario::SetState(int state)
@@ -696,8 +705,18 @@ void CMario::SetState(int state)
 
 	case MARIO_STATE_FLAP_FLOW:
 		flowTimer = 0;
-		vy = MARIO_FLAP_FLOW_SPEED_Y;
-		ay = MARIO_FLAP_FLOW_ACC_Y;
+		// Running
+		if (runCharge >= MARIO_RUN_CHARGE_MAX)
+		{
+			vy = -MARIO_FLAP_FLY_SPEED_Y;
+			ay = -MARIO_FLAP_FLY_ACC_Y;
+		}
+		// Walking
+		else
+		{
+			vy = MARIO_FLAP_FLOW_SPEED_Y;
+			ay = MARIO_FLAP_FLOW_ACC_Y;
+		}
 		break;
 	case MARIO_STATE_FLAP_FLOW_RELEASE:
 		flowTimer = MARIO_FLOW_TIME;
