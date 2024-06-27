@@ -44,7 +44,7 @@ void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			ay = 0;
 			vy = 0;
-			y = fixedY - cy;
+			y = fixedY;
 			// open mushroom
 			if (isOpened == MYSTERYBOX_GIFT_LEVELUP)
 			{
@@ -58,7 +58,7 @@ void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	if (state == MYSTERYBOX_STATE_UNACTIVE && y != fixedX - cy)
 	{
-		y = fixedY - cy;
+		y = fixedY;
 	}
 
 	CGameObject::Update(dt, coObjects);

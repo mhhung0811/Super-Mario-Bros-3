@@ -136,11 +136,11 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
 	CGame::GetInstance()->GetCamPos(cx, cy);
 	// Appear & Disappear
-	if (state == PIRANHAPLANT_STATE_APPEAR && y <= (fixedY - cy)-PIRANHAPLANT_BBOX_HEIGHT)
+	if (state == PIRANHAPLANT_STATE_APPEAR && y <= (fixedY)-PIRANHAPLANT_BBOX_HEIGHT)
 	{
 		SetState(PIRANHAPLANT_STATE_IDLE);
 	}
-	if (state == PIRANHAPLANT_STATE_DISAPPEAR && y >= (fixedY - cy) + 10)
+	if (state == PIRANHAPLANT_STATE_DISAPPEAR && y >= (fixedY) + 10)
 	{
 		SetState(PIRANHAPLANT_STATE_IDLE);
 	}
@@ -158,7 +158,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0:
 			facingDir = 0;
 			// only shoot 1 per idle UP
-			if (canShoot && y < fixedY - cy)
+			if (canShoot && y < fixedY)
 			{
 				canShoot = false;
 				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_LEFT_LOW_0);
@@ -166,7 +166,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1:
 			facingDir = 0;
-			if (canShoot && y < fixedY - cy)
+			if (canShoot && y < fixedY)
 			{
 				canShoot = false;
 				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_LEFT_LOW_1);
@@ -174,7 +174,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0:
 			facingDir = 1;
-			if (canShoot && y < fixedY - cy)
+			if (canShoot && y < fixedY)
 			{
 				canShoot = false;
 				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_LEFT_HIGH_0);
@@ -182,7 +182,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1:
 			facingDir = 1;
-			if (canShoot && y < fixedY - cy)
+			if (canShoot && y < fixedY)
 			{
 				canShoot = false;
 				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_LEFT_HIGH_1);
@@ -190,7 +190,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_0:
 			facingDir = 2;
-			if (canShoot && y < fixedY - cy)
+			if (canShoot && y < fixedY)
 			{
 				canShoot = false;
 				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_RIGHT_LOW_1);
@@ -198,7 +198,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_LOW_1:
 			facingDir = 2;
-			if (canShoot && y < fixedY - cy)
+			if (canShoot && y < fixedY)
 			{
 				canShoot = false;
 				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_RIGHT_LOW_1);
@@ -206,7 +206,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0:
 			facingDir = 3;
-			if (canShoot && y < fixedY - cy)
+			if (canShoot && y < fixedY)
 			{
 				canShoot = false;
 				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_RIGHT_HIGH_0);
@@ -214,7 +214,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			break;
 		case ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1:
 			facingDir = 3;
-			if (canShoot && y < fixedY - cy)
+			if (canShoot && y < fixedY)
 			{
 				canShoot = false;
 				playScene->CreateFireBall(x, y - 8, FIREBALL_DIRECTION_RIGHT_HIGH_1);
@@ -232,7 +232,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (isIdle > PIRANHAPLANT_IDLE_TIME)
 		{
 			isIdle = 0;
-			if (y < (fixedY - cy))
+			if (y < (fixedY))
 			{
 				SetState(PIRANHAPLANT_STATE_DISAPPEAR);
 			}
@@ -289,7 +289,7 @@ void CPiranhaPlant::Render()
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
 
-	/*RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0);
+	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0);
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1);
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0);
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1);
@@ -298,7 +298,7 @@ void CPiranhaPlant::Render()
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0);
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1);
 	RenderShootBox(ID_PIRANHAPLANT_SAFE_BOX);
-	RenderBoundingBox();*/
+	RenderBoundingBox();
 }
 
 void CPiranhaPlant::SetState(int state)
