@@ -289,7 +289,7 @@ void CPiranhaPlant::Render()
 		CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	}
 
-	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0);
+	/*RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_0);
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_LOW_1);
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_0);
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_LEFT_HIGH_1);
@@ -298,7 +298,7 @@ void CPiranhaPlant::Render()
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_0);
 	RenderShootBox(ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1);
 	RenderShootBox(ID_PIRANHAPLANT_SAFE_BOX);
-	RenderBoundingBox();
+	RenderBoundingBox();*/
 }
 
 void CPiranhaPlant::SetState(int state)
