@@ -3,6 +3,7 @@
 
 #include "Animation.h"
 #include "Animations.h"
+#include "PlayScene.h"
 
 #include "debug.h"
 
@@ -204,6 +205,7 @@ class CMario : public CGameObject
 	BOOLEAN isSitting;
 	BOOLEAN isHolding;
 	BOOLEAN canSetState;
+	BOOLEAN isCamFollowY;
 
 	CGameObject* holdedObj = NULL;
 
@@ -247,6 +249,7 @@ public:
 		isSitting = false;
 		isHolding = false;
 		canSetState = true;
+		isCamFollowY = false;
 
 		maxVx = 0.0f;
 		ax = 0.0f;
@@ -289,5 +292,8 @@ public:
 	bool IsHoldingShell();
 	bool IsDamaged();
 	bool IsGrounded();
+	bool IsCamFollowY() { return isCamFollowY; }
 	void Flap();
+	int FaceDirection() { return nx; }
+	int IsUp() { return (vy > 0) ? 1 : -1; }
 };

@@ -17,6 +17,8 @@ using namespace std;
 #define MAX_FRAME_RATE 100
 #define KEYBOARD_BUFFER_SIZE 1024
 #define KEYBOARD_STATE_SIZE 256
+#define CAM_FORWARD_X 16
+#define CAM_FORWARD_Y 32
 
 
 
@@ -48,6 +50,10 @@ class CGame
 
 	float cam_x = 0.0f;
 	float cam_y = 0.0f;
+	float leftBorder = -CAM_FORWARD_X;
+	float rightBorder = CAM_FORWARD_X;
+	float upBorder = -CAM_FORWARD_Y;
+	float downBorder = CAM_FORWARD_Y;
 
 	HINSTANCE hInstance;
 
@@ -104,7 +110,42 @@ public:
 
 	void SetPointSamplerState();
 
-	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; }
+	void SetCamPos(float x, float y, int xDir, int yDir) 
+	{
+		if (xDir > 0)
+		{
+			leftBorder = x - CAM_FORWARD_X;
+			if (x >= rightBorder)
+			{
+				cam_x = x - CAM_FORWARD_X/2;
+			}
+		}
+		else
+		{
+			rightBorder = x + CAM_FORWARD_X;
+			if (x <= leftBorder)
+			{
+				cam_x = x + CAM_FORWARD_X/2;
+			}
+		}
+
+		if (yDir > 0)
+		{
+			upBorder = y - CAM_FORWARD_Y;
+			if (y >= downBorder)
+			{
+				cam_y = y - CAM_FORWARD_Y / 2;
+			}
+		}
+		else
+		{
+			downBorder = y + CAM_FORWARD_Y;
+			if (y <= upBorder)
+			{
+				cam_y = y + CAM_FORWARD_Y / 2;
+			}
+		}
+	}
 	void GetCamPos(float& x, float& y) { x = cam_x; y = cam_y; }
 
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }

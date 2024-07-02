@@ -23,6 +23,11 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	if (y > (SCREEN_HEIGHT - SCREEN_UI) / 2)
+	{
+		isCamFollowY = false;
+	}
+
 	// Run Charge
 	if (abs(vx) >= MARIO_RUNNING_SLOW_SPEED && 
 		abs(ax) >= MARIO_ACCEL_RUN_SLOW_X && 
@@ -708,6 +713,7 @@ void CMario::SetState(int state)
 		// Running
 		if (runCharge >= MARIO_RUN_CHARGE_MAX)
 		{
+			isCamFollowY = true;
 			vy = -MARIO_FLAP_FLY_SPEED_Y;
 			ay = -MARIO_FLAP_FLY_ACC_Y;
 		}

@@ -8,6 +8,10 @@
 #include "Goomba.h"
 //#include "Koopas.h"
 
+// Pls sync with other in main.cpp if changes
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 290
+#define SCREEN_UI 50
 
 class CPlayScene: public CScene
 {
