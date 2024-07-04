@@ -126,7 +126,14 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
-		if (e->ny < 0) isOnPlatform = true;
+		if (e->ny < 0) 
+		{
+			isOnPlatform = true;
+		}
+		else
+		{
+			runChargeTimer = MARIO_RUN_CHARGE_DROP_TIME;
+		}
 	}
 	else 
 	if (e->nx != 0 && e->obj->IsBlocking())

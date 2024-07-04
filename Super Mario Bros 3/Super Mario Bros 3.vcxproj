@@ -214,6 +214,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Wing.h" />
+    <ClInclude Include="WorldWall.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="brick.txt" />

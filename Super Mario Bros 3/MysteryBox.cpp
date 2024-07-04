@@ -36,11 +36,11 @@ void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == MYSTERYBOX_STATE_OPEN)
 	{
-		if (y <= (fixedY - cy) + 5)
+		if (y <= (fixedY) + 5)
 		{
 			ay = MYSTERYBOX_GRAVITY;
 		}
-		if (y > (fixedY - cy))
+		if (y > (fixedY))
 		{
 			ay = 0;
 			vy = 0;

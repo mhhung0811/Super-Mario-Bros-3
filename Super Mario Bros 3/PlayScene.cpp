@@ -22,6 +22,7 @@
 #include "FlyGoomba.h"
 #include "Wing.h"
 #include "Spawner.h"
+#include "WorldWall.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -355,6 +356,34 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		objects0.push_back(obj);
 		break;
 	}
+	
+	case OBJECT_TYPE_WORLDWALL:
+	{
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+		int height = atoi(tokens[6].c_str());
+		int sprite_top_begin = atoi(tokens[7].c_str());
+		int sprite_top_middle = atoi(tokens[8].c_str());
+		int sprite_top_end = atoi(tokens[9].c_str());
+		int sprite_mid_begin = atoi(tokens[10].c_str());
+		int sprite_mid_middle = atoi(tokens[11].c_str());
+		int sprite_mid_end = atoi(tokens[12].c_str());
+		int sprite_bottom_begin = atoi(tokens[13].c_str());
+		int sprite_bottom_middle = atoi(tokens[14].c_str());
+		int sprite_bottom_end = atoi(tokens[15].c_str());
+
+		obj = new CWorldWall(
+			x, y,
+			cell_width, cell_height, length, height,
+			sprite_top_begin, sprite_top_middle, sprite_top_end,
+			sprite_mid_begin, sprite_mid_middle, sprite_mid_end,
+			sprite_bottom_begin, sprite_bottom_middle, sprite_bottom_end
+		);
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	}
 
 	case OBJECT_TYPE_PORTAL:
 	{
@@ -511,6 +540,7 @@ void CPlayScene::Update(DWORD dt)
 	
 	if (cx < 0) cx = 0;
 	if (cy > 0) cy = 0;
+	if (cy < WORLD_CEILING) cy = WORLD_CEILING;
 
 	if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 2 && mario->IsCamFollowY())
 		CGame::GetInstance()->SetCamPos(cx, cy, mario->FaceDirection(), mario->IsUp());

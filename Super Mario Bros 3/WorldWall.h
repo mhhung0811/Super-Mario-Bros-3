@@ -1,9 +1,13 @@
 #pragma once
 
-#include "GameObject.h"
+#include "Cube.h"
 
-class CCube : public CGameObject
+// 
+// Invicible Wall!
+// 
+class CWorldWall : public CCube
 {
+protected:
 protected:
 	int length;
 	int height;
@@ -19,13 +23,21 @@ protected:
 		spriteIdBottomMiddle,
 		spriteIdBottomEnd;
 public:
-	CCube(
+	CWorldWall(
 		float x, float y,
 		float cellWidth, float cellHeight,
 		int length, int height,
 		int sprite_id_top_begin, int sprite_id_top_middle, int sprite_id_top_end,
 		int sprite_id_mid_begin, int sprite_id_mid_middle, int sprite_id_mid_end,
-		int sprite_id_bottom_begin, int sprite_id_bottom_middle, int sprite_id_bottom_end) : CGameObject(x, y)
+		int sprite_id_bottom_begin, int sprite_id_bottom_middle, int sprite_id_bottom_end)
+		: CCube(
+			x, y,
+			cellWidth, cellHeight,
+			length, height,
+			sprite_id_top_begin, sprite_id_top_middle, sprite_id_top_end,
+			sprite_id_mid_begin, sprite_id_mid_middle, sprite_id_mid_end,
+			sprite_id_bottom_begin, sprite_id_bottom_middle, sprite_id_bottom_end
+		)
 	{
 		this->length = length;
 		this->height = height;
@@ -44,12 +56,8 @@ public:
 		this->spriteIdBottomMiddle = sprite_id_bottom_middle;
 		this->spriteIdBottomEnd = sprite_id_bottom_end;
 	}
-	virtual void Render();
-	void Update(DWORD dt) {}
-	void GetBoundingBox(float& l, float& t, float& r, float& b);
-	void RenderBoundingBox();
-	virtual int IsDirectionColliable(float nx, float ny) { return 1; };
-	virtual int IsBlocking() { return 1; }
+
+	void Render() {}
 };
 
-typedef CCube* LPCube;
+typedef CWorldWall* LPWORLDWALL;

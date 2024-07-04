@@ -12,6 +12,7 @@
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 290
 #define SCREEN_UI 50
+#define	WORLD_CEILING -212
 
 class CPlayScene: public CScene
 {

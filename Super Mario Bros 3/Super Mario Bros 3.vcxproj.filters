@@ -251,6 +251,9 @@
     <ClInclude Include="Spawner.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="WorldWall.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="mario-sample.txt">
