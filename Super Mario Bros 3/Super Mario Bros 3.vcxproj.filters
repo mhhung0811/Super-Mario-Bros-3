@@ -138,6 +138,12 @@
     <ClCompile Include="Spawner.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="FlyKoopa.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalKoopa.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -254,6 +260,12 @@
     <ClInclude Include="WorldWall.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="FlyKoopa.h">
+      <Filter>Header Files\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalKoopa.h">
+      <Filter>Header Files\Characters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="mario-sample.txt">
@@ -324,6 +336,9 @@
     </Text>
     <Text Include="wing.txt">
       <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="flyKoopa.txt">
+      <Filter>Infor Files\Characters</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

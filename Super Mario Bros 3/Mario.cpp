@@ -15,6 +15,8 @@
 #include "RacoonLeaf.h"
 #include "FlyGoomba.h"
 #include "Spawner.h"
+#include "FlyKoopa.h"
+#include "NormalKoopa.h"
 
 #include "Collision.h"
 
@@ -163,6 +165,10 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithFlyGoomba(e);
 	else if (dynamic_cast<CSpawner*>(e->obj))
 		OnCollisionWithSpawner(e);
+	else if (dynamic_cast<CFlyKoopa*>(e->obj))
+		OnCollisionWithFlyKoopa(e);
+	else if (dynamic_cast<CNormalKoopa*>(e->obj))
+		OnCollisionWithNormalKoopa(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -326,6 +332,139 @@ void CMario::OnCollisionWithSpawner(LPCOLLISIONEVENT e)
 	onAir = MARIO_ON_AIR_TIME;
 	CSpawner* spawner = dynamic_cast<CSpawner*>(e->obj);
 	spawner->Spawn();
+}
+
+void CMario::OnCollisionWithFlyKoopa(LPCOLLISIONEVENT e)
+{
+	CFlyKoopa* flyKoopa = dynamic_cast<CFlyKoopa*>(e->obj);
+
+	switch (flyKoopa->GetState())
+	{
+	case FLY_KOOPA_STATE_WALKING:
+	{
+		// jump on top >> turn Koopa to shell and deflect a bit 
+		if (e->ny < 0)
+		{
+			if (flyKoopa->HaveWing()) flyKoopa->LoseWing();
+			else flyKoopa->ToShellIdle();
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else // hit by koopa
+		{
+			IsDamaged();
+		}
+		break;
+	}
+	case FLY_KOOPA_STATE_SHELL_IDLE:
+	{
+		float kx, ky;
+		flyKoopa->GetPosition(kx, ky);
+		if (isHolding)
+		{
+			holdedObj = flyKoopa;
+			if (level == MARIO_LEVEL_SMALL) flyKoopa->ToShellHold(MARIO_HOLD_X, MARIO_HOLD_Y);
+			else flyKoopa->ToShellHold(MARIO_HOLD_X, MARIO_BIG_HOLD_Y);
+		}
+		else
+		{
+			// deflect if jump on top
+			if (e->ny < 0)
+			{
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
+			float kx, ky;
+			flyKoopa->GetPosition(kx, ky);
+			flyKoopa->SetPosition(kx, ky + (FLY_KOOPA_BBOX_HEIGHT - FLY_KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
+			flyKoopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+		}
+		break;
+	}
+	case FLY_KOOPA_STATE_SHELL_ROLL:
+	{
+		// jump on top >> stop Koopa shell and deflect a bit 
+		if (e->ny < 0)
+		{
+			float kx, ky;
+			flyKoopa->GetPosition(kx, ky);
+			flyKoopa->SetPosition(kx, ky + (FLY_KOOPA_BBOX_HEIGHT - FLY_KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
+			flyKoopa->ToShellIdle();
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else // hit by flyKoopa
+		{
+			IsDamaged();
+		}
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void CMario::OnCollisionWithNormalKoopa(LPCOLLISIONEVENT e)
+{
+	CNormalKoopa* normalKoopa = dynamic_cast<CNormalKoopa*>(e->obj);
+
+	switch (normalKoopa->GetState())
+	{
+	case NORMAL_KOOPA_STATE_WALKING:
+	{
+		// jump on top >> turn Koopa to shell and deflect a bit 
+		if (e->ny < 0)
+		{
+			normalKoopa->ToShellIdle();
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else // hit by koopa
+		{
+			IsDamaged();
+		}
+		break;
+	}
+	case NORMAL_KOOPA_STATE_SHELL_IDLE:
+	{
+		float kx, ky;
+		normalKoopa->GetPosition(kx, ky);
+		if (isHolding)
+		{
+			holdedObj = normalKoopa;
+			if (level == MARIO_LEVEL_SMALL) normalKoopa->ToShellHold(MARIO_HOLD_X, MARIO_HOLD_Y);
+			else normalKoopa->ToShellHold(MARIO_HOLD_X, MARIO_BIG_HOLD_Y);
+		}
+		else
+		{
+			// deflect if jump on top
+			if (e->ny < 0)
+			{
+				vy = -MARIO_JUMP_DEFLECT_SPEED;
+			}
+			float kx, ky;
+			normalKoopa->GetPosition(kx, ky);
+			normalKoopa->SetPosition(kx, ky + (NORMAL_KOOPA_BBOX_HEIGHT - NORMAL_KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
+			normalKoopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+		}
+		break;
+	}
+	case NORMAL_KOOPA_STATE_SHELL_ROLL:
+	{
+		// jump on top >> stop Koopa shell and deflect a bit 
+		if (e->ny < 0)
+		{
+			float kx, ky;
+			normalKoopa->GetPosition(kx, ky);
+			normalKoopa->SetPosition(kx, ky + (NORMAL_KOOPA_BBOX_HEIGHT - NORMAL_KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
+			normalKoopa->ToShellIdle();
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+		}
+		else // hit by flyKoopa
+		{
+			IsDamaged();
+		}
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 //
@@ -747,12 +886,24 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_KICK:
 		float kx, ky;
-		CKoopa* koopa = dynamic_cast<CKoopa*>(holdedObj);
-		koopa->GetPosition(kx, ky);
-		koopa->ToShellRoll((kx - x > 0) ? 1 : -1);
-		holdedObj = NULL;
-		kickTimer = MARIO_KICK_TIME;
-		canSetState = false;
+		if (dynamic_cast<CKoopa*>(holdedObj))
+		{
+			CKoopa* koopa = dynamic_cast<CKoopa*>(holdedObj);
+			koopa->GetPosition(kx, ky);
+			koopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+			holdedObj = NULL;
+			kickTimer = MARIO_KICK_TIME;
+			canSetState = false;
+		}
+		if (dynamic_cast<CFlyKoopa*>(holdedObj))
+		{
+			CFlyKoopa* flyKoopa = dynamic_cast<CFlyKoopa*>(holdedObj);
+			flyKoopa->GetPosition(kx, ky);
+			flyKoopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+			holdedObj = NULL;
+			kickTimer = MARIO_KICK_TIME;
+			canSetState = false;
+		}
 		break;
 	}
 
@@ -804,10 +955,18 @@ void CMario::SetLevel(int l)
 
 bool CMario::IsHoldingShell()
 {
-	if (isHolding && dynamic_cast<CKoopa*>(holdedObj))
+	if (isHolding)
 	{
-		CKoopa* koopa = dynamic_cast<CKoopa*>(holdedObj);
-		if (koopa->IsHolded()) return true;
+		if (dynamic_cast<CKoopa*>(holdedObj))
+		{
+			CKoopa* koopa = dynamic_cast<CKoopa*>(holdedObj);
+			if (koopa->IsHolded()) return true;
+		}
+		if (dynamic_cast<CFlyKoopa*>(holdedObj))
+		{
+			CFlyKoopa* flyKoopa = dynamic_cast<CFlyKoopa*>(holdedObj);
+			if (flyKoopa->IsHolded()) return true;
+		}
 	}
 	return false;
 }

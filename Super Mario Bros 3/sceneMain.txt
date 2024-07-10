@@ -16,6 +16,7 @@ racoonLeaf.txt
 flyGoomba.txt
 wing.txt
 cloud.txt
+flyKoopa.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -258,7 +259,10 @@ cloud.txt
 9	1440	-94
 
 # SPAWNER
+#	id	x	y	bboxWidth	bboxHeight	id1	x1	y1	id2	x2	y2....
 17	704	130	16	80	2	840	130	2	897	130	15	955	130
+
+17	1152	114	16	160	19	1374	114	19	1400	98	19	1426	72	20	1450	148
 
 # PIRANHA PLANT
 12	360	154
@@ -268,6 +272,9 @@ cloud.txt
 
 # FLY GOOMBA
 #15	250	150
+
+# FLY KOOPA
+#19	200	150
 
 # WING
 #16	200	150

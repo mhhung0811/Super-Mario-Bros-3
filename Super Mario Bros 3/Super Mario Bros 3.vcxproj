@@ -153,6 +153,7 @@
     <ClCompile Include="EmptyObject.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="FlyGoomba.cpp" />
+    <ClCompile Include="FlyKoopa.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="MysteryBox.cpp" />
+    <ClCompile Include="NormalKoopa.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlatformOneWay.cpp" />
@@ -191,6 +193,7 @@
     <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="FlyGoomba.h" />
+    <ClInclude Include="FlyKoopa.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
@@ -199,6 +202,7 @@
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="MysteryBox.h" />
+    <ClInclude Include="NormalKoopa.h" />
     <ClInclude Include="PiranhaPlant.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformOneWay.h" />
@@ -225,6 +229,7 @@
     <Text Include="cubes.txt" />
     <Text Include="fireball.txt" />
     <Text Include="flyGoomba.txt" />
+    <Text Include="flyKoopa.txt" />
     <Text Include="goomba.txt" />
     <Text Include="ground.txt" />
     <Text Include="koopa.txt" />

@@ -23,6 +23,8 @@
 #include "Wing.h"
 #include "Spawner.h"
 #include "WorldWall.h"
+#include "FlyKoopa.h"
+#include "NormalKoopa.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -385,6 +387,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_FLY_KOOPA:
+	{
+		obj = new CFlyKoopa(x, y);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
+	}
+
+	case OBJECT_TYPE_NORMAL_KOOPA:
+	{
+		obj = new CNormalKoopa(x, y);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -698,6 +716,24 @@ void CPlayScene::SpawnMonster(int id, float x, float y)
 		break;
 	case OBJECT_TYPE_FLY_GOOMBA:
 		obj = new CFlyGoomba(x, y);
+		obj->SetPosition(x, y);
+		/*objects0.push_back(obj);*/
+		objects0.insert(objects0.end(), obj);
+		break;
+	case OBJECT_TYPE_KOOPA:
+		obj = new CKoopa(x, y);
+		obj->SetPosition(x, y);
+		/*objects0.push_back(obj);*/
+		objects0.insert(objects0.end(), obj);
+		break;
+	case OBJECT_TYPE_FLY_KOOPA:
+		obj = new CFlyKoopa(x, y);
+		obj->SetPosition(x, y);
+		/*objects0.push_back(obj);*/
+		objects0.insert(objects0.end(), obj);
+		break;
+	case OBJECT_TYPE_NORMAL_KOOPA:
+		obj = new CNormalKoopa(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
 		objects0.insert(objects0.end(), obj);

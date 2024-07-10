@@ -7,7 +7,7 @@ CFlyGoomba::CFlyGoomba(float x, float y) :CGameObject(x, y)
 	this->ax = 0;
 	this->ay = FLY_GOOMBA_GRAVITY;
 	this->isOnPlatform = false;
-	this->leftWing = new CWing(x - FLY_GOOMBA_WING_X - 1, y - FLY_GOOMBA_WING_Y, -1);
+	this->leftWing = new CWing(x - FLY_GOOMBA_WING_X -	1, y - FLY_GOOMBA_WING_Y, -1);
 	this->rightWing = new CWing(x + FLY_GOOMBA_WING_X, y - FLY_GOOMBA_WING_Y, 1);
 	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
 	playScene->AddObject(leftWing, 1);

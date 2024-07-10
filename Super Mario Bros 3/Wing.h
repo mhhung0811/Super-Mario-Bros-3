@@ -31,4 +31,5 @@ protected:
 public:
 	CWing(float x, float y, int dir = -1);
 	virtual void SetState(int state);
+	void SetDir(int dir) { this->dir = dir; }
 };
