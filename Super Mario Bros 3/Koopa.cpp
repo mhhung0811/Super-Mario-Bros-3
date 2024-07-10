@@ -2,6 +2,7 @@
 
 CKoopa::CKoopa(float x, float y) :CGameObject(x, y)
 {
+	die_start = -1;
 	this->ax = 0;
 	this->ay = KOOPA_GRAVITY;
 	this->groundCheck = new CEmptyObject(x - KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y, KOOPA_BBOX_WIDTH, 2);
@@ -57,14 +58,62 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		CMysteryBox* mBox = dynamic_cast<CMysteryBox*>(e->obj);
 		mBox->OpenBox();
 	}
+
+	if (dynamic_cast<CKoopa*>(e->obj))
+	{
+		CKoopa* p = dynamic_cast<CKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(KOOPA_STATE_DIE);
+			isColl = 0;
+			vx = dir * KOOMBA_DIE_SPEED_X;
+			vy = -KOOMBA_DIE_SPEED_Y;
+		}
+	}
+	if (dynamic_cast<CFlyKoopa*>(e->obj))
+	{
+		CFlyKoopa* p = dynamic_cast<CFlyKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(FLY_KOOPA_STATE_DIE);
+			isColl = 0;
+			vx = dir * FLY_KOOMBA_DIE_SPEED_X;
+			vy = -FLY_KOOMBA_DIE_SPEED_Y;
+		}
+	}
+	if (dynamic_cast<CNormalKoopa*>(e->obj))
+	{
+		CNormalKoopa* p = dynamic_cast<CNormalKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(NORMAL_KOOPA_STATE_DIE);
+			isColl = 0;
+			vx = dir * NORMAL_KOOMBA_DIE_SPEED_X;
+			vy = -NORMAL_KOOMBA_DIE_SPEED_Y;
+		}
+	}
 }
 
 void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	/*DebugOut(L"state: %d\n", state);*/
-
 	vy += ay * dt;
 	vx += ax * dt;
+
+	// Die time
+	if ((state == KOOPA_STATE_DIE) && GetTickCount64() - die_start > KOOPA_DIE_TIMEOUT)
+	{
+		isDeleted = true;
+		return;
+	}
 
 	// Fix shell can't stop bug
 	if (toShellTimer > 0)
@@ -148,7 +197,6 @@ void CKoopa::Render()
 	case KOOPA_STATE_WALKING:
 		aniId = (vx <= 0) ? ID_ANI_KOOPA_WALK_LEFT : ID_ANI_KOOPA_WALK_RIGHT;
 		break;
-	/*case KOOPA_STATE_SHELL_HOLDED:*/
 	case KOOPA_STATE_SHELL_IDLE:
 		CSprites::GetInstance()->Get(sprId)->Draw(x, y);
 		break;
@@ -157,6 +205,9 @@ void CKoopa::Render()
 		break;
 	case KOOPA_STATE_SHELL_ROLL:
 		aniId = ID_ANI_KOOPA_SHELL_ROLL;
+		break;
+	case KOOPA_STATE_DIE:
+		aniId = ID_ANI_KOOPA_DIE;
 		break;
 	default:
 		aniId = 0;
@@ -200,17 +251,8 @@ void CKoopa::SetState(int state)
 		break;
 	case KOOPA_STATE_SHELL_RESURRECT:
 		break;
-	/*case KOOPA_STATE_SHELL_HOLDED:
-		vx = 0;
-		vy = 0;
-		ax = 0;
-		ay = 0;
-		break;*/
 	case KOOPA_STATE_DIE:
-		vx = 0;
-		vy = 0;
-		ay = 0;
-		Delete();
+		die_start = GetTickCount64();
 		break;
 	default:
 		break;
@@ -244,6 +286,7 @@ void CKoopa::ToShellHold(float adjX, float adjY)
 void CKoopa::ToResurrect()
 {
 	isBlck = false;
+	isHolded = false;
 	SetState(KOOPA_STATE_SHELL_RESURRECT);
 }
 

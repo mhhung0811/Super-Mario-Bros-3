@@ -265,7 +265,7 @@ public:
 		runCharge = 0;
 		runChargeTimer = 0;
 
-		level = MARIO_LEVEL_RACOON;
+		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;

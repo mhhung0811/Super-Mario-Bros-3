@@ -2,6 +2,7 @@
 
 CFlyKoopa::CFlyKoopa(float x, float y) :CGameObject(x, y)
 {
+	die_start = -1;
 	this->ax = 0;
 	this->ay = FLY_KOOPA_GRAVITY;
 	this->haveWing = true;
@@ -70,10 +71,56 @@ void CFlyKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = -vx;
 	}
+		
 	if (dynamic_cast<CMysteryBox*>(e->obj) && state == FLY_KOOPA_STATE_SHELL_ROLL)
 	{
 		CMysteryBox* mBox = dynamic_cast<CMysteryBox*>(e->obj);
 		mBox->OpenBox();
+	}
+
+	if (dynamic_cast<CKoopa*>(e->obj))
+	{
+		CKoopa* p = dynamic_cast<CKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(KOOPA_STATE_DIE);
+			isColl = 0;
+			vx = dir * KOOMBA_DIE_SPEED_X;
+			vy = -KOOMBA_DIE_SPEED_Y;
+		}
+	}
+
+	if (dynamic_cast<CFlyKoopa*>(e->obj))
+	{
+		CFlyKoopa* p = dynamic_cast<CFlyKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(FLY_KOOPA_STATE_DIE);
+			isColl = 0;
+			vx = dir * FLY_KOOMBA_DIE_SPEED_X;
+			vy = -FLY_KOOMBA_DIE_SPEED_Y;
+		}
+	}
+
+	if (dynamic_cast<CNormalKoopa*>(e->obj))
+	{
+		CNormalKoopa* p = dynamic_cast<CNormalKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(NORMAL_KOOPA_STATE_DIE);
+			isColl = 0;
+			vx = dir * NORMAL_KOOMBA_DIE_SPEED_X;
+			vy = -NORMAL_KOOMBA_DIE_SPEED_Y;
+		}
 	}
 }
 
@@ -81,6 +128,24 @@ void CFlyKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
 	vx += ax * dt;
+
+	// Die time
+	if ((state == FLY_KOOPA_STATE_DIE) && GetTickCount64() - die_start > FLY_KOOPA_DIE_TIMEOUT)
+	{
+		isDeleted = true;
+		return;
+	}
+
+	// Fix shell can't stop bug
+	if (toShellTimer > 0)
+	{
+		toShellTimer -= dt;
+		if (toShellTimer <= 0)
+		{
+			isBlck = false;
+			toShellTimer = 0;
+		}
+	}
 
 	// Wing
 	if (haveWing) 
@@ -166,7 +231,6 @@ void CFlyKoopa::Render()
 	case FLY_KOOPA_STATE_WALKING:
 		aniId = (vx <= 0) ? ID_ANI_FLY_KOOPA_WALK_LEFT : ID_ANI_FLY_KOOPA_WALK_RIGHT;
 		break;
-		/*case FLY_KOOPA_STATE_SHELL_HOLDED:*/
 	case FLY_KOOPA_STATE_SHELL_IDLE:
 		CSprites::GetInstance()->Get(sprId)->Draw(x, y);
 		break;
@@ -175,6 +239,9 @@ void CFlyKoopa::Render()
 		break;
 	case FLY_KOOPA_STATE_SHELL_ROLL:
 		aniId = ID_ANI_FLY_KOOPA_SHELL_ROLL;
+		break;
+	case FLY_KOOPA_STATE_DIE:
+		aniId = ID_ANI_FLY_KOOPA_DIE;
 		break;
 	default:
 		aniId = 0;
@@ -206,10 +273,8 @@ void CFlyKoopa::SetState(int state)
 	case FLY_KOOPA_STATE_SHELL_RESURRECT:
 		break;
 	case FLY_KOOPA_STATE_DIE:
-		vx = 0;
-		vy = 0;
-		ay = 0;
-		Delete();
+		die_start = GetTickCount64();
+		LoseWing();
 		break;
 	default:
 		break;
@@ -218,12 +283,14 @@ void CFlyKoopa::SetState(int state)
 
 void CFlyKoopa::ToShellIdle()
 {
+	toShellTimer = 100;
 	isHolded = false;
 	SetState(FLY_KOOPA_STATE_SHELL_IDLE);
 }
 
 void CFlyKoopa::ToShellRoll(int dir)
 {
+	isBlck = true;
 	isHolded = false;
 	SetState(FLY_KOOPA_STATE_SHELL_ROLL);
 	vx = dir * FLY_KOOPA_ROLLING_SPEED;
@@ -231,6 +298,7 @@ void CFlyKoopa::ToShellRoll(int dir)
 
 void CFlyKoopa::ToShellHold(float adjX, float adjY)
 {
+	isBlck = false;
 	isHolded = true;
 	holdAdjX = adjX;
 	holdAdjY = adjY;
@@ -239,17 +307,24 @@ void CFlyKoopa::ToShellHold(float adjX, float adjY)
 
 void CFlyKoopa::ToResurrect()
 {
+	isBlck = false;
+	isHolded = false;
 	SetState(FLY_KOOPA_STATE_SHELL_RESURRECT);
 }
 
 void CFlyKoopa::ToWalking()
 {
+	isBlck = false;
 	isHolded = false;
 	SetState(FLY_KOOPA_STATE_WALKING);
 }
 
 void CFlyKoopa::LoseWing()
 {
-	haveWing = false;
-	wing->Delete();
+	isBlck = false;
+	if (haveWing)
+	{
+		haveWing = false;
+		wing->Delete();
+	}
 }

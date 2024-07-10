@@ -2,14 +2,9 @@
 
 CNormalKoopa::CNormalKoopa(float x, float y) :CGameObject(x, y)
 {
+	die_start = -1;
 	this->ax = 0;
 	this->ay = NORMAL_KOOPA_GRAVITY;
-	//this->groundCheck = new CEmptyObject(x - NORMAL_KOOPA_GROUND_CHECK_X, y + NORMAL_KOOPA_GROUND_CHECK_Y, NORMAL_KOOPA_BBOX_WIDTH, 2);
-	/*groundCheck->SetPosition(-(x + NORMAL_KOOPA_GROUND_CHECK_X), y + NORMAL_KOOPA_GROUND_CHECK_Y);*/
-
-	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-	//playScene->AddObject(groundCheck, 0);
-
 
 	SetState(NORMAL_KOOPA_STATE_WALKING);
 }
@@ -48,31 +43,81 @@ void CNormalKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (e->nx != 0)
 	{
 		vx = -vx;
-		//if (vx <= 0) groundCheck->SetPosition(x - NORMAL_KOOPA_GROUND_CHECK_X, y + NORMAL_KOOPA_GROUND_CHECK_Y);
-		//else groundCheck->SetPosition(x + NORMAL_KOOPA_GROUND_CHECK_X, y + NORMAL_KOOPA_GROUND_CHECK_Y);
 	}
+
 	if (dynamic_cast<CMysteryBox*>(e->obj) && state == NORMAL_KOOPA_STATE_SHELL_ROLL)
 	{
 		CMysteryBox* mBox = dynamic_cast<CMysteryBox*>(e->obj);
 		mBox->OpenBox();
 	}
+
+	if (dynamic_cast<CKoopa*>(e->obj))
+	{
+		CKoopa* p = dynamic_cast<CKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(KOOPA_STATE_DIE);
+			isColl = 0;
+			vx = dir * KOOMBA_DIE_SPEED_X;
+			vy = -KOOMBA_DIE_SPEED_Y;
+		}
+	}
+
+	if (dynamic_cast<CFlyKoopa*>(e->obj))
+	{
+		CFlyKoopa* p = dynamic_cast<CFlyKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(FLY_KOOPA_STATE_DIE);
+			isColl = 0;
+			vx = dir * FLY_KOOMBA_DIE_SPEED_X;
+			vy = -FLY_KOOMBA_DIE_SPEED_Y;
+		}
+	}
+
+	if (dynamic_cast<CNormalKoopa*>(e->obj))
+	{
+		CNormalKoopa* p = dynamic_cast<CNormalKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(NORMAL_KOOPA_STATE_DIE);
+			isColl = 0;
+			vx = dir * NORMAL_KOOMBA_DIE_SPEED_X;
+			vy = -NORMAL_KOOMBA_DIE_SPEED_Y;
+		}
+	}
 }
 
 void CNormalKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	/*DebugOut(L"state: %d\n", state);*/
-
 	vy += ay * dt;
 	vx += ax * dt;
 
-	//groundCheck->SetSpeed(vx, vy);
-
-	// Patrol
-	if (state == NORMAL_KOOPA_STATE_WALKING && EdgeCheck())
+	// Die time
+	if ((state == FLY_KOOPA_STATE_DIE) && GetTickCount64() - die_start > FLY_KOOPA_DIE_TIMEOUT)
 	{
-		vx = -vx;
-		//if (vx <= 0) groundCheck->SetPosition(x - NORMAL_KOOPA_GROUND_CHECK_X, y + NORMAL_KOOPA_GROUND_CHECK_Y);
-		//else groundCheck->SetPosition(x + NORMAL_KOOPA_GROUND_CHECK_X, y + NORMAL_KOOPA_GROUND_CHECK_Y);
+		isDeleted = true;
+		return;
+	}
+
+	// Fix shell can't stop bug
+	if (toShellTimer > 0)
+	{
+		toShellTimer -= dt;
+		if (toShellTimer <= 0)
+		{
+			isBlck = false;
+			toShellTimer = 0;
+		}
 	}
 
 	// Holded
@@ -146,6 +191,9 @@ void CNormalKoopa::Render()
 	case NORMAL_KOOPA_STATE_SHELL_ROLL:
 		aniId = ID_ANI_NORMAL_KOOPA_SHELL_ROLL;
 		break;
+	case NORMAL_KOOPA_STATE_DIE:
+		aniId = ID_ANI_NORMAL_KOOPA_DIE;
+		break;
 	default:
 		aniId = 0;
 		break;
@@ -157,17 +205,6 @@ void CNormalKoopa::Render()
 	//RenderBoundingBox();
 }
 
-bool CNormalKoopa::EdgeCheck()
-{
-	float gx, gy;
-	//groundCheck->GetPosition(gx, gy);
-	/*if (gy > y + NORMAL_KOOPA_BBOX_HEIGHT / 2)
-	{
-		return true;
-	}*/
-	return false;
-}
-
 void CNormalKoopa::SetState(int state)
 {
 	CGameObject::SetState(state);
@@ -176,8 +213,6 @@ void CNormalKoopa::SetState(int state)
 	case NORMAL_KOOPA_STATE_WALKING:
 		y -= (NORMAL_KOOPA_BBOX_HEIGHT - NORMAL_KOOPA_SHELL_BBOX_HEIGHT) / 2 + 5;
 		vx = -NORMAL_KOOPA_WALKING_SPEED;
-		/*if (vx <= 0) groundCheck->SetPosition(x - NORMAL_KOOPA_GROUND_CHECK_X, y + NORMAL_KOOPA_GROUND_CHECK_Y);
-		else groundCheck->SetPosition(x + NORMAL_KOOPA_GROUND_CHECK_X, y + NORMAL_KOOPA_GROUND_CHECK_Y);*/
 		break;
 	case NORMAL_KOOPA_STATE_SHELL_IDLE:
 		y += (NORMAL_KOOPA_BBOX_HEIGHT - NORMAL_KOOPA_SHELL_BBOX_HEIGHT) / 2 - 5;
@@ -188,17 +223,8 @@ void CNormalKoopa::SetState(int state)
 		break;
 	case NORMAL_KOOPA_STATE_SHELL_RESURRECT:
 		break;
-		/*case NORMAL_KOOPA_STATE_SHELL_HOLDED:
-			vx = 0;
-			vy = 0;
-			ax = 0;
-			ay = 0;
-			break;*/
 	case NORMAL_KOOPA_STATE_DIE:
-		vx = 0;
-		vy = 0;
-		ay = 0;
-		Delete();
+		die_start = GetTickCount64();
 		break;
 	default:
 		break;
@@ -207,12 +233,14 @@ void CNormalKoopa::SetState(int state)
 
 void CNormalKoopa::ToShellIdle()
 {
+	toShellTimer = 100;
 	isHolded = false;
 	SetState(NORMAL_KOOPA_STATE_SHELL_IDLE);
 }
 
 void CNormalKoopa::ToShellRoll(int dir)
 {
+	isBlck = true;
 	isHolded = false;
 	SetState(NORMAL_KOOPA_STATE_SHELL_ROLL);
 	vx = dir * NORMAL_KOOPA_ROLLING_SPEED;
@@ -220,6 +248,7 @@ void CNormalKoopa::ToShellRoll(int dir)
 
 void CNormalKoopa::ToShellHold(float adjX, float adjY)
 {
+	isBlck = false;
 	isHolded = true;
 	holdAdjX = adjX;
 	holdAdjY = adjY;
@@ -228,11 +257,14 @@ void CNormalKoopa::ToShellHold(float adjX, float adjY)
 
 void CNormalKoopa::ToResurrect()
 {
+	isBlck = false;
+	isHolded = false;
 	SetState(NORMAL_KOOPA_STATE_SHELL_RESURRECT);
 }
 
 void CNormalKoopa::ToWalking()
 {
+	isBlck = false;
 	isHolded = false;
 	SetState(NORMAL_KOOPA_STATE_WALKING);
 }

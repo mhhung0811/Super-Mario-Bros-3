@@ -456,7 +456,7 @@ void CMario::OnCollisionWithNormalKoopa(LPCOLLISIONEVENT e)
 			normalKoopa->ToShellIdle();
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
-		else // hit by flyKoopa
+		else // hit by Koopa
 		{
 			IsDamaged();
 		}
@@ -904,6 +904,15 @@ void CMario::SetState(int state)
 			kickTimer = MARIO_KICK_TIME;
 			canSetState = false;
 		}
+		if (dynamic_cast<CNormalKoopa*>(holdedObj))
+		{
+			CNormalKoopa* normalKoopa = dynamic_cast<CNormalKoopa*>(holdedObj);
+			normalKoopa->GetPosition(kx, ky);
+			normalKoopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+			holdedObj = NULL;
+			kickTimer = MARIO_KICK_TIME;
+			canSetState = false;
+		}
 		break;
 	}
 
@@ -966,6 +975,11 @@ bool CMario::IsHoldingShell()
 		{
 			CFlyKoopa* flyKoopa = dynamic_cast<CFlyKoopa*>(holdedObj);
 			if (flyKoopa->IsHolded()) return true;
+		}
+		if (dynamic_cast<CNormalKoopa*>(holdedObj))
+		{
+			CNormalKoopa* normalKoopa = dynamic_cast<CNormalKoopa*>(holdedObj);
+			if (normalKoopa->IsHolded()) return true;
 		}
 	}
 	return false;

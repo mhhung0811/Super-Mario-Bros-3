@@ -6,13 +6,19 @@
 #include "Goomba.h"
 #include "FlyGoomba.h"
 #include "Mario.h"
+#include "FlyKoopa.h"
+#include "NormalKoopa.h"
 #include "debug.h"
 
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.05f
-#define KOOPA_ROLLING_SPEED 0.15f
+#define KOOPA_ROLLING_SPEED 0.2f
+#define KOOMBA_DIE_SPEED_X 0.1f
+#define KOOMBA_DIE_SPEED_Y 0.25f
+
 #define KOOPA_RESURRECT_TIME 1000
 #define KOOPA_RESURRECT_COOLDOWN 5000
+#define KOOPA_DIE_TIMEOUT 1000
 
 #define KOOPA_BBOX_WIDTH 14
 #define KOOPA_BBOX_HEIGHT 24
@@ -32,6 +38,7 @@
 #define ID_ANI_KOOPA_WALK_RIGHT 151102
 #define ID_ANI_KOOPA_SHELL_APPEAR 152101
 #define ID_ANI_KOOPA_SHELL_ROLL 152203
+#define ID_ANI_KOOPA_DIE 153001
 
 #define ID_SPR_KOOPA_SHELL_IDLE 152000
 
@@ -41,8 +48,11 @@ protected:
 	float ax;
 	float ay;
 
+	bool isColl = true;
 	bool isBlck = false;
 	bool isHolded = false;
+
+	long die_start;
 
 	float holdAdjX = 0;
 	float holdAdjY = 0;
@@ -56,7 +66,7 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
-	virtual int IsCollidable() { return 1; };
+	virtual int IsCollidable() { return isColl; };
 	virtual int IsBlocking() { return isBlck; }
 	virtual void OnNoCollision(DWORD dt);
 
