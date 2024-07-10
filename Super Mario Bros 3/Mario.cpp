@@ -282,10 +282,10 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		if (e->ny < 0)
 		{
 			float kx, ky;
+			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			koopa->ToShellIdle();
 			koopa->GetPosition(kx, ky);
 			koopa->SetPosition(kx, ky + (KOOPA_BBOX_HEIGHT - KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
-			koopa->ToShellIdle();
-			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
 		else // hit by koopa
 		{

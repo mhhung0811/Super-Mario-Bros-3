@@ -64,6 +64,21 @@ void CFlyGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = -vx;
 	}
+
+	if (dynamic_cast<CKoopa*>(e->obj))
+	{
+		CKoopa* p = dynamic_cast<CKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(GOOMBA_STATE_ALT_DIE);
+			isColl = 0;
+			vx = dir * FLY_GOOMBA_ALT_DIE_SPEED_X;
+			vy = -FLY_GOOMBA_ALT_DIE_SPEED_Y;
+		}
+	}
 }
 
 void CFlyGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -77,7 +92,8 @@ void CFlyGoomba::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	stepTimer += dt;
 	jumpTimer += dt;
 
-	if ((state == FLY_GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > FLY_GOOMBA_DIE_TIMEOUT))
+	if ( ((state == FLY_GOOMBA_STATE_DIE) && (GetTickCount64() - die_start > FLY_GOOMBA_DIE_TIMEOUT)) ||
+		((state == FLY_GOOMBA_STATE_ALT_DIE) && (GetTickCount64() - die_start > FLY_GOOMBA_ALT_DIE_TIMEOUT)) )
 	{
 		isDeleted = true;
 		return;
@@ -132,6 +148,10 @@ void CFlyGoomba::Render()
 	{
 		aniId = ID_ANI_FLY_GOOMBA_DIE;
 	}
+	if (state == FLY_GOOMBA_STATE_ALT_DIE)
+	{
+		aniId = ID_ANI_FLY_GOOMBA_ALT_DIE;
+	}
 
 	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	//RenderBoundingBox();
@@ -148,6 +168,12 @@ void CFlyGoomba::SetState(int state)
 		vx = 0;
 		vy = 0;
 		ay = 0;
+		break;
+	case FLY_GOOMBA_STATE_ALT_DIE:
+		die_start = GetTickCount64();
+		haveWings = false;
+		leftWing->Delete();
+		rightWing->Delete();
 		break;
 	case FLY_GOOMBA_STATE_WALKING:
 		vx = -FLY_GOOMBA_WALKING_SPEED;

@@ -51,6 +51,7 @@ void CKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (vx <= 0) groundCheck->SetPosition(x - KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
 		else groundCheck->SetPosition(x + KOOPA_GROUND_CHECK_X, y + KOOPA_GROUND_CHECK_Y);
 	}
+	
 	if (dynamic_cast<CMysteryBox*>(e->obj) && state == KOOPA_STATE_SHELL_ROLL)
 	{
 		CMysteryBox* mBox = dynamic_cast<CMysteryBox*>(e->obj);
@@ -207,12 +208,14 @@ void CKoopa::SetState(int state)
 
 void CKoopa::ToShellIdle()
 {
+	isBlck = true;
 	isHolded = false;
 	SetState(KOOPA_STATE_SHELL_IDLE);
 }
 
 void CKoopa::ToShellRoll(int dir)
 {
+	isBlck = true;
 	isHolded = false;
 	SetState(KOOPA_STATE_SHELL_ROLL);
 	vx = dir * KOOPA_ROLLING_SPEED;
@@ -220,6 +223,7 @@ void CKoopa::ToShellRoll(int dir)
 
 void CKoopa::ToShellHold(float adjX, float adjY)
 {
+	isBlck = false;
 	isHolded = true;
 	holdAdjX = adjX;
 	holdAdjY = adjY;
@@ -228,11 +232,13 @@ void CKoopa::ToShellHold(float adjX, float adjY)
 
 void CKoopa::ToResurrect()
 {
+	isBlck = false;
 	SetState(KOOPA_STATE_SHELL_RESURRECT);
 }
 
 void CKoopa::ToWalking()
 {
+	isBlck = false;
 	isHolded = false;
 	SetState(KOOPA_STATE_WALKING);	
 }

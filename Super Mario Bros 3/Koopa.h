@@ -10,7 +10,7 @@
 
 #define KOOPA_GRAVITY 0.002f
 #define KOOPA_WALKING_SPEED 0.05f
-#define KOOPA_ROLLING_SPEED 0.2f
+#define KOOPA_ROLLING_SPEED 0.15f
 #define KOOPA_RESURRECT_TIME 1000
 #define KOOPA_RESURRECT_COOLDOWN 5000
 
@@ -41,6 +41,7 @@ protected:
 	float ax;
 	float ay;
 
+	bool isBlck = false;
 	bool isHolded = false;
 
 	float holdAdjX = 0;
@@ -55,7 +56,7 @@ protected:
 	virtual void Render();
 
 	virtual int IsCollidable() { return 1; };
-	virtual int IsBlocking() { return 0; }
+	virtual int IsBlocking() { return isBlck; }
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
@@ -69,4 +70,5 @@ public:
 	void ToResurrect();
 	void ToWalking();
 	bool IsHolded() { return isHolded; }
+	bool IsRolled() { return (state == KOOPA_STATE_SHELL_ROLL) ? 1 : 0; }
 };
