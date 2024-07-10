@@ -66,6 +66,17 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	// Fix shell can't stop bug
+	if (toShellTimer > 0)
+	{
+		toShellTimer -= dt;
+		if (toShellTimer <= 0)
+		{
+			isBlck = false;
+			toShellTimer = 0;
+		}
+	}
+
 	groundCheck->SetSpeed(vx, vy);
 
 	// Patrol
@@ -208,7 +219,7 @@ void CKoopa::SetState(int state)
 
 void CKoopa::ToShellIdle()
 {
-	isBlck = true;
+	toShellTimer = 100;
 	isHolded = false;
 	SetState(KOOPA_STATE_SHELL_IDLE);
 }

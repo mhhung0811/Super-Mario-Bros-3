@@ -270,6 +270,7 @@ flyKoopa.txt
 # GOOMBA
 2	200	150
 3	250	150
+#3	200	150s
 
 # FLY GOOMBA
 #15	250	150

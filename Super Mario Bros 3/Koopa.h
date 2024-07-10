@@ -48,6 +48,7 @@ protected:
 	float holdAdjY = 0;
 	long resTime = 0;
 	long resCoolDown = 0;
+	long toShellTimer = 0;
 
 	CGameObject *groundCheck;
 
