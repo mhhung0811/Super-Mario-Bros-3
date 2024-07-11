@@ -64,4 +64,5 @@ public:
 	CFlyGoomba(float x, float y);
 	virtual void SetState(int state);
 	void Damaged();
+	void AltDie(int dir = 0);
 };

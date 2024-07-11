@@ -142,6 +142,7 @@ void CFlyKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		toShellTimer -= dt;
 		if (toShellTimer <= 0)
 		{
+			vx = 0;
 			isBlck = false;
 			toShellTimer = 0;
 		}
@@ -308,7 +309,6 @@ void CFlyKoopa::ToShellHold(float adjX, float adjY)
 void CFlyKoopa::ToResurrect()
 {
 	isBlck = false;
-	isHolded = false;
 	SetState(FLY_KOOPA_STATE_SHELL_RESURRECT);
 }
 
@@ -327,4 +327,12 @@ void CFlyKoopa::LoseWing()
 		haveWing = false;
 		wing->Delete();
 	}
+}
+
+void CFlyKoopa::Knocked(int dir)
+{
+	LoseWing();
+	ToShellIdle();
+	vx = dir * KOOMBA_DIE_SPEED_X;
+	vy = -KOOMBA_DIE_SPEED_Y;
 }

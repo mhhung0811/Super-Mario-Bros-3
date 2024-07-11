@@ -82,4 +82,5 @@ public:
 	void ToWalking();
 	bool IsHolded() { return isHolded; }
 	bool IsRolled() { return (state == KOOPA_STATE_SHELL_ROLL) ? 1 : 0; }
+	void Knocked(int dir = 0);
 };

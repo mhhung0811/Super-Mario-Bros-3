@@ -50,6 +50,8 @@
 #define MARIO_STATE_FLAP_FLOW		800
 #define MARIO_STATE_FLAP_FLOW_RELEASE 801
 
+#define MARIO_STATE_ATTACK			900
+
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -163,6 +165,9 @@
 #define	ID_ANI_MARIO_RACOON_HOLDSHELL_KICK_LEFT 2706
 #define	ID_ANI_MARIO_RACOON_HOLDSHELL_KICK_RIGHT 2707
 
+#define ID_ANI_MARIO_RACOON_ATTACK_LEFT 2800
+#define ID_ANI_MARIO_RACOON_ATTACK_RIGHT 2801
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -178,6 +183,11 @@
 #define MARIO_BIG_BBOX_HEIGHT 24
 #define MARIO_BIG_SITTING_BBOX_WIDTH  16
 #define MARIO_BIG_SITTING_BBOX_HEIGHT 16
+#define MARIO_RACOON_HIT_BBOX_WIDTH 32
+#define MARIO_RACOON_HIT_BBOX_HEIGHT 8
+
+#define MARIO_RACOON_HIT_BBOX_X 0
+#define MARIO_RACOON_HIT_BBOX_Y 8
 
 #define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 
@@ -196,6 +206,7 @@
 #define MARIO_FLOW_TIME			200
 #define MARIO_FLAP_COOLDOWN		150
 #define MARIO_KICK_TIME			150
+#define MARIO_ATTACK_TIME		350
 
 #define MARIO_RUN_CHARGE_MAX	1500
 #define MARIO_RUN_CHARGE_DROP_TIME	400
@@ -220,6 +231,7 @@ class CMario : public CGameObject
 	long kickTimer;
 	long runCharge;
 	long runChargeTimer;
+	long attackTimer;
 
 	int level; 
 	int untouchable; 
@@ -265,8 +277,9 @@ public:
 		kickTimer = 0;
 		runCharge = 0;
 		runChargeTimer = 0;
+		attackTimer = 0;
 
-		level = MARIO_LEVEL_BIG;
+		level = MARIO_LEVEL_RACOON;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;
@@ -274,12 +287,10 @@ public:
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
+	void RenderHitBox();
 	void SetState(int state);
 
-	int IsCollidable()
-	{ 
-		return (state != MARIO_STATE_DIE);
-	}
+	int IsCollidable() { return (state != MARIO_STATE_DIE); }
 
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
 
@@ -290,13 +301,17 @@ public:
 	int GetLevel();
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
+	void GetHitBox(float& left, float& top, float& right, float& bottom);
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
 	bool IsHoldingShell();
 	bool IsDamaged();
 	bool IsGrounded();
 	bool IsCamFollowY() { return isCamFollowY; }
-	void Flap();
+	bool InHitBox(LPGAMEOBJECT obj);
 	int FaceDirection() { return nx; }
 	int IsUp() { return (vy > 0) ? 1 : -1; }
+
+	void Flap();
+	void Attack(vector<LPGAMEOBJECT>* coObjects);
 };

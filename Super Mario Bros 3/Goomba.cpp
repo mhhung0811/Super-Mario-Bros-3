@@ -52,10 +52,7 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 			int dir = 0;
 			if (e->nx > 0) dir = 1;
 			if (e->nx < 0) dir = -1;
-			SetState(GOOMBA_STATE_ALT_DIE);
-			isColl = 0;
-			vx = dir * GOOMBA_ALT_DIE_SPEED_X;
-			vy = -GOOMBA_ALT_DIE_SPEED_Y;
+			AltDie(dir);
 		}
 	}
 	if (dynamic_cast<CFlyKoopa*>(e->obj))
@@ -66,10 +63,7 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 			int dir = 0;
 			if (e->nx > 0) dir = 1;
 			if (e->nx < 0) dir = -1;
-			SetState(GOOMBA_STATE_ALT_DIE);
-			isColl = 0;
-			vx = dir * GOOMBA_ALT_DIE_SPEED_X;
-			vy = -GOOMBA_ALT_DIE_SPEED_X;
+			AltDie(dir);
 		}
 	}
 
@@ -81,10 +75,7 @@ void CGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 			int dir = 0;
 			if (e->nx > 0) dir = 1;
 			if (e->nx < 0) dir = -1;
-			SetState(GOOMBA_STATE_ALT_DIE);
-			isColl = 0;
-			vx = dir * GOOMBA_ALT_DIE_SPEED_X;
-			vy = -GOOMBA_ALT_DIE_SPEED_X;
+			AltDie(dir);
 		}
 	}
 }
@@ -141,4 +132,12 @@ void CGoomba::SetState(int state)
 			vx = -GOOMBA_WALKING_SPEED;
 			break;
 	}
+}
+
+void CGoomba::AltDie(int dir)
+{
+	SetState(GOOMBA_STATE_ALT_DIE);
+	isColl = 0;
+	vx = dir * GOOMBA_ALT_DIE_SPEED_X;
+	vy = -GOOMBA_ALT_DIE_SPEED_X;
 }

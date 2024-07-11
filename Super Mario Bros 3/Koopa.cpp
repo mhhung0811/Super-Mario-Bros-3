@@ -121,6 +121,7 @@ void CKoopa::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		toShellTimer -= dt;
 		if (toShellTimer <= 0)
 		{
+			vx = 0;
 			isBlck = false;
 			toShellTimer = 0;
 		}
@@ -285,8 +286,7 @@ void CKoopa::ToShellHold(float adjX, float adjY)
 
 void CKoopa::ToResurrect()
 {
-	isBlck = false;
-	isHolded = false;
+	isBlck = false;	
 	SetState(KOOPA_STATE_SHELL_RESURRECT);
 }
 
@@ -295,4 +295,11 @@ void CKoopa::ToWalking()
 	isBlck = false;
 	isHolded = false;
 	SetState(KOOPA_STATE_WALKING);	
+}
+
+void CKoopa::Knocked(int dir)
+{
+	ToShellIdle();
+	vx = dir * KOOMBA_DIE_SPEED_X;
+	vy = -KOOMBA_DIE_SPEED_Y;
 }

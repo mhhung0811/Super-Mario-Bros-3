@@ -78,6 +78,19 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		SetState(MARIO_STATE_FLAP_FLOW_RELEASE);
 	}
 
+	// Attack timer
+	if (state == MARIO_STATE_ATTACK)
+	{
+		Attack(coObjects);
+		attackTimer -= dt;
+		if (attackTimer <= 0)
+		{
+			canSetState = true;
+			SetState(MARIO_STATE_IDLE);
+			attackTimer = 0;
+		}
+	}
+
 	// Kick timer
 	if (state == MARIO_STATE_KICK)
 	{
@@ -85,6 +98,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (kickTimer <= 0)
 		{
 			canSetState = true;
+			SetState(MARIO_STATE_IDLE);
 			kickTimer = 0;
 		}
 	}
@@ -657,7 +671,10 @@ int CMario::GetAniIdBig()
 int CMario::GetAniIdRacoon()
 {
 	int aniId = -1;
-	if (state == MARIO_STATE_KICK)
+	if (state == MARIO_STATE_ATTACK)
+	{
+		aniId = (nx >= 0) ? ID_ANI_MARIO_RACOON_ATTACK_RIGHT : ID_ANI_MARIO_RACOON_ATTACK_LEFT;
+	} else if (state == MARIO_STATE_KICK)
 	{
 		aniId = (nx >= 0) ? ID_ANI_MARIO_RACOON_HOLDSHELL_KICK_RIGHT : ID_ANI_MARIO_RACOON_HOLDSHELL_KICK_LEFT;
 	}
@@ -742,8 +759,26 @@ int CMario::GetAniIdRacoon()
 			aniId = ID_ANI_MARIO_RACOON_IDLE_LEFT;
 	}
 	if (aniId == -1) aniId = ID_ANI_MARIO_RACOON_IDLE_RIGHT;
-
 	return aniId;
+}
+
+void CMario::RenderHitBox()
+{
+	RECT rect;
+
+	LPTEXTURE bbox = CTextures::GetInstance()->Get(ID_TEX_BBOX);
+
+	float l, t, r, b;
+	GetHitBox(l, t, r, b);
+	rect.left = 0;
+	rect.top = 0;
+	rect.right = (int)r - (int)l;
+	rect.bottom = (int)b - (int)t;
+
+	float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);
+
+	CGame::GetInstance()->Draw(l - cx + MARIO_RACOON_HIT_BBOX_WIDTH / 2, t - cy + MARIO_RACOON_HIT_BBOX_HEIGHT / 2, bbox, &rect, BBOX_ALPHA);
 }
 
 void CMario::Render()
@@ -762,6 +797,7 @@ void CMario::Render()
 
 	animations->Get(aniId)->Render(x, y);
 
+	//if (level == MARIO_LEVEL_RACOON) RenderHitBox();
 	//RenderBoundingBox();
 	
 	DebugOutTitle(L"Coins: %d, Run: %d, RunTimer: %d", coin, runCharge, runChargeTimer);
@@ -923,9 +959,22 @@ void CMario::SetState(int state)
 			canSetState = false;
 		}
 		break;
+	case MARIO_STATE_ATTACK:
+		attackTimer = MARIO_ATTACK_TIME;
+		canSetState = false;
+		break;
 	}
+	
 
 	CGameObject::SetState(state);
+}
+
+void CMario::GetHitBox(float& left, float& top, float& right, float& bottom)
+{
+	left = x - MARIO_RACOON_HIT_BBOX_WIDTH / 2 + MARIO_RACOON_HIT_BBOX_X;
+	top = y - MARIO_RACOON_HIT_BBOX_HEIGHT / 2 + MARIO_RACOON_HIT_BBOX_Y;
+	right = left + MARIO_RACOON_HIT_BBOX_WIDTH;
+	bottom = top + MARIO_RACOON_HIT_BBOX_HEIGHT;
 }
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
@@ -998,7 +1047,7 @@ bool CMario::IsDamaged()
 {
 	if (untouchable == 0)
 	{
-		holdedObj = nullptr;
+		holdedObj = NULL;
 		switch (level)
 		{
 		case MARIO_LEVEL_SMALL:
@@ -1035,4 +1084,79 @@ void CMario::Flap()
 	}*/
 	SetState(MARIO_STATE_FLAP_FLOW);
 	flapTimer = MARIO_FLAP_COOLDOWN;
+}
+
+void CMario::Attack(vector<LPGAMEOBJECT>* coObjects)
+{
+	for (int i = 0; i < coObjects->size(); i++)
+	{
+		if (InHitBox(coObjects->at(i)))
+		{
+			if (dynamic_cast<CGoomba*>(coObjects->at(i)))
+			{
+				CGoomba* p = dynamic_cast<CGoomba*>(coObjects->at(i));
+				float px, py;
+				p->GetPosition(px, py);
+				p->AltDie((x < px) ? 1 : -1);
+			} 
+			else if (dynamic_cast<CFlyGoomba*>(coObjects->at(i)))
+			{
+				CFlyGoomba* p = dynamic_cast<CFlyGoomba*>(coObjects->at(i));
+				float px, py;
+				p->GetPosition(px, py);
+				p->AltDie((x < px) ? 1 : -1);
+			}
+			else if (dynamic_cast<CKoopa*>(coObjects->at(i)))
+			{
+				CKoopa* p = dynamic_cast<CKoopa*>(coObjects->at(i));
+				float px, py;
+				p->GetPosition(px, py);
+				p->Knocked((x < px) ? 1 : -1);
+			}
+			else if (dynamic_cast<CFlyKoopa*>(coObjects->at(i)))
+			{
+				CFlyKoopa* p = dynamic_cast<CFlyKoopa*>(coObjects->at(i));
+				float px, py;
+				p->GetPosition(px, py);
+				p->Knocked((x < px) ? 1 : -1);
+			}
+			else if (dynamic_cast<CNormalKoopa*>(coObjects->at(i)))
+			{
+				CNormalKoopa* p = dynamic_cast<CNormalKoopa*>(coObjects->at(i));
+				float px, py;
+				p->GetPosition(px, py);
+				p->Knocked((x < px) ? 1 : -1);
+			}
+			else if (dynamic_cast<CPiranhaPlant*>(coObjects->at(i)))
+			{
+				CPiranhaPlant* p = dynamic_cast<CPiranhaPlant*>(coObjects->at(i));
+				float px, py;
+				p->GetPosition(px, py);
+				p->SetState(PIRANHAPLANT_STATE_DIE);
+			}
+			else if (dynamic_cast<CPiranhaPlantBite*>(coObjects->at(i)))
+			{
+				CPiranhaPlantBite* p = dynamic_cast<CPiranhaPlantBite*>(coObjects->at(i));
+				float px, py;
+				p->GetPosition(px, py);
+				p->SetState(PIRANHAPLANT_BITE_STATE_DIE);
+			}
+		}
+	}
+}
+
+bool CMario::InHitBox(LPGAMEOBJECT obj)
+{
+	if (obj == NULL) return -1;
+	float l1, t1, r1, b1, l2, t2, r2, b2;
+	obj->GetBoundingBox(l2, t2, r2, b2);
+
+	// Is in Safe Box
+	GetHitBox(l1, t1, r1, b1);
+	if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+	{
+		return true;
+	}
+	//DebugOut(L"no box found\n");
+	return false;
 }

@@ -44,4 +44,5 @@ protected:
 public:
 	CGoomba(float x, float y);
 	virtual void SetState(int state);
+	void AltDie(int dir);
 };

@@ -22,6 +22,10 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		else
 			mario->SetState(MARIO_STATE_JUMP);
 		break;
+	case DIK_A:
+		if (mario->GetLevel() == MARIO_LEVEL_RACOON)
+			mario->SetState(MARIO_STATE_ATTACK);
+		break;
 	case DIK_1:
 		mario->SetLevel(MARIO_LEVEL_SMALL);
 		break;
