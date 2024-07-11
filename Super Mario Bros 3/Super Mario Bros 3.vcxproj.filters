@@ -144,6 +144,9 @@
     <ClCompile Include="NormalKoopa.cpp">
       <Filter>Source Files\Characters</Filter>
     </ClCompile>
+    <ClCompile Include="PiranhaPlantBite.cpp">
+      <Filter>Source Files\Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -264,6 +267,9 @@
       <Filter>Header Files\Characters</Filter>
     </ClInclude>
     <ClInclude Include="NormalKoopa.h">
+      <Filter>Header Files\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="PiranhaPlantBite.h">
       <Filter>Header Files\Characters</Filter>
     </ClInclude>
   </ItemGroup>

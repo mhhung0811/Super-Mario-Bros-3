@@ -127,7 +127,31 @@ void CPiranhaPlant::OnNoCollision(DWORD dt)
 
 void CPiranhaPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (dynamic_cast<CKoopa*>(e->obj))
+	{
+		CKoopa* p = dynamic_cast<CKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			SetState(PIRANHAPLANT_STATE_DIE);
+		}
+	}
+	if (dynamic_cast<CFlyKoopa*>(e->obj))
+	{
+		CFlyKoopa* p = dynamic_cast<CFlyKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			SetState(PIRANHAPLANT_STATE_DIE);
+		}
+	}
 
+	if (dynamic_cast<CNormalKoopa*>(e->obj))
+	{
+		CNormalKoopa* p = dynamic_cast<CNormalKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			SetState(PIRANHAPLANT_STATE_DIE);
+		}
+	}
 }
 
 void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -138,6 +162,7 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Appear & Disappear
 	if (state == PIRANHAPLANT_STATE_APPEAR && y <= (fixedY)-PIRANHAPLANT_BBOX_HEIGHT)
 	{
+		isColl = 1;
 		SetState(PIRANHAPLANT_STATE_IDLE);
 	}
 	if (state == PIRANHAPLANT_STATE_DISAPPEAR && y >= (fixedY) + 10)
@@ -229,11 +254,12 @@ void CPiranhaPlant::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 
 		// to Other state
-		if (isIdle > PIRANHAPLANT_IDLE_TIME)
+		if (isIdle > ((x < 1500) ? PIRANHAPLANT_IDLE_TIME : PIRANHAPLANT_GREEN_IDLE_TIME))
 		{
 			isIdle = 0;
 			if (y < (fixedY))
 			{
+				isColl = 0;
 				SetState(PIRANHAPLANT_STATE_DISAPPEAR);
 			}
 			else
@@ -261,24 +287,24 @@ void CPiranhaPlant::Render()
 	switch (facingDir)
 	{
 	case 0:
-		aniId = ID_ANI_PIRANHAPLANT_APPEAR_LEFT;
-		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_DOWN;
+		aniId = (x < 1500) ? ID_ANI_PIRANHAPLANT_APPEAR_LEFT : ID_ANI_PIRANHAPLANT_GREEN_APPEAR_LEFT;
+		sprId = (x < 1500) ? ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_DOWN : ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_GREEN_LEFT_DOWN;
 		break;
 	case 1:
-		aniId = ID_ANI_PIRANHAPLANT_APPEAR_LEFT;
-		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_UP;
+		aniId = (x < 1500) ? ID_ANI_PIRANHAPLANT_APPEAR_LEFT : ID_ANI_PIRANHAPLANT_GREEN_APPEAR_LEFT;
+		sprId = (x < 1500) ? ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_UP : ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_GREEN_LEFT_UP;
 		break;
 	case 2:
-		aniId = ID_ANI_PIRANHAPLANT_APPEAR_RIGHT;
-		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_RIGHT_DOWN;
+		aniId = (x < 1500) ? ID_ANI_PIRANHAPLANT_APPEAR_RIGHT : ID_ANI_PIRANHAPLANT_GREEN_APPEAR_RIGHT;
+		sprId = (x < 1500) ? ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_RIGHT_DOWN : ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_GREEN_RIGHT_DOWN;
 		break;
 	case 3:
-		aniId = ID_ANI_PIRANHAPLANT_APPEAR_RIGHT;
-		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_RIGHT_UP;
+		aniId = (x < 1500) ? ID_ANI_PIRANHAPLANT_APPEAR_RIGHT : ID_ANI_PIRANHAPLANT_GREEN_APPEAR_RIGHT;
+		sprId = (x < 1500) ? ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_RIGHT_UP : ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_GREEN_RIGHT_UP;
 		break;
 	default:
-		aniId = ID_ANI_PIRANHAPLANT_APPEAR_LEFT;
-		sprId = ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_UP;
+		aniId = (x < 1500) ? ID_ANI_PIRANHAPLANT_APPEAR_LEFT : ID_ANI_PIRANHAPLANT_GREEN_APPEAR_LEFT;
+		sprId = (x < 1500) ? ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_RED_LEFT_UP : ID_SPRITE_PIRANHA_PLANT_BIG_SHOOT_GREEN_LEFT_UP;
 	}
 	if (state == PIRANHAPLANT_STATE_IDLE)
 	{
@@ -307,14 +333,17 @@ void CPiranhaPlant::SetState(int state)
 	switch (state)
 	{
 	case PIRANHAPLANT_STATE_APPEAR:
-		vy = -PIRANHAPLANT_APPEAR_SPEED;
+		vy = -((x < 1500) ? PIRANHAPLANT_APPEAR_SPEED : PIRANHAPLANT_GREEN_APPEAR_SPEED);
 		break;
 	case PIRANHAPLANT_STATE_DISAPPEAR:
-		vy = PIRANHAPLANT_APPEAR_SPEED;
+		vy = (x < 1500) ? PIRANHAPLANT_APPEAR_SPEED : PIRANHAPLANT_GREEN_APPEAR_SPEED;
 		break;
 	case PIRANHAPLANT_STATE_IDLE:
 		canShoot = true;
 		vy = 0;
+		break;
+	case PIRANHAPLANT_STATE_DIE:
+		isDeleted = true;
 		break;
 	default:
 		break;
@@ -425,6 +454,7 @@ int CPiranhaPlant::InWhichBox(LPGAMEOBJECT obj)
 		//DebugOut(L"is: %d\n", ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1);
 		return ID_PIRANHAPLANT_SHOOT_BOX_RIGHT_HIGH_1;
 	}
+	// Is in Safe Box
 	GetShootBox(ID_PIRANHAPLANT_SAFE_BOX, l1, t1, r1, b1);
 	l1 = l1 - cx + bug1;
 	t1 = t1 - cy + bug2;

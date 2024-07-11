@@ -164,6 +164,7 @@
     <ClCompile Include="MysteryBox.cpp" />
     <ClCompile Include="NormalKoopa.cpp" />
     <ClCompile Include="PiranhaPlant.cpp" />
+    <ClCompile Include="PiranhaPlantBite.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlatformOneWay.cpp" />
     <ClCompile Include="PlayScene.cpp" />
@@ -204,6 +205,7 @@
     <ClInclude Include="MysteryBox.h" />
     <ClInclude Include="NormalKoopa.h" />
     <ClInclude Include="PiranhaPlant.h" />
+    <ClInclude Include="PiranhaPlantBite.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformOneWay.h" />
     <ClInclude Include="PlayScene.h" />

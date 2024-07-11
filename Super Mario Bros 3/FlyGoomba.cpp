@@ -73,10 +73,39 @@ void CFlyGoomba::OnCollisionWith(LPCOLLISIONEVENT e)
 			int dir = 0;
 			if (e->nx > 0) dir = 1;
 			if (e->nx < 0) dir = -1;
-			SetState(GOOMBA_STATE_ALT_DIE);
+			SetState(FLY_GOOMBA_STATE_ALT_DIE);
 			isColl = 0;
 			vx = dir * FLY_GOOMBA_ALT_DIE_SPEED_X;
 			vy = -FLY_GOOMBA_ALT_DIE_SPEED_Y;
+		}
+	}
+	if (dynamic_cast<CFlyKoopa*>(e->obj))
+	{
+		CFlyKoopa* p = dynamic_cast<CFlyKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(FLY_GOOMBA_STATE_ALT_DIE);
+			isColl = 0;
+			vx = dir * FLY_GOOMBA_ALT_DIE_SPEED_X;
+			vy = -FLY_GOOMBA_ALT_DIE_SPEED_Y;
+		}
+	}
+
+	if (dynamic_cast<CNormalKoopa*>(e->obj))
+	{
+		CNormalKoopa* p = dynamic_cast<CNormalKoopa*>(e->obj);
+		if (p->IsRolled())
+		{
+			int dir = 0;
+			if (e->nx > 0) dir = 1;
+			if (e->nx < 0) dir = -1;
+			SetState(FLY_GOOMBA_STATE_ALT_DIE);
+			isColl = 0;
+			vx = dir * FLY_GOOMBA_ALT_DIE_SPEED_X;
+			vy = -FLY_GOOMBA_ALT_DIE_SPEED_X;
 		}
 	}
 }

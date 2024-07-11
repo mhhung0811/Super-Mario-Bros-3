@@ -240,6 +240,7 @@ class CMario : public CGameObject
 	void OnCollisionWithSpawner(LPCOLLISIONEVENT e);
 	void OnCollisionWithFlyKoopa(LPCOLLISIONEVENT e);
 	void OnCollisionWithNormalKoopa(LPCOLLISIONEVENT e);
+	void OnCollisionWithPiranhaPlantBite(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
@@ -265,7 +266,7 @@ public:
 		runCharge = 0;
 		runChargeTimer = 0;
 
-		level = MARIO_LEVEL_SMALL;
+		level = MARIO_LEVEL_BIG;
 		untouchable = 0;
 		untouchable_start = -1;
 		isOnPlatform = false;

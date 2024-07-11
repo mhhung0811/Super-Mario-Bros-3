@@ -25,6 +25,7 @@
 #include "WorldWall.h"
 #include "FlyKoopa.h"
 #include "NormalKoopa.h"
+#include "PiranhaPlantBite.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -400,6 +401,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CNormalKoopa(x, y);
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
+		break;
+	}
+
+	case OBJECT_TYPE_PIRANHAPLANT_BITE:
+	{
+		obj = new CPiranhaPlantBite(x, y);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
 		break;
 	}
 

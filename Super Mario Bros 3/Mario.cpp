@@ -17,6 +17,7 @@
 #include "Spawner.h"
 #include "FlyKoopa.h"
 #include "NormalKoopa.h"
+#include "PiranhaPlantBite.h"
 
 #include "Collision.h"
 
@@ -169,6 +170,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithFlyKoopa(e);
 	else if (dynamic_cast<CNormalKoopa*>(e->obj))
 		OnCollisionWithNormalKoopa(e);
+	else if (dynamic_cast<CPiranhaPlantBite*>(e->obj))
+		OnCollisionWithPiranhaPlantBite(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -465,6 +468,12 @@ void CMario::OnCollisionWithNormalKoopa(LPCOLLISIONEVENT e)
 	default:
 		break;
 	}
+}
+
+void CMario::OnCollisionWithPiranhaPlantBite(LPCOLLISIONEVENT e)
+{
+	CPiranhaPlantBite* p = dynamic_cast<CPiranhaPlantBite*>(e->obj);
+	IsDamaged();
 }
 
 //
