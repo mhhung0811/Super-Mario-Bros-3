@@ -26,6 +26,7 @@
 #include "FlyKoopa.h"
 #include "NormalKoopa.h"
 #include "PiranhaPlantBite.h"
+#include "FlowScore.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -413,6 +414,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_FLOW_SCORE:
+	{
+		int scoreId = atoi(tokens[3].c_str());
+		obj = new CFlowScore(x, y, scoreId);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -751,4 +761,11 @@ void CPlayScene::SpawnMonster(int id, float x, float y)
 	default:
 		break;
 	}
+}
+
+void CPlayScene::FlowScore(float x, float y, int scoreId)
+{
+	CGameObject* obj = new CFlowScore(x, y, scoreId);
+	obj->SetPosition(x, y);
+	objects0.push_back(obj);
 }

@@ -197,6 +197,10 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 	{
 		if (goomba->GetState() != GOOMBA_STATE_DIE)
 		{
+			float px, py;
+			goomba->GetPosition(px, py);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(px, py, 0);
 			goomba->SetState(GOOMBA_STATE_DIE);
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
 		}
@@ -234,6 +238,10 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	CMushroom* p = (CMushroom*)e->obj;
 	SetLevel(MARIO_LEVEL_BIG);
 	p->IsAbsorbed();
+	float px, py;
+	p->GetPosition(px, py);
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->FlowScore(px, py, 4);
 }
 
 void CMario::OnCollisionWithPiranhaPlant(LPCOLLISIONEVENT e)
@@ -262,6 +270,10 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 		{
 			koopa->ToShellIdle();
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			float px, py;
+			koopa->GetPosition(px, py);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(px, py, 0);
 		}
 		else // hit by koopa
 		{
@@ -290,6 +302,8 @@ void CMario::OnCollisionWithKoopa(LPCOLLISIONEVENT e)
 			koopa->GetPosition(kx, ky);
 			koopa->SetPosition(kx, ky + (KOOPA_BBOX_HEIGHT - KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
 			koopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(kx, ky, 0);
 		}
 		break;
 	}
@@ -320,6 +334,10 @@ void CMario::OnCollisionWithRacoonLeaf(LPCOLLISIONEVENT e)
 	CRacoonLeaf* p = (CRacoonLeaf*)e->obj;
 	SetLevel(MARIO_LEVEL_RACOON);
 	p->IsAbsorbed();
+	float px, py;
+	p->GetPosition(px, py);
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->FlowScore(px, py, 4);
 }
 
 void CMario::OnCollisionWithFlyGoomba(LPCOLLISIONEVENT e)
@@ -336,6 +354,10 @@ void CMario::OnCollisionWithFlyGoomba(LPCOLLISIONEVENT e)
 			flyGoomba->SetPosition(kx, ky + (FLY_GOOMBA_BBOX_HEIGHT) / 2 - 10);
 			flyGoomba->Damaged();
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			float px, py;
+			flyGoomba->GetPosition(px, py);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(px, py, 0);
 		}
 	}
 	else // hit by Goomba
@@ -365,6 +387,10 @@ void CMario::OnCollisionWithFlyKoopa(LPCOLLISIONEVENT e)
 			if (flyKoopa->HaveWing()) flyKoopa->LoseWing();
 			else flyKoopa->ToShellIdle();
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			float px, py;
+			flyKoopa->GetPosition(px, py);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(px, py, 0);
 		}
 		else // hit by koopa
 		{
@@ -393,6 +419,8 @@ void CMario::OnCollisionWithFlyKoopa(LPCOLLISIONEVENT e)
 			flyKoopa->GetPosition(kx, ky);
 			flyKoopa->SetPosition(kx, ky + (FLY_KOOPA_BBOX_HEIGHT - FLY_KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
 			flyKoopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(kx, ky, 0);
 		}
 		break;
 	}
@@ -431,6 +459,10 @@ void CMario::OnCollisionWithNormalKoopa(LPCOLLISIONEVENT e)
 		{
 			normalKoopa->ToShellIdle();
 			vy = -MARIO_JUMP_DEFLECT_SPEED;
+			float px, py;
+			normalKoopa->GetPosition(px, py);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(px, py, 0);
 		}
 		else // hit by koopa
 		{
@@ -459,6 +491,8 @@ void CMario::OnCollisionWithNormalKoopa(LPCOLLISIONEVENT e)
 			normalKoopa->GetPosition(kx, ky);
 			normalKoopa->SetPosition(kx, ky + (NORMAL_KOOPA_BBOX_HEIGHT - NORMAL_KOOPA_SHELL_BBOX_HEIGHT) / 2 - 10);
 			normalKoopa->ToShellRoll((kx - x > 0) ? 1 : -1);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(kx, ky, 0);
 		}
 		break;
 	}
@@ -1098,6 +1132,9 @@ void CMario::Attack(vector<LPGAMEOBJECT>* coObjects)
 				float px, py;
 				p->GetPosition(px, py);
 				p->AltDie((x < px) ? 1 : -1);
+
+				LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+				playScene->FlowScore(px, py, 0);
 			} 
 			else if (dynamic_cast<CFlyGoomba*>(coObjects->at(i)))
 			{
@@ -1105,6 +1142,9 @@ void CMario::Attack(vector<LPGAMEOBJECT>* coObjects)
 				float px, py;
 				p->GetPosition(px, py);
 				p->AltDie((x < px) ? 1 : -1);
+				
+				LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+				playScene->FlowScore(px, py, 0);
 			}
 			else if (dynamic_cast<CKoopa*>(coObjects->at(i)))
 			{
@@ -1133,6 +1173,9 @@ void CMario::Attack(vector<LPGAMEOBJECT>* coObjects)
 				float px, py;
 				p->GetPosition(px, py);
 				p->SetState(PIRANHAPLANT_STATE_DIE);
+				
+				LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+				playScene->FlowScore(px, py, 0);
 			}
 			else if (dynamic_cast<CPiranhaPlantBite*>(coObjects->at(i)))
 			{
@@ -1140,6 +1183,9 @@ void CMario::Attack(vector<LPGAMEOBJECT>* coObjects)
 				float px, py;
 				p->GetPosition(px, py);
 				p->SetState(PIRANHAPLANT_BITE_STATE_DIE);
+				
+				LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+				playScene->FlowScore(px, py, 0);
 			}
 		}
 	}

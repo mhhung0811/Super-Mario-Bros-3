@@ -22,3 +22,4 @@ height	240
 40	textures\items.png
 50	textures\enemy.png
 60	textures\marioAll.png
+70	textures\hudnfont.png

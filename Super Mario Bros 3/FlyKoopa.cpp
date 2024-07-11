@@ -86,10 +86,7 @@ void CFlyKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 			int dir = 0;
 			if (e->nx > 0) dir = 1;
 			if (e->nx < 0) dir = -1;
-			SetState(KOOPA_STATE_DIE);
-			isColl = 0;
-			vx = dir * KOOMBA_DIE_SPEED_X;
-			vy = -KOOMBA_DIE_SPEED_Y;
+			DieAlt(dir);
 		}
 	}
 
@@ -101,10 +98,7 @@ void CFlyKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 			int dir = 0;
 			if (e->nx > 0) dir = 1;
 			if (e->nx < 0) dir = -1;
-			SetState(FLY_KOOPA_STATE_DIE);
-			isColl = 0;
-			vx = dir * FLY_KOOMBA_DIE_SPEED_X;
-			vy = -FLY_KOOMBA_DIE_SPEED_Y;
+			DieAlt(dir);
 		}
 	}
 
@@ -116,10 +110,7 @@ void CFlyKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 			int dir = 0;
 			if (e->nx > 0) dir = 1;
 			if (e->nx < 0) dir = -1;
-			SetState(NORMAL_KOOPA_STATE_DIE);
-			isColl = 0;
-			vx = dir * NORMAL_KOOMBA_DIE_SPEED_X;
-			vy = -NORMAL_KOOMBA_DIE_SPEED_Y;
+			DieAlt(dir);
 		}
 	}
 }
@@ -335,4 +326,15 @@ void CFlyKoopa::Knocked(int dir)
 	ToShellIdle();
 	vx = dir * KOOMBA_DIE_SPEED_X;
 	vy = -KOOMBA_DIE_SPEED_Y;
+}
+
+void CFlyKoopa::DieAlt(int dir)
+{
+	SetState(FLY_KOOPA_STATE_DIE);
+	isColl = 0;
+	vx = dir * FLY_KOOMBA_DIE_SPEED_X;
+	vy = -FLY_KOOMBA_DIE_SPEED_Y;
+
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->FlowScore(x, y, 0);
 }

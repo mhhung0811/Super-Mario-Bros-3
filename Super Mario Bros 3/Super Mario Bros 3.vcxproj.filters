@@ -147,6 +147,9 @@
     <ClCompile Include="PiranhaPlantBite.cpp">
       <Filter>Source Files\Characters</Filter>
     </ClCompile>
+    <ClCompile Include="FlowScore.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -272,6 +275,9 @@
     <ClInclude Include="PiranhaPlantBite.h">
       <Filter>Header Files\Characters</Filter>
     </ClInclude>
+    <ClInclude Include="FlowScore.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="mario-sample.txt">
@@ -346,6 +352,9 @@
     <Text Include="flyKoopa.txt">
       <Filter>Infor Files\Characters</Filter>
     </Text>
+    <Text Include="flowScore.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico">
@@ -367,6 +376,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\items.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\hudnfont.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

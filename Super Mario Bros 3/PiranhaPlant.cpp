@@ -133,6 +133,8 @@ void CPiranhaPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (p->IsRolled())
 		{
 			SetState(PIRANHAPLANT_STATE_DIE);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(x, y, 0);
 		}
 	}
 	if (dynamic_cast<CFlyKoopa*>(e->obj))
@@ -141,6 +143,8 @@ void CPiranhaPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (p->IsRolled())
 		{
 			SetState(PIRANHAPLANT_STATE_DIE);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(x, y, 0);
 		}
 	}
 
@@ -150,6 +154,8 @@ void CPiranhaPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 		if (p->IsRolled())
 		{
 			SetState(PIRANHAPLANT_STATE_DIE);
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->FlowScore(x, y, 0);
 		}
 	}
 }

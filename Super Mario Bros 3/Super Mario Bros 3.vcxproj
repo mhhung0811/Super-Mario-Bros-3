@@ -152,6 +152,7 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="EmptyObject.cpp" />
     <ClCompile Include="FireBall.cpp" />
+    <ClCompile Include="FlowScore.cpp" />
     <ClCompile Include="FlyGoomba.cpp" />
     <ClCompile Include="FlyKoopa.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Decor.h" />
     <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="FireBall.h" />
+    <ClInclude Include="FlowScore.h" />
     <ClInclude Include="FlyGoomba.h" />
     <ClInclude Include="FlyKoopa.h" />
     <ClInclude Include="Game.h" />
@@ -230,6 +232,7 @@
     <Text Include="coin.txt" />
     <Text Include="cubes.txt" />
     <Text Include="fireball.txt" />
+    <Text Include="flowScore.txt" />
     <Text Include="flyGoomba.txt" />
     <Text Include="flyKoopa.txt" />
     <Text Include="goomba.txt" />
@@ -252,6 +255,7 @@
     <Image Include="mario.ico" />
     <Image Include="textures\bbox.png" />
     <Image Include="textures\enemies.png" />
+    <Image Include="textures\hudnfont.png" />
     <Image Include="textures\items.png" />
     <Image Include="textures\mario.png" />
     <Image Include="textures\misc.png" />

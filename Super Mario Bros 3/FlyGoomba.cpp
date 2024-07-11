@@ -221,4 +221,7 @@ void CFlyGoomba::AltDie(int dir)
 	isColl = 0;
 	vx = dir * FLY_GOOMBA_ALT_DIE_SPEED_X;
 	vy = -FLY_GOOMBA_ALT_DIE_SPEED_X;
+
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->FlowScore(x, y, 0);
 }
