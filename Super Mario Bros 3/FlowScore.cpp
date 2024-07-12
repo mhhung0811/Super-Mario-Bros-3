@@ -80,7 +80,6 @@ void CFlowScore::SetState(int state)
 	switch (state)
 	{
 	case FLOW_SCORE_STATE_APPEAR:
-		ay = -FLOW_SCORE_SPEED;
 		vy = -FLOW_SCORE_SPEED;
 		appearTimer = GetTickCount64();
 		break;

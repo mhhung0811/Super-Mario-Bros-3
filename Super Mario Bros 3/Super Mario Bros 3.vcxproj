@@ -152,6 +152,7 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="EmptyObject.cpp" />
     <ClCompile Include="FireBall.cpp" />
+    <ClCompile Include="FlowCoin.cpp" />
     <ClCompile Include="FlowScore.cpp" />
     <ClCompile Include="FlyGoomba.cpp" />
     <ClCompile Include="FlyKoopa.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="AnimationFrame.h" />
     <ClInclude Include="Animations.h" />
     <ClInclude Include="AssetIDs.h" />
+    <ClInclude Include="BreakableBrick.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
@@ -194,6 +196,7 @@
     <ClInclude Include="Decor.h" />
     <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="FireBall.h" />
+    <ClInclude Include="FLowCoin.h" />
     <ClInclude Include="FlowScore.h" />
     <ClInclude Include="FlyGoomba.h" />
     <ClInclude Include="FlyKoopa.h" />

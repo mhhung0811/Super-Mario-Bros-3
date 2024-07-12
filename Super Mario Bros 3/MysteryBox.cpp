@@ -36,6 +36,12 @@ void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == MYSTERYBOX_STATE_OPEN)
 	{
+		if (isOpened == MYSTERYBOX_GIFT_COIN)
+		{
+			playScene->FlowCoin(x, y - 5);
+			// done open
+			isOpened = 0;
+		}
 		if (y <= (fixedY) + 5)
 		{
 			ay = MYSTERYBOX_GRAVITY;
