@@ -216,6 +216,7 @@ class CMario : public CGameObject
 	BOOLEAN isSitting;
 	BOOLEAN isHolding;
 	BOOLEAN canSetState;
+	BOOLEAN isAttacking;
 	BOOLEAN isCamFollowY;
 
 	CGameObject* holdedObj = NULL;
@@ -266,6 +267,7 @@ public:
 		isSitting = false;
 		isHolding = false;
 		canSetState = true;
+		isAttacking = false;
 		isCamFollowY = false;
 
 		maxVx = 0.0f;

@@ -81,13 +81,14 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	// Attack timer
-	if (state == MARIO_STATE_ATTACK)
+	if (isAttacking)
 	{
 		Attack(coObjects);
 		attackTimer -= dt;
 		if (attackTimer <= 0)
 		{
-			canSetState = true;
+			isAttacking = false;
+			//canSetState = true;
 			SetState(MARIO_STATE_IDLE);
 			attackTimer = 0;
 		}
@@ -733,8 +734,9 @@ int CMario::GetAniIdBig()
 int CMario::GetAniIdRacoon()
 {
 	int aniId = -1;
-	if (state == MARIO_STATE_ATTACK)
+	if (state == MARIO_STATE_ATTACK || isAttacking)
 	{
+		DebugOut(L"spin\n");
 		aniId = (nx >= 0) ? ID_ANI_MARIO_RACOON_ATTACK_RIGHT : ID_ANI_MARIO_RACOON_ATTACK_LEFT;
 	} else if (state == MARIO_STATE_KICK)
 	{
@@ -1023,7 +1025,8 @@ void CMario::SetState(int state)
 		break;
 	case MARIO_STATE_ATTACK:
 		attackTimer = MARIO_ATTACK_TIME;
-		canSetState = false;
+		//canSetState = false;
+		isAttacking = true;
 		break;
 	}
 	
