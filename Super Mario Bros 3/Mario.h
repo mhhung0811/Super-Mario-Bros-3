@@ -218,6 +218,7 @@ class CMario : public CGameObject
 	BOOLEAN canSetState;
 	BOOLEAN isAttacking;
 	BOOLEAN isCamFollowY;
+	BOOLEAN isCamStaticY;
 
 	CGameObject* holdedObj = NULL;
 
@@ -269,6 +270,7 @@ public:
 		canSetState = true;
 		isAttacking = false;
 		isCamFollowY = false;
+		isCamStaticY = true;
 
 		maxVx = 0.0f;
 		ax = 0.0f;
@@ -312,6 +314,7 @@ public:
 	bool IsDamaged();
 	bool IsGrounded();
 	bool IsCamFollowY() { return isCamFollowY; }
+	bool IsCamStaticY() { return isCamStaticY; }
 	bool InHitBox(LPGAMEOBJECT obj);
 	int FaceDirection() { return nx; }
 	int IsUp() { return (vy > 0) ? 1 : -1; }

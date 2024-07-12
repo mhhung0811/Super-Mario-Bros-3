@@ -613,19 +613,28 @@ void CPlayScene::Update(DWORD dt)
 
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
-	if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 3 * 2 && mario->IsCamFollowY())
-	{
-		cy -= game->GetBackBufferHeight() / 2;
-	}
+	cy -= game->GetBackBufferHeight() / 2;
 	
 	if (cx < 0) cx = 0;
 	if (cy > 0) cy = 0;
-	if (cy < WORLD_CEILING) cy = WORLD_CEILING;
 
-	if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 2 && mario->IsCamFollowY())
+	if (mario->IsCamStaticY())
+	{
+		CGame::GetInstance()->SetCamPos(cx, CAM_STATIC_Y, mario->FaceDirection(), -1);
+	}
+	else if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 2 && mario->IsCamFollowY())
+	{
+		if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 3 * 2 && mario->IsCamFollowY())
+		{
+			cy -= game->GetBackBufferHeight() / 2;
+		}
+		if (cy < WORLD_CEILING) cy = WORLD_CEILING;
 		CGame::GetInstance()->SetCamPos(cx, cy, mario->FaceDirection(), mario->IsUp());
+	}
 	else
+	{
 		CGame::GetInstance()->SetCamPos(cx, 0, mario->FaceDirection(), mario->IsUp());
+	}
 
 	PurgeDeletedObjects();
 }
