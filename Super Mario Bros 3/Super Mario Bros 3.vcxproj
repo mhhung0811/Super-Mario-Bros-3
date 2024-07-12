@@ -147,6 +147,7 @@
     <ClCompile Include="BreakableBrick.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="CGameUI.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Cube.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="BreakableBrick.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="CGameUI.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Cube.h" />
@@ -229,6 +231,9 @@
     <ClInclude Include="Teleporter.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="UICard.h" />
+    <ClInclude Include="UINum.h" />
+    <ClInclude Include="UITag.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Wing.h" />
     <ClInclude Include="WorldWall.h" />
@@ -246,6 +251,7 @@
     <Text Include="flowScore.txt" />
     <Text Include="flyGoomba.txt" />
     <Text Include="flyKoopa.txt" />
+    <Text Include="gameUI.txt" />
     <Text Include="goomba.txt" />
     <Text Include="ground.txt" />
     <Text Include="koopa.txt" />

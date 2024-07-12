@@ -118,7 +118,7 @@ public:
 		downBorder = y + CAM_FORWARD_Y;
 	}
 
-	void SetCamPos(float x, float y, int xDir, int yDir, int isDirectly = 0) 
+	void SetCamPos(float& cx, float& cy, float x, float y, int xDir, int yDir, int isDirectly = 0)
 	{
 		if (isDirectly == 1)
 		{
@@ -159,6 +159,8 @@ public:
 				cam_y = y + CAM_FORWARD_Y / 2;
 			}
 		}
+		cx = cam_x;
+		cy = cam_y;
 	}
 	void GetCamPos(float& x, float& y) { x = cam_x; y = cam_y; }
 

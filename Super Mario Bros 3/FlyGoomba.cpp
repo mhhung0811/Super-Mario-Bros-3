@@ -209,6 +209,7 @@ void CFlyGoomba::Damaged()
 {
 	if (haveWings)
 	{
+		y -= 5;
 		haveWings = false;
 		leftWing->Delete();
 		rightWing->Delete();

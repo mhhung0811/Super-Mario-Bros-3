@@ -21,6 +21,7 @@ flowScore.txt
 coin.txt
 breakableBrick.txt
 button.txt
+gameUI.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -310,9 +311,8 @@ button.txt
 # TELEPORTER
 #	id	x	y	bboxWidth	bboxHeight	desX	desY	isUp
 27	2264	-72	32	8	136	-414	0
-27	360	-398	32	8	2328	162	1
+27	360	-398	32	8	2328	174	1
 
-# COIN
 4	1072	98
 4	1104	66
 4	1136	34
@@ -388,3 +388,29 @@ button.txt
 #0	300	-300
 0	20	150
 #0	2266	-100
+
+# UI
+28	8	218
+
+29	168	218
+29	194	218
+29	220	218
+
+30	12	223
+
+31	44	214
+31	44	222
+
+31	60	222
+31	68	222
+31	76	222
+31	84	222
+31	92	222
+31	100	222
+31	108	222
+
+31	133	222
+31	141	222
+31	149	222
+
+31	149	214

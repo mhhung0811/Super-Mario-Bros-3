@@ -162,6 +162,9 @@
     <ClCompile Include="Teleporter.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="CGameUI.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -305,6 +308,18 @@
     <ClInclude Include="Teleporter.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="CGameUI.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="UICard.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="UITag.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="UINum.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="mario-sample.txt">
@@ -386,6 +401,9 @@
       <Filter>Infor Files\Objects</Filter>
     </Text>
     <Text Include="button.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="gameUI.txt">
       <Filter>Infor Files\Objects</Filter>
     </Text>
   </ItemGroup>

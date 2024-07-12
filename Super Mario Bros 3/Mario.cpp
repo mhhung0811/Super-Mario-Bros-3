@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "MysteryBox.h"
 #include "Mushroom.h"
+#include "MushroomGreen.h"
 #include "PiranhaPlant.h"
 #include "FireBall.h"
 #include "Koopa.h"
@@ -33,15 +34,21 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		nearestTele->GetPosition(tx, ty);
 		CTeleporter* p = dynamic_cast<CTeleporter*>(nearestTele);
 		LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+		if (waitTele > 0)
+		{
+			waitTele -= dt;
+			if (waitTele <= 0)
+				playScene->ResetCam();
+		}
 		if (isTeleUp)
 		{
 			if (y < ty - MARIO_TELE_DIS)
 			{
 				p->Teleport();
+				waitTele = 100;
 				vy = -MARIO_TELE_SPEED;
 				isFinishTele = true;
 				isCamStaticY = false;
-				playScene->ResetCam();
 			}
 			if (isFinishTele && y < p->GetDesY() - MARIO_TELE_DIS)
 			{
@@ -56,10 +63,10 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			if (y > ty + MARIO_TELE_DIS)
 			{
 				p->Teleport();
+				waitTele = 100;
 				vy = MARIO_TELE_SPEED;
 				isFinishTele = true;
 				isCamStaticY = true;
-				playScene->ResetCam();
 			}
 			if (isFinishTele && y > p->GetDesY() + MARIO_TELE_DIS)
 			{
@@ -272,6 +279,8 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithCoin(LPCOLLISIONEVENT e)
 {
 	e->obj->Delete();
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->UpdateUICoin(1);
 	coin++;
 }
 
@@ -294,11 +303,19 @@ void CMario::OnCollisionWithMysteryBox(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 {
 	CMushroom* p = (CMushroom*)e->obj;
-	SetLevel(MARIO_LEVEL_BIG);
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	if (dynamic_cast<CMushroomGreen*>(p))
+	{
+		playScene->UpdateUILives(1);
+	}
+	else
+	{
+		if (level != MARIO_LEVEL_RACOON)
+			SetLevel(MARIO_LEVEL_BIG);
+	}
 	p->IsAbsorbed();
 	float px, py;
 	p->GetPosition(px, py);
-	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
 	playScene->FlowScore(px, py, p->GetPoint());
 }
 
@@ -1039,7 +1056,10 @@ void CMario::SetState(int state)
 		// Running
 		if (runCharge >= MARIO_RUN_CHARGE_MAX)
 		{
-			isCamFollowY = true;
+			if (y < (SCREEN_HEIGHT - SCREEN_UI) / 2)
+			{
+				isCamFollowY = true;
+			}
 			vy = -MARIO_FLAP_FLY_SPEED_Y;
 			ay = -MARIO_FLAP_FLY_ACC_Y;
 		}

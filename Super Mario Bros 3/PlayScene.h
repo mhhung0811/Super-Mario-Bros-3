@@ -3,15 +3,17 @@
 #include "Textures.h"
 #include "Scene.h"
 #include "GameObject.h"
+#include "CGameUI.h"
+#include "UINum.h"
 #include "Brick.h"
 #include "Mario.h"
 #include "Goomba.h"
 //#include "Koopas.h"
 
 // Pls sync with other in main.cpp if changes
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 290
-#define SCREEN_UI 48
+#define SCREEN_WIDTH 280
+#define SCREEN_HEIGHT 270
+#define SCREEN_UI	28
 #define	WORLD_CEILING -212
 #define CAM_STATIC_Y -454
 
@@ -23,6 +25,8 @@ protected:
 
 	vector<LPGAMEOBJECT> objects0;
 	vector<LPGAMEOBJECT> objects1;
+	vector<LPGAMEUI> objects2;
+	vector<CUINum*> numsObj;
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
@@ -56,6 +60,10 @@ public:
 	void FlowCoin(float x, float y);
 	void BrickToCoin();
 	void ResetCam();
+	void UpdateUILives(int num);
+	void UpdateUIScore(int num);
+	void UpdateUICoin(int num);
+	void UpdateUITime(int num);
 };
 
 typedef CPlayScene* LPPLAYSCENE;

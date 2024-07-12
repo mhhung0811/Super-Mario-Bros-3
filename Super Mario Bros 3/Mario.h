@@ -250,6 +250,7 @@ class CMario : public CGameObject
 	long runCharge;
 	long runChargeTimer;
 	long attackTimer;
+	long waitTele;
 
 	int level; 
 	int untouchable; 
@@ -305,6 +306,7 @@ public:
 		runCharge = 0;
 		runChargeTimer = 0;
 		attackTimer = 0;
+		waitTele = 0;
 
 		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;

@@ -321,6 +321,7 @@ void CFlyKoopa::LoseWing()
 	isBlck = false;
 	if (haveWing)
 	{
+		y -= (FLY_KOOPA_BBOX_HEIGHT - FLY_KOOPA_SHELL_BBOX_HEIGHT) / 2 + 5;
 		haveWing = false;
 		wing->Delete();
 	}

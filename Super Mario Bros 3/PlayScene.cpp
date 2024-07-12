@@ -32,6 +32,10 @@
 #include "MushroomGreen.h"
 #include "Button.h"
 #include "Teleporter.h"
+#include "CGameUI.h"
+#include "UICard.h"
+#include "UITag.h"
+#include "UINum.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -125,6 +129,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	float y = (float)atof(tokens[2].c_str());
 
 	CGameObject *obj = NULL;
+	CGameUI* uiObj = NULL;
 
 	switch (object_type)
 	{
@@ -476,6 +481,43 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CTeleporter(x, y, bboxWidth, bboxHeight, desX, desY, isUp);
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
+		break;
+	}
+
+	case OBJECT_TYPE_UI_HUD:
+	{
+		uiObj = new CGameUI(x, y);
+		uiObj->SetPosition(x, y);
+		objects2.push_back(uiObj);
+		break;
+	}
+
+	case OBJECT_TYPE_UI_CARD:
+	{
+		uiObj = new CUICard(x, y);
+		uiObj->SetPosition(x, y);
+		objects2.push_back(uiObj);
+		break;
+	}
+
+	case OBJECT_TYPE_UI_TAG:
+	{
+		uiObj = new CUITag(x, y);
+		uiObj->SetPosition(x, y);
+		objects2.push_back(uiObj);
+		break;
+	}
+
+	case OBJECT_TYPE_UI_NUM:
+	{
+		uiObj = new CUINum(x, y);
+		uiObj->SetPosition(x, y);
+		objects2.push_back(uiObj);
+		if (dynamic_cast<CUINum*>(uiObj))
+		{
+			numsObj.push_back(dynamic_cast<CUINum*>(uiObj));
+		}
+		break;
 	}
 
 	case OBJECT_TYPE_PORTAL:
@@ -619,33 +661,37 @@ void CPlayScene::Update(DWORD dt)
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
 
-	// Update camera to follow mario
-	float cx, cy;
+	float cx, cy, rx, ry;
 	player->GetPosition(cx, cy);
 	CMario* mario = dynamic_cast<CMario*>(player);
 
-	CGame *game = CGame::GetInstance();
+	CGame* game = CGame::GetInstance();
+
+	// Update camera to follow mario
 	cx -= game->GetBackBufferWidth() / 2;
 	
 	if (cx < 0) cx = 0;
-	if (cy > 0) cy = 0;
+	if (cy > 12) cy = 12;
 
 	if (mario->IsCamStaticY())
 	{
-		CGame::GetInstance()->SetCamPos(cx, CAM_STATIC_Y, mario->FaceDirection(), -1);
+		CGame::GetInstance()->SetCamPos(rx, ry, cx, CAM_STATIC_Y, mario->FaceDirection(), -1);
 	}
-	else if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 2 && mario->IsCamFollowY())
+	else if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 3 * 2 && mario->IsCamFollowY())
 	{
-		if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 3 * 2 && mario->IsCamFollowY())
-		{
-			cy -= game->GetBackBufferHeight() / 2;
-		}
+		cy -= game->GetBackBufferHeight() / 2;
 		if (cy < WORLD_CEILING) cy = WORLD_CEILING;
-		CGame::GetInstance()->SetCamPos(cx, cy, mario->FaceDirection(), mario->IsUp());
+		CGame::GetInstance()->SetCamPos(rx, ry, cx, cy, mario->FaceDirection(), mario->IsUp());
 	}
 	else
 	{
-		CGame::GetInstance()->SetCamPos(cx, 0, mario->FaceDirection(), mario->IsUp());
+		CGame::GetInstance()->SetCamPos(rx, ry, cx, 12, mario->FaceDirection(), mario->IsUp());
+	}
+
+	for (size_t i = 0; i < objects2.size(); i++)
+	{
+		objects2[i]->Update(dt, &coAllObjects);
+		objects2[i]->UIUpdate(rx, ry);
 	}
 
 	PurgeDeletedObjects();
@@ -658,6 +704,9 @@ void CPlayScene::Render()
 
 	for (int i = 0; i < objects1.size(); i++)
 		objects1[i]->Render();
+
+	for (int i = 0; i < objects2.size(); i++)
+		objects2[i]->Render();
 }
 
 /*
@@ -774,7 +823,7 @@ void CPlayScene::CreateItem(int id, float x, float y)
 		obj = new CCoin(x, y);
 		obj->SetPosition(x, y);
 		obj->SetState(COIN_STATE_STATIC);
-		objects0.push_back(obj);
+		objects0.insert(objects0.end() - 1, obj);
 		break;
 	default:
 		break;
@@ -812,31 +861,31 @@ void CPlayScene::SpawnMonster(int id, float x, float y)
 		obj = new CGoomba(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end(), obj);
+		objects0.insert(objects0.end() - 1, obj);
 		break;
 	case OBJECT_TYPE_FLY_GOOMBA:
 		obj = new CFlyGoomba(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end(), obj);
+		objects0.insert(objects0.end() - 1, obj);
 		break;
 	case OBJECT_TYPE_KOOPA:
 		obj = new CKoopa(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end(), obj);
+		objects0.insert(objects0.end() - 1, obj);
 		break;
 	case OBJECT_TYPE_FLY_KOOPA:
 		obj = new CFlyKoopa(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end(), obj);
+		objects0.insert(objects0.end() - 1, obj);
 		break;
 	case OBJECT_TYPE_NORMAL_KOOPA:
 		obj = new CNormalKoopa(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end(), obj);
+		objects0.insert(objects0.end() - 1, obj);
 		break;
 	default:
 		break;
@@ -907,7 +956,7 @@ void CPlayScene::BrickToCoin()
 
 void CPlayScene::ResetCam()
 {
-	float cx, cy;
+	float cx, cy, rx, ry;
 	player->GetPosition(cx, cy);
 	CMario* mario = dynamic_cast<CMario*>(player);
 
@@ -916,9 +965,16 @@ void CPlayScene::ResetCam()
 	cx -= game->GetBackBufferWidth() / 2;
 	cy -= game->GetBackBufferHeight() / 2;
 	if (cx < 0) cx = 0;
-	if (cy > 0) cy = 0;
+	if (cy > 12) cy = 12;
 
-	CGame::GetInstance()->SetCamPos(cx, cy, mario->FaceDirection(), -1, 1);
+	if (mario->IsCamStaticY())
+	{
+		CGame::GetInstance()->SetCamPos(rx, ry, cx, CAM_STATIC_Y, mario->FaceDirection(), -1, 1);
+	}
+	else
+	{
+		CGame::GetInstance()->SetCamPos(rx, ry, cx, 12, mario->FaceDirection(), mario->IsUp(), 1);
+	}
 
 	/*if (cx < 0) cx = 0;
 	if (cy > 0) cy = 0;
@@ -940,4 +996,70 @@ void CPlayScene::ResetCam()
 	{
 		CGame::GetInstance()->SetCamPos(cx, 0, mario->FaceDirection(), mario->IsUp());
 	}*/
+}
+
+void CPlayScene::UpdateUILives(int num)
+{
+	if (numsObj.size() > 1)
+	{
+		numsObj.at(1)->SetNum(numsObj.at(1)->GetNum() + num);
+	}
+}
+
+void CPlayScene::UpdateUIScore(int num)
+{
+	if (numsObj.size() > 8)
+	{
+		int res = numsObj.at(2)->GetNum() * 1000000
+			+ numsObj.at(3)->GetNum() * 100000
+			+ numsObj.at(4)->GetNum() * 10000
+			+ numsObj.at(5)->GetNum() * 1000
+			+ numsObj.at(6)->GetNum() * 100
+			+ numsObj.at(7)->GetNum() * 10
+			+ numsObj.at(8)->GetNum();
+
+		res += num;
+
+		numsObj.at(8)->SetNum(res % 10);
+		res /= 10;
+		numsObj.at(7)->SetNum(res % 10);
+		res /= 10;
+		numsObj.at(6)->SetNum(res % 10);
+		res /= 10;
+		numsObj.at(5)->SetNum(res % 10);
+		res /= 10;
+		numsObj.at(4)->SetNum(res % 10);
+		res /= 10;
+		numsObj.at(3)->SetNum(res % 10);
+		res /= 10;
+		numsObj.at(2)->SetNum(res % 10);
+		res /= 10;
+	}
+}
+
+void CPlayScene::UpdateUICoin(int num)
+{
+	if (numsObj.size() > 12)
+	{
+		numsObj.at(12)->SetNum(numsObj.at(12)->GetNum() + num);
+	}
+}
+
+void CPlayScene::UpdateUITime(int num)
+{
+	if (numsObj.size() > 11)
+	{
+		int res = numsObj.at(9)->GetNum() * 1000
+			+ numsObj.at(10)->GetNum() * 100
+			+ numsObj.at(11)->GetNum() * 10;
+
+		res += num;
+
+		numsObj.at(11)->SetNum(res % 10);
+		res /= 10;
+		numsObj.at(10)->SetNum(res % 10);
+		res /= 10;
+		numsObj.at(9)->SetNum(res % 10);
+		res /= 10;
+	}
 }
