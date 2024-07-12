@@ -13,7 +13,11 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	if (mario->GetState() == MARIO_STATE_FLAP_FLOW) return;
 	switch (KeyCode)
 	{
+	case DIK_UP:
+		mario->Teleport(1);
+		break;
 	case DIK_DOWN:
+		mario->Teleport(0);
 		mario->SetState(MARIO_STATE_SIT);
 		break;
 	case DIK_S:

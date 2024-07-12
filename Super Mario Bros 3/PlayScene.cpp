@@ -31,6 +31,7 @@
 #include "BreakableBrick.h"
 #include "MushroomGreen.h"
 #include "Button.h"
+#include "Teleporter.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -139,7 +140,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object has been created!\n");
 
 		obj->SetPosition(x, y);
-		objects1.push_back(obj);
+		objects0.push_back(obj);
 		break;
 	case OBJECT_TYPE_GOOMBA: 
 		obj = new CGoomba(x,y); 
@@ -318,7 +319,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		obj = new CFireBall(x, y, dir);
 		obj->SetPosition(x, y);
-		objects0.push_back(obj);
+		objects0.insert(objects0.end() - 1, obj);
 		break;
 	}
 	case OBJECT_TYPE_RACOONLEAF:
@@ -465,6 +466,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_TELEPORTER:
+	{
+		int bboxWidth = atoi(tokens[3].c_str());
+		int bboxHeight = atoi(tokens[4].c_str());
+		int desX = atoi(tokens[5].c_str());
+		int desY = atoi(tokens[6].c_str());
+		int isUp = atoi(tokens[7].c_str());
+		obj = new CTeleporter(x, y, bboxWidth, bboxHeight, desX, desY, isUp);
+		obj->SetPosition(x, y);
+		objects0.push_back(obj);
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -566,14 +579,14 @@ void CPlayScene::Update(DWORD dt)
 	
 	vector<LPGAMEOBJECT> coObjects0;
 	
-	for (size_t i = 0; i < objects0.size(); i++)
+	for (size_t i = 0; i < objects0.size() - 1; i++)
 	{
 		coObjects0.push_back(objects0[i]);
 	}
 	
 	// Now Mario is the last
 	vector<LPGAMEOBJECT> coObjects1;
-	for (size_t i = 0; i < objects1.size() - 1; i++)
+	for (size_t i = 0; i < objects1.size(); i++)
 	{
 		coObjects1.push_back(objects1[i]);
 	}
@@ -613,7 +626,6 @@ void CPlayScene::Update(DWORD dt)
 
 	CGame *game = CGame::GetInstance();
 	cx -= game->GetBackBufferWidth() / 2;
-	cy -= game->GetBackBufferHeight() / 2;
 	
 	if (cx < 0) cx = 0;
 	if (cy > 0) cy = 0;
@@ -773,7 +785,7 @@ void CPlayScene::CreateFireBall(float x, float y, int dir)
 {
 	CGameObject* obj = new CFireBall(x, y, dir);
 	obj->SetPosition(x, y);
-	objects0.push_back(obj);
+	objects0.insert(objects0.end()-1, obj);
 }
 
 void CPlayScene::AddObject(CGameObject* obj, int type)
@@ -891,4 +903,41 @@ void CPlayScene::BrickToCoin()
 			}
 		}
 	}
+}
+
+void CPlayScene::ResetCam()
+{
+	float cx, cy;
+	player->GetPosition(cx, cy);
+	CMario* mario = dynamic_cast<CMario*>(player);
+
+	CGame* game = CGame::GetInstance();
+	game->SetBorder(cx, cy);
+	cx -= game->GetBackBufferWidth() / 2;
+	cy -= game->GetBackBufferHeight() / 2;
+	if (cx < 0) cx = 0;
+	if (cy > 0) cy = 0;
+
+	CGame::GetInstance()->SetCamPos(cx, cy, mario->FaceDirection(), -1, 1);
+
+	/*if (cx < 0) cx = 0;
+	if (cy > 0) cy = 0;
+
+	if (mario->IsCamStaticY())
+	{
+		CGame::GetInstance()->SetCamPos(cx, CAM_STATIC_Y, mario->FaceDirection(), -1);
+	}
+	else if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 2 && mario->IsCamFollowY())
+	{
+		if (cy < (SCREEN_HEIGHT - SCREEN_UI) / 3 * 2 && mario->IsCamFollowY())
+		{
+			cy -= game->GetBackBufferHeight() / 2;
+		}
+		if (cy < WORLD_CEILING) cy = WORLD_CEILING;
+		CGame::GetInstance()->SetCamPos(cx, cy, mario->FaceDirection(), mario->IsUp());
+	}
+	else
+	{
+		CGame::GetInstance()->SetCamPos(cx, 0, mario->FaceDirection(), mario->IsUp());
+	}*/
 }

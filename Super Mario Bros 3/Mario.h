@@ -10,6 +10,7 @@
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SLOW_SPEED 0.125f
 #define MARIO_RUNNING_SPEED		0.2f
+#define MARIO_TELE_SPEED		0.05f
 
 #define MARIO_ACCEL_WALK_X	0.0005f
 #define	MARIO_ACCEL_RUN_SLOW_X	0.0007f
@@ -52,6 +53,8 @@
 
 #define MARIO_STATE_ATTACK			900
 
+#define MARIO_STATE_TELE			1000
+
 #pragma region ANIMATION_ID
 
 #define ID_ANI_MARIO_IDLE_RIGHT 400
@@ -90,6 +93,8 @@
 #define ID_ANI_MARIO_HOLDSHELL_KICK_LEFT 2506
 #define ID_ANI_MARIO_HOLDSHELL_KICK_RIGHT 2507
 
+#define ID_ANI_MARIO_TELE 2900
+
 #define ID_ANI_MARIO_DIE 999
 
 // SMALL MARIO
@@ -122,6 +127,8 @@
 #define ID_ANI_MARIO_SMALL_HOLDSHELL_JUMP_RIGHT 2605
 #define ID_ANI_MARIO_SMALL_HOLDSHELL_KICK_LEFT 2606
 #define ID_ANI_MARIO_SMALL_HOLDSHELL_KICK_RIGHT 2607
+
+#define ID_ANI_MARIO_SMALL_TELE 3000
 
 // RACOON MARIO
 #define ID_ANI_MARIO_RACOON_IDLE_LEFT 1700
@@ -168,6 +175,8 @@
 #define ID_ANI_MARIO_RACOON_ATTACK_LEFT 2800
 #define ID_ANI_MARIO_RACOON_ATTACK_RIGHT 2801
 
+#define ID_ANI_MARIO_RACOON_TELE 3100
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -198,7 +207,9 @@
 #define MARIO_HOLD_Y -1
 #define MARIO_BIG_HOLD_Y 2
 
-#define MARIO_UNTOUCHABLE_TIME 2500
+#define MARIO_TELE_DIS 32
+
+#define MARIO_UNTOUCHABLE_TIME 1500
 
 #define MARIO_ON_AIR_TIME		15
 #define MARIO_FIRST_JUMP_TIME	5
@@ -219,8 +230,13 @@ class CMario : public CGameObject
 	BOOLEAN isAttacking;
 	BOOLEAN isCamFollowY;
 	BOOLEAN isCamStaticY;
+	BOOLEAN isTeleUp;
+	BOOLEAN isFinishTele;
+	BOOLEAN isBlck;
+	BOOLEAN isColl;
 
 	CGameObject* holdedObj = NULL;
+	CGameObject* nearestTele = NULL;
 
 	float maxVx;
 	float ax;				// acceleration on x 
@@ -239,7 +255,7 @@ class CMario : public CGameObject
 	int untouchable; 
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
-	int coin; 
+	int coin;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
@@ -257,6 +273,7 @@ class CMario : public CGameObject
 	void OnCollisionWithPiranhaPlantBite(LPCOLLISIONEVENT e);
 	void OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithButton(LPCOLLISIONEVENT e);
+	void OnCollisionWithTeleporter (LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
@@ -270,7 +287,11 @@ public:
 		canSetState = true;
 		isAttacking = false;
 		isCamFollowY = false;
-		isCamStaticY = true;
+		isCamStaticY = false;
+		isTeleUp = false;
+		isFinishTele = false;
+		isBlck = true;
+		isColl = true;
 
 		maxVx = 0.0f;
 		ax = 0.0f;
@@ -296,9 +317,9 @@ public:
 	void RenderHitBox();
 	void SetState(int state);
 
-	int IsCollidable() { return (state != MARIO_STATE_DIE); }
+	int IsCollidable() { return (state != MARIO_STATE_DIE && isColl); }
 
-	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0); }
+	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable==0 && isBlck); }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
@@ -321,4 +342,5 @@ public:
 
 	void Flap();
 	void Attack(vector<LPGAMEOBJECT>* coObjects);
+	void Teleport(bool isUp);
 };

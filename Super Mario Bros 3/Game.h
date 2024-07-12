@@ -110,8 +110,22 @@ public:
 
 	void SetPointSamplerState();
 
-	void SetCamPos(float x, float y, int xDir, int yDir) 
+	void SetBorder(float x, float y)
 	{
+		leftBorder = x -CAM_FORWARD_X;
+		rightBorder = x + CAM_FORWARD_X;
+		upBorder = y - CAM_FORWARD_Y;
+		downBorder = y + CAM_FORWARD_Y;
+	}
+
+	void SetCamPos(float x, float y, int xDir, int yDir, int isDirectly = 0) 
+	{
+		if (isDirectly == 1)
+		{
+			cam_x = x;
+			cam_y = y;
+			return;
+		}
 		if (xDir > 0)
 		{
 			leftBorder = x - CAM_FORWARD_X;

@@ -47,7 +47,7 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #define MAIN_WINDOW_TITLE L"04 - Collision"
 #define WINDOW_ICON_PATH L"mario.ico"
 
-#define BACKGROUND_COLOR D3DXCOLOR(200.0f/255, 200.0f/255, 255.0f/255, 0.0f)
+#define BACKGROUND_COLOR D3DXCOLOR(200.0f/255, 236.0f/255, 252.0f/255, 0.0f)
 
 // sync with other in Playscene if changes
 #define SCREEN_WIDTH 320

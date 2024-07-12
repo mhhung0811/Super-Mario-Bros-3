@@ -20,11 +20,59 @@
 #include "PiranhaPlantBite.h"
 #include "BreakableBrick.h"
 #include "Button.h"
+#include "Teleporter.h"
 
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	// Tele stuff
+	if (state == MARIO_STATE_TELE)
+	{
+		float tx, ty;
+		nearestTele->GetPosition(tx, ty);
+		CTeleporter* p = dynamic_cast<CTeleporter*>(nearestTele);
+		LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+		if (isTeleUp)
+		{
+			if (y < ty - MARIO_TELE_DIS)
+			{
+				p->Teleport();
+				vy = -MARIO_TELE_SPEED;
+				isFinishTele = true;
+				isCamStaticY = false;
+				playScene->ResetCam();
+			}
+			if (isFinishTele && y < p->GetDesY() - MARIO_TELE_DIS)
+			{
+				isBlck = true;
+				isColl = true;
+				canSetState = true;
+				SetState(MARIO_STATE_WALKING_RIGHT);
+			}
+		}
+		if (!isTeleUp)
+		{
+			if (y > ty + MARIO_TELE_DIS)
+			{
+				p->Teleport();
+				vy = MARIO_TELE_SPEED;
+				isFinishTele = true;
+				isCamStaticY = true;
+				playScene->ResetCam();
+			}
+			if (isFinishTele && y > p->GetDesY() + MARIO_TELE_DIS)
+			{
+				isBlck = true;
+				isColl = true;
+				canSetState = true;
+				SetState(MARIO_STATE_WALKING_RIGHT);
+			}
+		}
+		CCollision::GetInstance()->Process(this, dt, coObjects);
+		return;
+	}
+
 	vy += ay * dt;
 	vx += ax * dt;
 
@@ -193,6 +241,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBreakableBrick(e);
 	else if (dynamic_cast<CButton*>(e->obj))
 		OnCollisionWithButton(e);
+	else if (dynamic_cast<CTeleporter*>(e->obj))
+		OnCollisionWithTeleporter(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -553,13 +603,22 @@ void CMario::OnCollisionWithButton(LPCOLLISIONEVENT e)
 	}
 }
 
+void CMario::OnCollisionWithTeleporter(LPCOLLISIONEVENT e)
+{
+	nearestTele = dynamic_cast<CTeleporter*>(e->obj);
+}
+
 //
 // Get animation ID for small Mario
 //
 int CMario::GetAniIdSmall()
 {
 	int aniId = -1;
-	if (state == MARIO_STATE_KICK)
+	if (state == MARIO_STATE_TELE)
+	{
+		aniId = ID_ANI_MARIO_SMALL_TELE;
+	}
+	else if (state == MARIO_STATE_KICK)
 	{
 		aniId = (nx >= 0) ? ID_ANI_MARIO_SMALL_HOLDSHELL_KICK_RIGHT : ID_ANI_MARIO_SMALL_HOLDSHELL_KICK_LEFT;
 	}
@@ -578,8 +637,7 @@ int CMario::GetAniIdSmall()
 			aniId = (nx >= 0) ? ID_ANI_MARIO_SMALL_JUMP_WALK_RIGHT : ID_ANI_MARIO_SMALL_JUMP_WALK_LEFT;
 		}
 	}
-	else
-	if (isSitting)
+	else if (isSitting)
 	{
 		aniId = (nx >= 0) ? ID_ANI_MARIO_SIT_RIGHT : ID_ANI_MARIO_SIT_LEFT;
 	}
@@ -643,7 +701,11 @@ int CMario::GetAniIdSmall()
 int CMario::GetAniIdBig()
 {
 	int aniId = -1;
-	if (state == MARIO_STATE_KICK)
+	if (state == MARIO_STATE_TELE)
+	{
+		aniId = ID_ANI_MARIO_TELE;
+	}
+	else if (state == MARIO_STATE_KICK)
 	{
 		aniId = (nx >= 0) ? ID_ANI_MARIO_HOLDSHELL_KICK_RIGHT : ID_ANI_MARIO_HOLDSHELL_KICK_LEFT;
 	}
@@ -734,9 +796,12 @@ int CMario::GetAniIdBig()
 int CMario::GetAniIdRacoon()
 {
 	int aniId = -1;
-	if (state == MARIO_STATE_ATTACK || isAttacking)
+	if (state == MARIO_STATE_TELE)
 	{
-		DebugOut(L"spin\n");
+		aniId = ID_ANI_MARIO_RACOON_TELE;
+	}
+	else if (state == MARIO_STATE_ATTACK || isAttacking)
+	{
 		aniId = (nx >= 0) ? ID_ANI_MARIO_RACOON_ATTACK_RIGHT : ID_ANI_MARIO_RACOON_ATTACK_LEFT;
 	} else if (state == MARIO_STATE_KICK)
 	{
@@ -847,6 +912,12 @@ void CMario::RenderHitBox()
 
 void CMario::Render()
 {
+	if (untouchable != 0)
+	{
+		if (GetTickCount64() % 2 == 0)
+			return;
+	}
+
 	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
 
@@ -1027,6 +1098,13 @@ void CMario::SetState(int state)
 		attackTimer = MARIO_ATTACK_TIME;
 		//canSetState = false;
 		isAttacking = true;
+		break;
+	case MARIO_STATE_TELE:
+		canSetState = false;
+		isBlck = false;
+		isColl = false;
+		vx = 0;
+		vy = (isTeleUp ? -1 : 1) * MARIO_TELE_SPEED;
 		break;
 	}
 	
@@ -1247,4 +1325,21 @@ bool CMario::InHitBox(LPGAMEOBJECT obj)
 	}
 	//DebugOut(L"no box found\n");
 	return false;
+}
+
+void CMario::Teleport(bool isUp)
+{
+	if (state == MARIO_STATE_TELE) return;
+	if (nearestTele != nullptr)
+	{
+		float l1, t1, r1, b1, l2, t2, r2, b2;
+		GetBoundingBox(l1, t1, r1, b1);
+		nearestTele->GetBoundingBox(l2, t2, r2, b2);
+		if (OverlapBox(l1, t1, r1, b1, l2, t2, r2, b2))
+		{
+			isTeleUp = isUp;
+			isFinishTele = false;
+			SetState(MARIO_STATE_TELE);
+		}
+	}
 }

@@ -55,6 +55,7 @@ public:
 	void FlowScore(float x, float y, int scoreId);
 	void FlowCoin(float x, float y);
 	void BrickToCoin();
+	void ResetCam();
 };
 
 typedef CPlayScene* LPPLAYSCENE;
