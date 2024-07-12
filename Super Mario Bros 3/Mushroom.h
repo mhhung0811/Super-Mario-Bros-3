@@ -18,6 +18,9 @@ class CMushroom : public CGameObject
 protected:
 	float fixedX;
 	float fixedY;
+
+	int point;
+
 	float ax;
 	float ay;
 	int isCollidable = 0;
@@ -35,4 +38,10 @@ public:
 	CMushroom(float x, float y);
 	virtual void SetState(int state);
 	virtual void IsAbsorbed();
+	int GetPoint()
+	{
+		int res = point;
+		point = 0;
+		return res;
+	}
 };

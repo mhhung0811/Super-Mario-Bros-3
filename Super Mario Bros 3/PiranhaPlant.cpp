@@ -2,6 +2,7 @@
 
 CPiranhaPlant::CPiranhaPlant(float x, float y) :CGameObject(x, y)
 {
+	this->point = 100;
 	this->fixedX = x;
 	this->fixedY = y;
 	this->isIdle = 0;
@@ -134,7 +135,7 @@ void CPiranhaPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 		{
 			SetState(PIRANHAPLANT_STATE_DIE);
 			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-			playScene->FlowScore(x, y, 0);
+			playScene->FlowScore(x, y, GetPoint());
 		}
 	}
 	if (dynamic_cast<CFlyKoopa*>(e->obj))
@@ -144,7 +145,7 @@ void CPiranhaPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 		{
 			SetState(PIRANHAPLANT_STATE_DIE);
 			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-			playScene->FlowScore(x, y, 0);
+			playScene->FlowScore(x, y, GetPoint());
 		}
 	}
 
@@ -155,7 +156,7 @@ void CPiranhaPlant::OnCollisionWith(LPCOLLISIONEVENT e)
 		{
 			SetState(PIRANHAPLANT_STATE_DIE);
 			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-			playScene->FlowScore(x, y, 0);
+			playScene->FlowScore(x, y, GetPoint());
 		}
 	}
 }

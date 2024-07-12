@@ -19,6 +19,8 @@ cloud.txt
 flyKoopa.txt
 flowScore.txt
 coin.txt
+breakableBrick.txt
+button.txt
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -258,7 +260,32 @@ coin.txt
 9	656	162	2
 9	704	130	1
 9	1472	146	1
-9	1440	-94	1
+
+# BREAKABLE BRICK
+24	1952	178	1
+24	1968	178	1
+24	1984	178	1
+24	2000	178	1
+24	2016	178	1
+24	2032	178	1
+24	2048	178	1
+
+24	1968	162	1
+24	1984	162	1
+24	2000	162	1
+24	2016	162	1
+24	2032	162	1
+
+24	1984	146	1
+24	2000	146	1
+24	2016	146	1
+24	2032	146	2
+
+24	2096	178	1
+24	2112	178	1
+24	2096	162	1
+
+24	1440	-94	3
 
 # SPAWNER
 #	id	x	y	bboxWidth	bboxHeight	id1	x1	y1	id2	x2	y2....

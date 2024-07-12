@@ -53,6 +53,7 @@ public:
 	void SpawnMonster(int id, float x, float y);
 	void FlowScore(float x, float y, int scoreId);
 	void FlowCoin(float x, float y);
+	void BrickToCoin();
 };
 
 typedef CPlayScene* LPPLAYSCENE;

@@ -153,6 +153,12 @@
     <ClCompile Include="FlowCoin.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="BreakableBrick.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -287,6 +293,12 @@
     <ClInclude Include="FLowCoin.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="MushroomGreen.h">
+      <Filter>Header Files\Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="mario-sample.txt">
@@ -362,6 +374,12 @@
       <Filter>Infor Files\Characters</Filter>
     </Text>
     <Text Include="flowScore.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="breakableBrick.txt">
+      <Filter>Infor Files\Objects</Filter>
+    </Text>
+    <Text Include="button.txt">
       <Filter>Infor Files\Objects</Filter>
     </Text>
   </ItemGroup>

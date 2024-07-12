@@ -28,6 +28,9 @@
 #include "PiranhaPlantBite.h"
 #include "FlowScore.h"
 #include "FLowCoin.h"
+#include "BreakableBrick.h"
+#include "MushroomGreen.h"
+#include "Button.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -432,6 +435,36 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_BREAKABLE_BRICK:
+	{
+		int gift = 1;
+		if (tokens.size() > 3)
+		{
+			gift = (int)atoi(tokens[3].c_str());
+		}
+		obj = new CBreakableBrick(x, y, gift);
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	}
+
+	case OBJECT_TYPE_MUSHROOM_GREEN:
+	{
+		obj = new CMushroomGreen(x, y);
+		obj->SetPosition(x, y);
+		// mushroom should be the first
+		objects1.insert(objects1.begin(), obj);
+		break;
+	}
+
+	case OBJECT_TYPE_BUTTON:
+	{
+		obj = new CButton(x, y);
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -702,8 +735,25 @@ void CPlayScene::CreateItem(int id, float x, float y)
 	case OBJECT_TYPE_RACOONLEAF:
 		obj = new CRacoonLeaf(x, y);
 		obj->SetPosition(x, y);
-		// racoon should be the last but still after mario
+		// racoon leaf should be the last but still after mario
 		objects1.insert(objects1.end() - 1, obj);
+		break;
+	case OBJECT_TYPE_MUSHROOM_GREEN:
+		obj = new CMushroomGreen(x, y);
+		obj->SetPosition(x, y);
+		// mushroom should be the first
+		objects1.insert(objects1.begin(), obj);
+		break;
+	case OBJECT_TYPE_BUTTON:
+		obj = new CButton(x, y - 16);
+		obj->SetPosition(x, y - 16);
+		objects1.insert(objects1.end() - 1, obj);
+		break;
+	case OBJECT_TYPE_COIN:
+		obj = new CCoin(x, y);
+		obj->SetPosition(x, y);
+		obj->SetState(COIN_STATE_STATIC);
+		objects0.push_back(obj);
 		break;
 	default:
 		break;
@@ -772,8 +822,41 @@ void CPlayScene::SpawnMonster(int id, float x, float y)
 	}
 }
 
-void CPlayScene::FlowScore(float x, float y, int scoreId)
+void CPlayScene::FlowScore(float x, float y, int score)
 {
+	int scoreId = -1;
+	switch (score)
+	{
+	case 100:
+		scoreId = FLOW_SCORE_100;
+		break;
+	case 200:
+		scoreId = FLOW_SCORE_200;
+		break;
+	case 400:
+		scoreId = FLOW_SCORE_400;
+		break;
+	case 800:
+		scoreId = FLOW_SCORE_800;
+		break;
+	case 1000:
+		scoreId = FLOW_SCORE_1000;
+		break;
+	case 2000:
+		scoreId = FLOW_SCORE_2000;
+		break;
+	case 4000:
+		scoreId = FLOW_SCORE_4000;
+		break;
+	case 8000:
+		scoreId = FLOW_SCORE_8000;
+		break;
+	case 10000:
+		scoreId = FLOW_SCORE_1UP;
+		break;
+	default:
+		return;
+	}
 	CGameObject* obj = new CFlowScore(x, y, scoreId);
 	obj->SetPosition(x, y);
 	objects0.push_back(obj);
@@ -784,4 +867,19 @@ void CPlayScene::FlowCoin(float x, float y)
 	CGameObject* obj = new CFlowCoin(x, y);
 	obj->SetPosition(x, y);
 	objects0.push_back(obj);
+}
+
+void CPlayScene::BrickToCoin()
+{
+	for (int i = 0; i < objects1.size(); i++)
+	{
+		if (dynamic_cast<CBreakableBrick*>(objects1.at(i)))
+		{
+			CBreakableBrick* p = dynamic_cast<CBreakableBrick*>(objects1.at(i));
+			if (p->IsCoin())
+			{
+				p->ToCoin();
+			}
+		}
+	}
 }

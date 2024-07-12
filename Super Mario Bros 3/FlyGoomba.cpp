@@ -3,6 +3,7 @@
 
 CFlyGoomba::CFlyGoomba(float x, float y) :CGameObject(x, y)
 {
+	this->point = 200;
 	this->haveWings = true;
 	this->ax = 0;
 	this->ay = FLY_GOOMBA_GRAVITY;
@@ -191,9 +192,12 @@ void CFlyGoomba::SetState(int state)
 		break;
 	case FLY_GOOMBA_STATE_ALT_DIE:
 		die_start = GetTickCount64();
-		haveWings = false;
-		leftWing->Delete();
-		rightWing->Delete();
+		if (haveWings)
+		{
+			haveWings = false;
+			leftWing->Delete();
+			rightWing->Delete();
+		}
 		break;
 	case FLY_GOOMBA_STATE_WALKING:
 		vx = -FLY_GOOMBA_WALKING_SPEED;
@@ -223,5 +227,6 @@ void CFlyGoomba::AltDie(int dir)
 	vy = -FLY_GOOMBA_ALT_DIE_SPEED_X;
 
 	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-	playScene->FlowScore(x, y, 0);
+	playScene->FlowScore(x, y, point);
+	point = 0;
 }

@@ -2,6 +2,7 @@
 
 CFlyKoopa::CFlyKoopa(float x, float y) :CGameObject(x, y)
 {
+	this->point = 300;
 	die_start = -1;
 	this->ax = 0;
 	this->ay = FLY_KOOPA_GRAVITY;
@@ -75,6 +76,11 @@ void CFlyKoopa::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (dynamic_cast<CMysteryBox*>(e->obj) && state == FLY_KOOPA_STATE_SHELL_ROLL)
 	{
 		CMysteryBox* mBox = dynamic_cast<CMysteryBox*>(e->obj);
+		mBox->OpenBox();
+	}
+	if (dynamic_cast<CBreakableBrick*>(e->obj) && state == KOOPA_STATE_SHELL_ROLL)
+	{
+		CBreakableBrick* mBox = dynamic_cast<CBreakableBrick*>(e->obj);
 		mBox->OpenBox();
 	}
 
@@ -336,5 +342,6 @@ void CFlyKoopa::DieAlt(int dir)
 	vy = -FLY_KOOMBA_DIE_SPEED_Y;
 
 	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-	playScene->FlowScore(x, y, 0);
+	playScene->FlowScore(x, y, point);
+	point = 0;
 }

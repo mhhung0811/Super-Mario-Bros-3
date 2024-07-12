@@ -2,6 +2,7 @@
 
 CGoomba::CGoomba(float x, float y):CGameObject(x, y)
 {
+	this->point = 100;
 	this->ax = 0;
 	this->ay = GOOMBA_GRAVITY;
 	die_start = -1;
@@ -142,5 +143,6 @@ void CGoomba::AltDie(int dir)
 	vy = -GOOMBA_ALT_DIE_SPEED_X;
 
 	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-	playScene->FlowScore(x, y, 0);
+	playScene->FlowScore(x, y, point);
+	point = 0;
 }

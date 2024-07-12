@@ -67,6 +67,7 @@ class CPiranhaPlant : public CGameObject
 protected:
 	float fixedX;
 	float fixedY;
+	int point;
 	bool isColl = 0;
 	unsigned long isIdle;
 	int facingDir;	// 0: left down, 1: left up, 2: right down, 3: right up
@@ -88,4 +89,10 @@ protected:
 public:
 	CPiranhaPlant(float x, float y);
 	virtual void SetState(int state);
+	int GetPoint()
+	{
+		int res = point;
+		point = 0;
+		return res;
+	}
 };

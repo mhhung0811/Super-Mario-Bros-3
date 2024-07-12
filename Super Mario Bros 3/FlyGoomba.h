@@ -38,6 +38,8 @@ protected:
 	float ax;
 	float ay;
 
+	int point;
+
 	bool isColl = 1;
 	bool haveWings;
 	int stepTimer;
@@ -65,4 +67,14 @@ public:
 	virtual void SetState(int state);
 	void Damaged();
 	void AltDie(int dir = 0);
+	int GetPoint()
+	{
+		int res = 0;
+		if (point > 0)
+		{
+			res = 100;
+			point -= res;
+		}
+		return res;
+	}
 };

@@ -64,7 +64,7 @@ void CFlowCoin::SetState(int state)
 		ay = FLOW_COIN_ACCEL;
 		break;
 	case FLOW_COIN_STATE_DISAPPEAR:
-		playScene->FlowScore(x, y, 0);
+		playScene->FlowScore(x, y, 100);
 		isDeleted = true;
 		break;
 	default:

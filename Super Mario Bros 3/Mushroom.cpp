@@ -2,6 +2,7 @@
 
 CMushroom::CMushroom(float x, float y) :CGameObject(x, y)
 {
+	this->point = 1000;
 	this->fixedX = x;
 	this->fixedY = y;
 	this->ax = 0;

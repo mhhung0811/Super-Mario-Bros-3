@@ -22,6 +22,8 @@ protected:
 	float fixedX, fixedY;
 	float ax, ay;
 
+	int point;
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
@@ -35,4 +37,10 @@ public:
 	CRacoonLeaf(float x, float y);
 	virtual void SetState(int state);
 	virtual void IsAbsorbed();
+	int GetPoint()
+	{
+		int res = point;
+		point = 0;
+		return res;
+	}
 };

@@ -3,6 +3,7 @@
 #include "EmptyObject.h"
 #include "PlayScene.h"
 #include "MysteryBox.h"
+#include "BreakableBrick.h"
 #include "Goomba.h"
 #include "FlyGoomba.h"
 #include "Mario.h"
@@ -48,6 +49,8 @@ protected:
 	float ax;
 	float ay;
 
+	int point = 100;
+
 	bool isColl = true;
 	bool isBlck = false;
 	bool isHolded = false;
@@ -84,4 +87,14 @@ public:
 	bool IsRolled() { return (state == KOOPA_STATE_SHELL_ROLL) ? 1 : 0; }
 	void Knocked(int dir = 0);
 	void AltDie(int dir = 0);
+	int GetPoint()
+	{
+		int res = 0;
+		if (point > 0)
+		{
+			res = 100;
+			point -= res;
+		}
+		return res;
+	}
 };

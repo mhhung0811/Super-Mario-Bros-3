@@ -33,6 +33,8 @@ protected:
 	float fixedX;
 	float fixedY;
 
+	int point;
+
 	bool isColl = 0;
 
 	unsigned long isIdle;
@@ -53,4 +55,10 @@ protected:
 public:
 	CPiranhaPlantBite(float x, float y);
 	virtual void SetState(int state);
+	int GetPoint()
+	{
+		int res = point;
+		point = 0;
+		return res;
+	}
 };

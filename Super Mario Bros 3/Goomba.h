@@ -29,6 +29,8 @@ protected:
 	float ay; 
 	bool isColl = 1;
 
+	int point;
+
 	ULONGLONG die_start;
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
@@ -45,4 +47,10 @@ public:
 	CGoomba(float x, float y);
 	virtual void SetState(int state);
 	void AltDie(int dir);
+	int GetPoint() 
+	{ 
+		int res = point;
+		point = 0;
+		return res; 
+	}
 };
