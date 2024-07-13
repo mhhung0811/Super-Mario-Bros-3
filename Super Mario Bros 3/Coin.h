@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "Animation.h"
 #include "Animations.h"
+#include "PlayScene.h"
+#include "AssetIDs.h"
 
 #define	COIN_WIDTH 10
 #define COIN_BBOX_WIDTH 10
@@ -24,4 +26,5 @@ protected:
 public:
 	CCoin(float x, float y);
 	virtual void SetState(int state);
+	void ToBrick();
 };

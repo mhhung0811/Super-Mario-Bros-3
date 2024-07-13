@@ -27,6 +27,8 @@
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	if (y > 210) SetState(MARIO_STATE_DIE);
+
 	// Revive
 	if (state == MARIO_STATE_DIE && (GetTickCount64() - die_time > MARIO_DIE_TIME))
 	{
@@ -119,6 +121,9 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				runChargeTimer += dt;
 		}
 	}
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->UpdateUIRuncharge(GetRunCharges());
+	
 
 	// Flow timer
 	if (flowTimer > 0)
@@ -1394,6 +1399,7 @@ void CMario::Restart()
 		SetPosition(20, 150);
 
 		canSetState = true;
+		level = MARIO_LEVEL_SMALL;
 		SetState(MARIO_STATE_IDLE);
 		vy = 0;
 		ay = MARIO_GRAVITY;
@@ -1401,4 +1407,16 @@ void CMario::Restart()
 	}
 	else
 		CGame::GetInstance()->InitiateSwitchScene(20);
+}
+
+int CMario::GetRunCharges()
+{
+	float r = MARIO_RUN_CHARGE_MAX / 6;
+	if (runCharge < r) return 0;
+	else if (runCharge < 2 * r) return 1;
+	else if (runCharge < 3 * r) return 2;
+	else if (runCharge < 4 * r) return 3;
+	else if (runCharge < 5 * r) return 4;
+	else if (runCharge < 6 * r) return 5;
+	else return 6;
 }

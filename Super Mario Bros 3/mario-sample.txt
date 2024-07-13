@@ -26,3 +26,4 @@ height	270
 60	textures\marioAll.png
 70	textures\hudnfont.png
 80	textures\menu.png
+90	textures\pick.png

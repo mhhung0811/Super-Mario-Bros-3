@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "CGameUI.h"
 #include "UINum.h"
+#include "UIArrow.h"
+#include "UIPow.h"
 #include "Brick.h"
 #include "Mario.h"
 #include "Goomba.h"
@@ -27,6 +29,8 @@ protected:
 	vector<LPGAMEOBJECT> objects1;
 	vector<LPGAMEUI> objects2;
 	vector<CUINum*> numsObj;
+	vector<CUIArrow*> arrsObj;
+	CUIPow* pow;
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
@@ -59,11 +63,13 @@ public:
 	void FlowScore(float x, float y, int scoreId);
 	void FlowCoin(float x, float y);
 	void BrickToCoin();
+	void CoinToBrick();
 	void ResetCam();
 	void UpdateUILives();
 	void UpdateUIScore(int num);
 	void UpdateUICoin(int num);
 	void UpdateUITime(int num);
+	void UpdateUIRuncharge(int num);
 	void Restart();
 };
 

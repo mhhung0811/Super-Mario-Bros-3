@@ -2,6 +2,7 @@
 
 CButton::CButton(float x, float y) : CGameObject(x, y)
 {
+	time_out = 0;
 	SetState(BUTTON_STATE_ACTIVE);
 }
 
@@ -15,7 +16,16 @@ void CButton::GetBoundingBox(float& left, float& top, float& right, float& botto
 
 void CButton::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
+	if (time_out > 0)
+	{
+		time_out -= dt;
+		if (time_out <= 0)
+		{
+			LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+			playScene->CoinToBrick();
+			time_out = 0;
+		}
+	}
 }
 
 void CButton::Render()
@@ -77,4 +87,5 @@ void CButton::PressButton()
 	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
 	playScene->BrickToCoin();
 	SetState(BUTTON_STATE_PRESS);
+	time_out = BUTTON_TIME_OUT;
 }

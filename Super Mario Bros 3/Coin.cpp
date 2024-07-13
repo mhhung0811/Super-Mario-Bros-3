@@ -42,3 +42,10 @@ void CCoin::SetState(int state)
 		break;
 	}
 }
+
+void CCoin::ToBrick()
+{
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->CreateItem(OBJECT_TYPE_BREAKABLE_BRICK, x, y);
+	isDeleted = true;
+}

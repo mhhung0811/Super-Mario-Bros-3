@@ -335,6 +335,7 @@ public:
 	void SetLevel(int l);
 	int GetLevel();
 	int GetLives() { return lives; }
+	int GetRunCharges();
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetHitBox(float& left, float& top, float& right, float& bottom);

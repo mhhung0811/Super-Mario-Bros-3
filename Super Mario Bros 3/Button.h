@@ -6,6 +6,8 @@
 #define BUTTON_PRESS_BBOX_HEIGHT 4
 #define BUTTON_BBOX_WIDTH 16
 
+#define BUTTON_TIME_OUT 5000
+
 #define BUTTON_STATE_ACTIVE 100
 #define BUTTON_STATE_PRESS 200
 
@@ -15,6 +17,8 @@
 class CButton : public CGameObject
 {
 protected:
+	long time_out;
+
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

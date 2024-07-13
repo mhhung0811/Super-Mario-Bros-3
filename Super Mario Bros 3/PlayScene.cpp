@@ -541,6 +541,27 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_UI_ARROW:
+	{
+		uiObj = new CUIArrow(x, y);
+		uiObj->SetPosition(x, y);
+		objects2.push_back(uiObj);
+		if (dynamic_cast<CUIArrow*>(uiObj))
+		{
+			arrsObj.push_back(dynamic_cast<CUIArrow*>(uiObj));
+		}
+		break;
+	}
+
+	case OBJECT_TYPE_UI_POW:
+	{
+		uiObj = new CUIPow(x, y);
+		uiObj->SetPosition(x, y);
+		objects2.push_back(uiObj);
+		pow = dynamic_cast<CUIPow*>(uiObj);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -638,7 +659,6 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 	
-
 	
 	vector<LPGAMEOBJECT> coObjects0;
 	
@@ -713,7 +733,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		objects2[i]->Update(dt, &coAllObjects);
 		objects2[i]->UIUpdate(rx, ry);
-	}
+	}	
 
 	PurgeDeletedObjects();
 }
@@ -846,6 +866,11 @@ void CPlayScene::CreateItem(int id, float x, float y)
 		obj->SetState(COIN_STATE_STATIC);
 		objects0.insert(objects0.end() - 1, obj);
 		break;
+	case OBJECT_TYPE_BREAKABLE_BRICK:
+		obj = new CBreakableBrick(x, y, 1);
+		obj->SetPosition(x, y);
+		objects1.insert(objects1.end() - 1, obj);
+		break;
 	default:
 		break;
 	}	
@@ -975,6 +1000,32 @@ void CPlayScene::BrickToCoin()
 	}
 }
 
+void CPlayScene::CoinToBrick()
+{
+	for (int i = 0; i < objects1.size(); i++)
+	{
+		if (dynamic_cast<CCoin*>(objects1.at(i)))
+		{
+			CCoin* p = dynamic_cast<CCoin*>(objects1.at(i));
+			if (p->GetState() == COIN_STATE_STATIC)
+			{
+				p->ToBrick();
+			}
+		}
+	}
+	for (int i = 0; i < objects0.size(); i++)
+	{
+		if (dynamic_cast<CCoin*>(objects0.at(i)))
+		{
+			CCoin* p = dynamic_cast<CCoin*>(objects0.at(i));
+			if (p->GetState() == COIN_STATE_STATIC)
+			{
+				p->ToBrick();
+			}
+		}
+	}
+}
+
 void CPlayScene::ResetCam()
 {
 	float cx, cy, rx, ry;
@@ -1083,6 +1134,79 @@ void CPlayScene::UpdateUITime(int num)
 		res /= 10;
 		numsObj.at(9)->SetNum(res % 10);
 		res /= 10;
+	}
+}
+
+void CPlayScene::UpdateUIRuncharge(int num)
+{
+	if (arrsObj.size() > 5 && pow)
+	switch (num)
+	{
+	case 0:
+		arrsObj[0]->SetActive(0);
+		arrsObj[1]->SetActive(0);
+		arrsObj[2]->SetActive(0);
+		arrsObj[3]->SetActive(0);
+		arrsObj[4]->SetActive(0);
+		arrsObj[5]->SetActive(0);
+		pow->SetActive(0);
+		break;
+	case 1:
+		arrsObj[0]->SetActive(1);
+		arrsObj[1]->SetActive(0);
+		arrsObj[2]->SetActive(0);
+		arrsObj[3]->SetActive(0);
+		arrsObj[4]->SetActive(0);
+		arrsObj[5]->SetActive(0);
+		pow->SetActive(0);
+		break;
+	case 2:
+		arrsObj[0]->SetActive(1);
+		arrsObj[1]->SetActive(1);
+		arrsObj[2]->SetActive(0);
+		arrsObj[3]->SetActive(0);
+		arrsObj[4]->SetActive(0);
+		arrsObj[5]->SetActive(0);
+		pow->SetActive(0);
+		break;
+	case 3:
+		arrsObj[0]->SetActive(1);
+		arrsObj[1]->SetActive(1);
+		arrsObj[2]->SetActive(1);
+		arrsObj[3]->SetActive(1);
+		arrsObj[4]->SetActive(0);
+		arrsObj[5]->SetActive(0);
+		pow->SetActive(0);
+		break;
+	case 4:
+		arrsObj[0]->SetActive(1);
+		arrsObj[1]->SetActive(1);
+		arrsObj[2]->SetActive(1);
+		arrsObj[3]->SetActive(1);
+		arrsObj[4]->SetActive(0);
+		arrsObj[5]->SetActive(0);
+		pow->SetActive(0);
+		break;
+	case 5:
+		arrsObj[0]->SetActive(1);
+		arrsObj[1]->SetActive(1);
+		arrsObj[2]->SetActive(1);
+		arrsObj[3]->SetActive(1);
+		arrsObj[4]->SetActive(1);
+		arrsObj[5]->SetActive(0);
+		pow->SetActive(0);
+		break;
+	case 6:
+		arrsObj[0]->SetActive(1);
+		arrsObj[1]->SetActive(1);
+		arrsObj[2]->SetActive(1);
+		arrsObj[3]->SetActive(1);
+		arrsObj[4]->SetActive(1);
+		arrsObj[5]->SetActive(1);
+		pow->SetActive(1);
+		break;
+	default:
+		break;
 	}
 }
 

@@ -40,6 +40,7 @@
 #define ID_SPR_UI_PANEL	236000
 #define ID_SPR_UI_PANEL_DARK 236001	
 #define ID_SPR_UI_PANEL_END 236002	
+#define ID_SPR_UI_PANEL_PICK 236003
 
 class CGameUI : public CGameObject
 {

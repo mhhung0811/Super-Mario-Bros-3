@@ -233,9 +233,11 @@
     <ClInclude Include="Teleporter.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="UIArrow.h" />
     <ClInclude Include="UICard.h" />
     <ClInclude Include="UINum.h" />
     <ClInclude Include="UIPanel.h" />
+    <ClInclude Include="UIPow.h" />
     <ClInclude Include="UITag.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Wing.h" />

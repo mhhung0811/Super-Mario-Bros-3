@@ -329,6 +329,12 @@
     <ClInclude Include="EndGate.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="UIArrow.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPow.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="mario-sample.txt">
