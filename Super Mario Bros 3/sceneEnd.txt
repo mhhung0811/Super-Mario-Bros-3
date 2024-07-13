@@ -1,0 +1,15 @@
+# list of object assets to load in this scene
+[ASSETS]
+gameUI.txt
+mario.txt
+
+[OBJECTS]
+32	0	202	0
+32	16	202	0
+32	0	0	0
+32	16	0	0
+32	0	32	0
+32	16	32	0
+32	4	0	2
+
+0	-20	0

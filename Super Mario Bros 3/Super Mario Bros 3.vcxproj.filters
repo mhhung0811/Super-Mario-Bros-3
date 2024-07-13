@@ -165,6 +165,9 @@
     <ClCompile Include="CGameUI.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="EndGate.cpp">
+      <Filter>Source Files\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -320,6 +323,12 @@
     <ClInclude Include="UINum.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="UIPanel.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="EndGate.h">
+      <Filter>Header Files\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="mario-sample.txt">
@@ -406,6 +415,12 @@
     <Text Include="gameUI.txt">
       <Filter>Infor Files\Objects</Filter>
     </Text>
+    <Text Include="sceneStart.txt">
+      <Filter>Infor Files\Scenes</Filter>
+    </Text>
+    <Text Include="sceneEnd.txt">
+      <Filter>Infor Files\Scenes</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="mario.ico">
@@ -430,6 +445,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="textures\hudnfont.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\menu.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

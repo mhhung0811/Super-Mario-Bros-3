@@ -20,9 +20,7 @@ void CFlowCoin::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(FLOW_COIN_STATE_DROP);
 	}
 	if (state == FLOW_COIN_STATE_DROP && y > (fixedY - 5))
-	{
-		LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
-		playScene->UpdateUICoin(1);
+	{		
 		SetState(FLOW_COIN_STATE_DISAPPEAR);
 	}
 }
@@ -66,6 +64,7 @@ void CFlowCoin::SetState(int state)
 		ay = FLOW_COIN_ACCEL;
 		break;
 	case FLOW_COIN_STATE_DISAPPEAR:
+		playScene->UpdateUICoin(1);
 		playScene->FlowScore(x, y, 100);
 		isDeleted = true;
 		break;

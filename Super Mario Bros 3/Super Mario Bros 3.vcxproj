@@ -154,6 +154,7 @@
     <ClCompile Include="CubeOneWay.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="EmptyObject.cpp" />
+    <ClCompile Include="EndGate.cpp" />
     <ClCompile Include="FireBall.cpp" />
     <ClCompile Include="FlowCoin.cpp" />
     <ClCompile Include="FlowScore.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="debug.h" />
     <ClInclude Include="Decor.h" />
     <ClInclude Include="EmptyObject.h" />
+    <ClInclude Include="EndGate.h" />
     <ClInclude Include="FireBall.h" />
     <ClInclude Include="FLowCoin.h" />
     <ClInclude Include="FlowScore.h" />
@@ -233,6 +235,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="UICard.h" />
     <ClInclude Include="UINum.h" />
+    <ClInclude Include="UIPanel.h" />
     <ClInclude Include="UITag.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Wing.h" />
@@ -264,7 +267,9 @@
     <Text Include="scene0005.txt" />
     <Text Include="scene01.txt" />
     <Text Include="scene02.txt" />
+    <Text Include="sceneEnd.txt" />
     <Text Include="sceneMain.txt" />
+    <Text Include="sceneStart.txt" />
     <Text Include="shadowDecor.txt" />
     <Text Include="wing.txt" />
   </ItemGroup>
@@ -275,6 +280,7 @@
     <Image Include="textures\hudnfont.png" />
     <Image Include="textures\items.png" />
     <Image Include="textures\mario.png" />
+    <Image Include="textures\menu.png" />
     <Image Include="textures\misc.png" />
     <Image Include="textures\tiles.png" />
   </ItemGroup>

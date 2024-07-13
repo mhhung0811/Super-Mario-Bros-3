@@ -22,11 +22,18 @@
 #include "BreakableBrick.h"
 #include "Button.h"
 #include "Teleporter.h"
-
+#include "EndGate.h"
 #include "Collision.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	// Revive
+	if (state == MARIO_STATE_DIE && (GetTickCount64() - die_time > MARIO_DIE_TIME))
+	{
+		vy = 0;
+		Restart();
+	}
+
 	// Tele stuff
 	if (state == MARIO_STATE_TELE)
 	{
@@ -198,6 +205,8 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+	playScene->UpdateUILives();
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
@@ -250,6 +259,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithButton(e);
 	else if (dynamic_cast<CTeleporter*>(e->obj))
 		OnCollisionWithTeleporter(e);
+	else if (dynamic_cast<CEndGate*>(e->obj))
+		OnCollisionWithEndGate(e);
 }
 
 void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
@@ -306,7 +317,8 @@ void CMario::OnCollisionWithMushroom(LPCOLLISIONEVENT e)
 	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
 	if (dynamic_cast<CMushroomGreen*>(p))
 	{
-		playScene->UpdateUILives(1);
+		lives++;
+		playScene->UpdateUILives();
 	}
 	else
 	{
@@ -623,6 +635,11 @@ void CMario::OnCollisionWithButton(LPCOLLISIONEVENT e)
 void CMario::OnCollisionWithTeleporter(LPCOLLISIONEVENT e)
 {
 	nearestTele = dynamic_cast<CTeleporter*>(e->obj);
+}
+void CMario::OnCollisionWithEndGate(LPCOLLISIONEVENT e)
+{
+	CEndGate* gate = dynamic_cast<CEndGate*>(e->obj);
+	gate->End();
 }
 
 //
@@ -957,8 +974,7 @@ void CMario::Render()
 
 void CMario::SetState(int state)
 {
-	// DIE is the end state, cannot be changed! 
-	if (this->state == MARIO_STATE_DIE) return; 
+	//if (this->state == MARIO_STATE_DIE) return;
 	if (!this->canSetState) return;
 	switch (state)
 	{
@@ -1083,6 +1099,8 @@ void CMario::SetState(int state)
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 		vx = 0;
 		ax = 0;
+		die_time = GetTickCount64();
+		canSetState = false;
 		break;
 	case MARIO_STATE_KICK:
 		float kx, ky;
@@ -1362,4 +1380,25 @@ void CMario::Teleport(bool isUp)
 			SetState(MARIO_STATE_TELE);
 		}
 	}
+}
+
+void CMario::Restart()
+{
+	if (lives > 0)
+	{
+		lives--;
+		LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
+		playScene->UpdateUILives();
+		playScene->Restart();
+
+		SetPosition(20, 150);
+
+		canSetState = true;
+		SetState(MARIO_STATE_IDLE);
+		vy = 0;
+		ay = MARIO_GRAVITY;
+		playScene->ResetCam();
+	}
+	else
+		CGame::GetInstance()->InitiateSwitchScene(20);
 }

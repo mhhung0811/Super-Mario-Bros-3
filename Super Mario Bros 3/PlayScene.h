@@ -60,10 +60,11 @@ public:
 	void FlowCoin(float x, float y);
 	void BrickToCoin();
 	void ResetCam();
-	void UpdateUILives(int num);
+	void UpdateUILives();
 	void UpdateUIScore(int num);
 	void UpdateUICoin(int num);
 	void UpdateUITime(int num);
+	void Restart();
 };
 
 typedef CPlayScene* LPPLAYSCENE;

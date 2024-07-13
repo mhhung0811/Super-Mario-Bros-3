@@ -1,7 +1,7 @@
 [SETTINGS]
-start	10
-width	320
-height	240
+start	20
+width	280
+height	270
 
 #id	type	file
 # type: 0: intro, 1: play scene 
@@ -11,6 +11,8 @@ height	240
 2	scene02.txt
 5	scene0005.txt
 10	sceneMain.txt
+20	sceneStart.txt
+30	sceneEnd.txt
 
 # id	file 
 [TEXTURES]
@@ -23,3 +25,4 @@ height	240
 50	textures\enemy.png
 60	textures\marioAll.png
 70	textures\hudnfont.png
+80	textures\menu.png

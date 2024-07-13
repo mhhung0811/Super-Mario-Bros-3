@@ -36,6 +36,8 @@
 #include "UICard.h"
 #include "UITag.h"
 #include "UINum.h"
+#include "UIPanel.h"
+#include "EndGate.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -520,6 +522,25 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 
+	case OBJECT_TYPE_UI_PANEL:
+	{
+		int type = atoi(tokens[3].c_str());
+		uiObj = new CUIPanel(x, y, type);
+		uiObj->SetPosition(x, y);
+		objects2.push_back(uiObj);
+		break;
+	}
+
+	case OBJECT_TYPE_END_GATE:
+	{
+		int w = atoi(tokens[3].c_str());
+		int h = atoi(tokens[4].c_str());
+		obj = new CEndGate(x, y, w, h);
+		obj->SetPosition(x, y);
+		objects1.push_back(obj);
+		break;
+	}
+
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -529,7 +550,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetPosition(x, y);
 		objects0.push_back(obj);
 		break;
-	}	
+	}
 
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
@@ -834,7 +855,7 @@ void CPlayScene::CreateFireBall(float x, float y, int dir)
 {
 	CGameObject* obj = new CFireBall(x, y, dir);
 	obj->SetPosition(x, y);
-	objects0.insert(objects0.end()-1, obj);
+	objects0.insert(objects0.end()-3, obj);
 }
 
 void CPlayScene::AddObject(CGameObject* obj, int type)
@@ -861,31 +882,31 @@ void CPlayScene::SpawnMonster(int id, float x, float y)
 		obj = new CGoomba(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end() - 1, obj);
+		objects0.insert(objects0.end() - 3, obj);
 		break;
 	case OBJECT_TYPE_FLY_GOOMBA:
 		obj = new CFlyGoomba(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end() - 1, obj);
+		objects0.insert(objects0.end() - 3, obj);
 		break;
 	case OBJECT_TYPE_KOOPA:
 		obj = new CKoopa(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end() - 1, obj);
+		objects0.insert(objects0.end() - 3, obj);
 		break;
 	case OBJECT_TYPE_FLY_KOOPA:
 		obj = new CFlyKoopa(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end() - 1, obj);
+		objects0.insert(objects0.end() - 3, obj);
 		break;
 	case OBJECT_TYPE_NORMAL_KOOPA:
 		obj = new CNormalKoopa(x, y);
 		obj->SetPosition(x, y);
 		/*objects0.push_back(obj);*/
-		objects0.insert(objects0.end() - 1, obj);
+		objects0.insert(objects0.end() - 3, obj);
 		break;
 	default:
 		break;
@@ -973,7 +994,7 @@ void CPlayScene::ResetCam()
 	}
 	else
 	{
-		CGame::GetInstance()->SetCamPos(rx, ry, cx, 12, mario->FaceDirection(), mario->IsUp(), 1);
+		CGame::GetInstance()->SetCamPos(rx, ry, cx, 0, mario->FaceDirection(), mario->IsUp(), 1);
 	}
 
 	/*if (cx < 0) cx = 0;
@@ -998,11 +1019,12 @@ void CPlayScene::ResetCam()
 	}*/
 }
 
-void CPlayScene::UpdateUILives(int num)
+void CPlayScene::UpdateUILives()
 {
+	CMario* mario = dynamic_cast<CMario*>(player);
 	if (numsObj.size() > 1)
 	{
-		numsObj.at(1)->SetNum(numsObj.at(1)->GetNum() + num);
+		numsObj.at(1)->SetNum(mario->GetLives());
 	}
 }
 
@@ -1061,5 +1083,35 @@ void CPlayScene::UpdateUITime(int num)
 		res /= 10;
 		numsObj.at(9)->SetNum(res % 10);
 		res /= 10;
+	}
+}
+
+void CPlayScene::Restart()
+{
+	for (int i = 0; i < objects0.size(); i++)
+	{
+		if (dynamic_cast<CMysteryBox*>(objects0.at(i)))
+		{
+			CMysteryBox* p = dynamic_cast<CMysteryBox*>(objects0.at(i));
+			p->SetState(MYSTERYBOX_STATE_ACTIVE);
+		}
+		if (dynamic_cast<CSpawner*>(objects0.at(i)))
+		{
+			CSpawner* p = dynamic_cast<CSpawner*>(objects0.at(i));
+			p->Ready();
+		}
+	}
+	for (int i = 0; i < objects1.size(); i++)
+	{
+		if (dynamic_cast<CMysteryBox*>(objects1.at(i)))
+		{
+			CMysteryBox* p = dynamic_cast<CMysteryBox*>(objects1.at(i));
+			p->SetState(MYSTERYBOX_STATE_ACTIVE);
+		}
+		if (dynamic_cast<CSpawner*>(objects1.at(i)))
+		{
+			CSpawner* p = dynamic_cast<CSpawner*>(objects1.at(i));
+			p->Ready();
+		}
 	}
 }

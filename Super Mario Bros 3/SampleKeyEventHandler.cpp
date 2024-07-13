@@ -10,9 +10,16 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMario* mario = (CMario *)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer(); 
+	LPPLAYSCENE playScene = dynamic_cast<LPPLAYSCENE>(CGame::GetInstance()->GetCurrentScene());
 	if (mario->GetState() == MARIO_STATE_FLAP_FLOW) return;
 	switch (KeyCode)
 	{
+	case DIK_SPACE:
+		if (playScene->GetSceneId() == 20)	
+			CGame::GetInstance()->InitiateSwitchScene(10);
+		else if (playScene->GetSceneId() == 30)
+			CGame::GetInstance()->InitiateSwitchScene(20);
+		break;
 	case DIK_UP:
 		mario->Teleport(1);
 		break;

@@ -218,6 +218,7 @@
 #define MARIO_FLAP_COOLDOWN		150
 #define MARIO_KICK_TIME			150
 #define MARIO_ATTACK_TIME		350
+#define MARIO_DIE_TIME			2000
 
 #define MARIO_RUN_CHARGE_MAX	1500
 #define MARIO_RUN_CHARGE_DROP_TIME	400
@@ -251,8 +252,10 @@ class CMario : public CGameObject
 	long runChargeTimer;
 	long attackTimer;
 	long waitTele;
+	int die_time;
 
 	int level; 
+	int lives;
 	int untouchable; 
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
@@ -275,6 +278,7 @@ class CMario : public CGameObject
 	void OnCollisionWithBreakableBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithButton(LPCOLLISIONEVENT e);
 	void OnCollisionWithTeleporter (LPCOLLISIONEVENT e);
+	void OnCollisionWithEndGate(LPCOLLISIONEVENT e);
 
 	int GetAniIdBig();
 	int GetAniIdSmall();
@@ -307,9 +311,11 @@ public:
 		runChargeTimer = 0;
 		attackTimer = 0;
 		waitTele = 0;
+		die_time = 0;
 
 		level = MARIO_LEVEL_SMALL;
 		untouchable = 0;
+		lives = 4;
 		untouchable_start = -1;
 		isOnPlatform = false;
 		coin = 0;
@@ -328,6 +334,7 @@ public:
 
 	void SetLevel(int l);
 	int GetLevel();
+	int GetLives() { return lives; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); }
 
 	void GetHitBox(float& left, float& top, float& right, float& bottom);
@@ -345,4 +352,5 @@ public:
 	void Flap();
 	void Attack(vector<LPGAMEOBJECT>* coObjects);
 	void Teleport(bool isUp);
+	void Restart();
 };
