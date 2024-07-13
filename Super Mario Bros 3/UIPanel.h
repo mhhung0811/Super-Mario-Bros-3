@@ -17,6 +17,8 @@ public:
 			s->Get(ID_SPR_UI_PANEL)->Draw(x + UI_PANEL_BBOX_WIDTH / 2, y + UI_PANEL_BBOX_HEIGHT / 2);
 		else if (type == 2)
 			s->Get(ID_SPR_UI_PANEL_END)->Draw(x + UI_PANEL_BBOX_WIDTH / 2, y + UI_PANEL_BBOX_HEIGHT / 2);
+		else if (type == 3)
+			s->Get(ID_SPR_UI_PANEL_PICK)->Draw(x + UI_PANEL_PICK_BBOX_WIDTH / 2, y + UI_PANEL_PICK_BBOX_HEIGHT / 2);
 		else
 			s->Get(ID_SPR_UI_PANEL_DARK)->Draw(x + UI_PANEL_DARK_BBOX_WIDTH / 2, y + UI_PANEL_DARK_BBOX_HEIGHT / 2);
 	}

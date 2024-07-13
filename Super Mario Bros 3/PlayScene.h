@@ -7,6 +7,7 @@
 #include "UINum.h"
 #include "UIArrow.h"
 #include "UIPow.h"
+#include "UIMario.h"
 #include "Brick.h"
 #include "Mario.h"
 #include "Goomba.h"
@@ -24,6 +25,7 @@ class CPlayScene: public CScene
 protected: 
 	// A play scene has to have player, right? 
 	LPGAMEOBJECT player;					
+	CUIMario* uiPlayer;
 
 	vector<LPGAMEOBJECT> objects0;
 	vector<LPGAMEOBJECT> objects1;
@@ -49,6 +51,7 @@ public:
 	virtual void Unload();
 
 	LPGAMEOBJECT GetPlayer() { return player; }
+	CUIMario* GetUIPlayer() { return uiPlayer; }
 
 	void Clear();
 	void PurgeDeletedObjects();

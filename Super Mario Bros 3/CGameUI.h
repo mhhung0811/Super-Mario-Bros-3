@@ -18,6 +18,10 @@
 #define UI_PANEL_BBOX_HEIGHT 224
 #define UI_PANEL_DARK_BBOX_WIDTH 256
 #define UI_PANEL_DARK_BBOX_HEIGHT 186
+#define UI_PANEL_PICK_BBOX_WIDTH 234
+#define UI_PANEL_PICK_BBOX_HEIGHT 160
+#define UI_MARIO_BBOX_WIDTH 14
+#define UI_MARIO_BBOX_HEIGHT 16
 
 
 #define ID_SPR_UI_HUD	230000
@@ -42,6 +46,8 @@
 #define ID_SPR_UI_PANEL_END 236002	
 #define ID_SPR_UI_PANEL_PICK 236003
 
+#define ID_ANI_UI_MARIO 237002
+
 class CGameUI : public CGameObject
 {
 protected:
@@ -55,6 +61,7 @@ public:
 	virtual void RenderBoundingBox() {};
 	virtual int IsBlocking() { return 0; }
 	virtual void UIUpdate(float cx, float cy);
+	
 };
 
 typedef CGameUI* LPGAMEUI;

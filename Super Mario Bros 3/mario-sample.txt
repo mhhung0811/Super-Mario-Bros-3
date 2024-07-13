@@ -13,6 +13,7 @@ height	270
 10	sceneMain.txt
 20	sceneStart.txt
 30	sceneEnd.txt
+40	scenePick.txt
 
 # id	file 
 [TEXTURES]

@@ -235,6 +235,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="UIArrow.h" />
     <ClInclude Include="UICard.h" />
+    <ClInclude Include="UIMario.h" />
     <ClInclude Include="UINum.h" />
     <ClInclude Include="UIPanel.h" />
     <ClInclude Include="UIPow.h" />
@@ -271,6 +272,7 @@
     <Text Include="scene02.txt" />
     <Text Include="sceneEnd.txt" />
     <Text Include="sceneMain.txt" />
+    <Text Include="scenePick.txt" />
     <Text Include="sceneStart.txt" />
     <Text Include="shadowDecor.txt" />
     <Text Include="wing.txt" />
@@ -284,6 +286,7 @@
     <Image Include="textures\mario.png" />
     <Image Include="textures\menu.png" />
     <Image Include="textures\misc.png" />
+    <Image Include="textures\pick.png" />
     <Image Include="textures\tiles.png" />
   </ItemGroup>
   <ItemGroup>

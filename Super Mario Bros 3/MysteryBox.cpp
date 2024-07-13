@@ -54,7 +54,7 @@ void CMysteryBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			// open mushroom
 			if (isOpened == MYSTERYBOX_GIFT_LEVELUP)
 			{
-				if (mario->GetLevel() == MARIO_LEVEL_SMALL) playScene->CreateItem(OBJECT_TYPE_MUSHROOM, x, y);
+				if (mario->GetLevel() == MARIO_LEVEL_SMALL || mario->GetLevel() == MARIO_LEVEL_RACOON) playScene->CreateItem(OBJECT_TYPE_MUSHROOM, x, y);
 				if (mario->GetLevel() == MARIO_LEVEL_BIG) playScene->CreateItem(OBJECT_TYPE_RACOONLEAF, x, y);
 			}
 			// done open

@@ -38,6 +38,7 @@
 #include "UINum.h"
 #include "UIPanel.h"
 #include "EndGate.h"
+#include "UIMario.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -559,6 +560,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		uiObj->SetPosition(x, y);
 		objects2.push_back(uiObj);
 		pow = dynamic_cast<CUIPow*>(uiObj);
+		break;
+	}
+
+	case OBJECT_TYPE_UI_MARIO:
+	{
+		uiObj = new CUIMario(x, y);
+		uiObj->SetPosition(x, y);
+		objects2.push_back(uiObj);
+		uiPlayer = dynamic_cast<CUIMario*>(uiObj);
 		break;
 	}
 
