@@ -139,7 +139,56 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d10.lib;dinput8.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)textures\bbox.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\enemies.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\enemy.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\hudnfont.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\items.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\mario.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\marioAll.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\menu.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\misc.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\pick.png" "$(OutDir)textures\" /Y /I
+xcopy "$(ProjectDir)textures\tiles.png" "$(OutDir)textures\" /Y /I
+
+xcopy "$(ProjectDir)mario.ico" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)fireball.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)flyGoomba.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)flyKoopa.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)goomba.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)koopa.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)mario.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)mushroom.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)piranhaPlant.txt" "$(OutDir)" /Y /I
+
+xcopy "$(ProjectDir)breakableBrick.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)brick.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)bushes.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)button.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)cloud.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)cloudDecor.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)coin.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)cubes.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)flowScore.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)gameUI.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)ground.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)mysteryBox.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)racoonLeaf.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)shadowDecor.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)wing.txt" "$(OutDir)" /Y /I
+
+xcopy "$(ProjectDir)scene01.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)scene02.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)scene0005.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)sceneEnd.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)sceneMain.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)scenePick.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)sceneStart.txt" "$(OutDir)" /Y /I
+xcopy "$(ProjectDir)mario-sample.txt" "$(OutDir)" /Y /I</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
