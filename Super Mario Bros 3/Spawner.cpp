@@ -48,8 +48,8 @@ void CSpawner::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CSpawner::Render()
 {
-	if (!isTriggered)
-		RenderBoundingBox();
+	//if (!isTriggered)
+	//	RenderBoundingBox();
 }
 
 void CSpawner::Spawn()

@@ -33,7 +33,7 @@ void CEndGate::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CEndGate::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CEndGate::End()
